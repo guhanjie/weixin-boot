@@ -44,25 +44,10 @@ public class WeixinController extends BaseController {
 
     @RequestMapping(value="/get",method=RequestMethod.GET)
     public void init(HttpServletRequest req,HttpServletResponse resp) throws IOException {
-//      signature   微信加密签名，signature结合了开发者填写的token参数和请求中的timestamp参数、nonce参数。
-//      timestamp   时间戳
-//      nonce   随机数
-//      echostr
-        String signature = req.getParameter("signature");
-        String timestamp = req.getParameter("timestamp");
-        String nonce = req.getParameter("nonce");
-        String echostr = req.getParameter("echostr");
-        String[] arrs = {weixinContants.TOKEN,nonce,timestamp};
-        Arrays.sort(arrs);
-        StringBuffer sb = new StringBuffer();
-        for(String a:arrs) {
-            sb.append(a);
-        }
-        String sha1 = SHA1Util.sha1(sb.toString());
-//      System.out.println(sha1.equals(signature));
-        if(sha1.equals(signature)) {
-            LOGGER.info("Weixin auth successfully.");
-            resp.getWriter().println(echostr);
+    	String echostr = req.getParameter("echostr");
+        if(checkSignature(req)) {
+        	resp.getWriter().println(echostr);
+        	LOGGER.info("Weixin auth successfully.");
         }
     }
     
@@ -76,6 +61,30 @@ public class WeixinController extends BaseController {
         LOGGER.info("response= "+respCon);
         resp.getWriter().write(respCon);
     }    
+    
+    private boolean checkSignature(HttpServletRequest req) {
+//      signature   微信加密签名，signature结合了开发者填写的token参数和请求中的timestamp参数、nonce参数。
+//      timestamp   时间戳
+//      nonce   随机数
+        String signature = req.getParameter("signature");
+        String timestamp = req.getParameter("timestamp");
+        String nonce = req.getParameter("nonce");
+    	String[] arrs = {weixinContants.TOKEN,nonce,timestamp};
+        Arrays.sort(arrs);
+        StringBuffer sb = new StringBuffer();
+        for(String a:arrs) {
+            sb.append(a);
+        }
+        String sha1 = SHA1Util.sha1(sb.toString());
+        if(sha1.equals(signature)) {
+            LOGGER.debug("Success to check weixin request signature.");
+            return true;
+        }
+        else {
+        	LOGGER.warn("Failed to check weixin request signature, this msg may be fake!");
+        	return false;
+        }
+    }
     
 //    @RequestMapping("/at")
 //    public void testAccessToken(HttpServletResponse resp) throws IOException {
