@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<configuration scan="true" scanPeriod="120 seconds" debug="true">
+	<property name="PROJECT_NAME" value="webboot" />
+    <property name="PROJECT_LOG_DIR" value="${user.home}/logs/${PROJECT_NAME}" />
+    <property name="log.root.level" value="DEBUG" />
+    <property name="log.sql.level" value="DEBUG" />
+    
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5p %logger{36} [%file:%line] - %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="com.guhanjie" level="DEBUG"/>
+    <logger name="java.sql" level="${log.sql.level}"/>	
+
+	<!-- TRACE < DEBUG < INFO < WARN < ERROR -->
+	<root level="${log.root.level}">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

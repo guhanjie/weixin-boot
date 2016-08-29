@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+
+	<context:component-scan base-package="com.guhanjie.controller" />
+	<context:property-placeholder 
+		location="classpath:default.properties, file:${user.home}/default.properties" 
+		ignore-resource-not-found="true" file-encoding="utf-8" />
+		
+	<mvc:default-servlet-handler />
+	<mvc:resources location="/WEB-INF/assets/" mapping="/resources/**" />
+	
+	<mvc:annotation-driven />
+    
+	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
+				p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer"
+    			p:definitions="/WEB-INF/tiles.xml" /> -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+	    			p:viewClass="org.springframework.web.servlet.view.JstlView" 
+	    			p:prefix="/WEB-INF/pages/"  
+	    			p:suffix=".jsp" />
+    
+	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" 
+					p:defaultEncoding="UTF-8" 
+					p:maxUploadSize="5400000" /> -->
+													
+	<bean id="localResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"
+					p:cookieName="clientLanguage"
+					p:cookieMaxAge="100000"
+					p:cookiePath="/"
+					p:defaultLocale="zh_CN"/>
+
+	<bean id="exceptionResolver" class="com.guhanjie.exception.WebExceptionHandler" />
+	
+    <!-- <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/*/preview/**"/>
+            <ref bean="interceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors> -->
+
+</beans>

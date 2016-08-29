@@ -1,0 +1,20 @@
+.footer {
+	background-color: #999;
+	box-shadow: 0 1px 2px #ccc, inset 0 1px 0 #fff;
+    text-align: center;
+    color: #e0e0e0;
+}
+.footer .links {
+    font-size: 15px;
+    margin: 0 15px;
+}
+.footer .links li {
+    margin: 10px 15px 0;
+}
+.footer .copyright {
+	font-size: 12px;
+    margin: 10px auto;
+}
+.footer .copyright p {
+	margin: 0 0;
+}

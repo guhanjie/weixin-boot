@@ -1,0 +1,25 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.project
+.classpath
+.settings
+target
+META-INF
+.externalToolBuilders
+bin
+*.log
+.DS_Store
+*.iml
+.idea
+.springBeans
+.clover
+rebel.xml
+.bpmn
