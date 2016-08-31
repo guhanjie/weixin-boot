@@ -12,27 +12,23 @@
 		</commentGenerator>
 		<!-- 数据库驱动 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://127.0.0.1:3306/test" userId="root"
-			password="123">
+			connectionURL="jdbc:mysql://127.0.0.1:3306/zhmv" userId="root" password="1234">
 		</jdbcConnection>
 		<!-- java类型解析 -->
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 		<!-- 生成模型的包名和位置 -->
-		<javaModelGenerator targetPackage="com.guhanjie.model"
-			targetProject="./src/main/java">
+		<javaModelGenerator targetPackage="com.guhanjie.model" targetProject="./src/main/java">
 			<property name="enableSubPackages" value="false" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 		<!-- 生成DAO接口的包名和位置 -->
-		<sqlMapGenerator targetPackage="com.guhanjie.mapper"
-			targetProject="./src/main/resources">
+		<sqlMapGenerator targetPackage="com.guhanjie.mapper" targetProject="./src/main/resources">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 		<!-- 生成映射文件的包名和位置 -->
-		<javaClientGenerator targetPackage="com.guhanjie.mapper"
-			targetProject="./src/main/java" type="XMLMAPPER">
+		<javaClientGenerator targetPackage="com.guhanjie.mapper" targetProject="./src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!-- 生成具体的表 -->
@@ -47,6 +43,33 @@
                enableUpdateByExample="false"
                selectByPrimaryKeyQueryId="false"
                selectByExampleQueryId="false">
+               <generatedKey column="id" sqlStatement="MySql" identity="false" />
+		</table>
+		<table tableName="order" domainObjectName="Order" 
+			   enableInsert="true"
+               enableSelectByPrimaryKey="true"
+               enableSelectByExample="false"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true"
+               enableDeleteByExample="false"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               selectByPrimaryKeyQueryId="false"
+               selectByExampleQueryId="false">
+               <generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="position" domainObjectName="Position" 
+			   enableInsert="true"
+               enableSelectByPrimaryKey="true"
+               enableSelectByExample="false"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true"
+               enableDeleteByExample="false"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               selectByPrimaryKeyQueryId="false"
+               selectByExampleQueryId="false">
+               <generatedKey column="id" sqlStatement="MySql" identity="true" />
 		</table>
 	</context>
 	<!--

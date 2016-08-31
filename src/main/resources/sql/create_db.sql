@@ -1,36 +1,85 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : local
-Source Server Version : 50168
+Source Server         : localhost
+Source Server Version : 50709
 Source Host           : localhost:3306
-Source Database       : test
+Source Database       : zhmv
 
 Target Server Type    : MYSQL
-Target Server Version : 50168
+Target Server Version : 50709
 File Encoding         : 65001
 
-Date: 2015-06-07 20:42:41
+Date: 2016-08-31 17:34:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `user`
+-- Table structure for order
+-- ----------------------------
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `amount` decimal(6,2) DEFAULT NULL COMMENT '订单金额',
+  `tip` decimal(6,2) DEFAULT NULL COMMENT '小费',
+  `from` int(11) DEFAULT NULL COMMENT '起始点',
+  `waypoints` varchar(120) DEFAULT NULL COMMENT '途径点（多个position_id以,分隔，有顺序关系，最多支持10个）',
+  `to` int(11) DEFAULT NULL COMMENT '目的点',
+  `distance` decimal(4,2) DEFAULT '0.00' COMMENT '运送距离（包括途径点）',
+  `vehicle` tinyint(4) DEFAULT NULL COMMENT '车型（1：小面车， 2：金杯车）',
+  `status` smallint(6) DEFAULT NULL COMMENT '订单状态（位表示法，第1-2位：是否下单成功，第3-4位：是否开始送货，第5-6位：是否支付完成）',
+  `remark` varchar(100) DEFAULT NULL COMMENT '订单备注',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of order
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for position
+-- ----------------------------
+DROP TABLE IF EXISTS `position`;
+CREATE TABLE `position` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `address` varchar(50) DEFAULT NULL COMMENT '地址',
+  `detail` varchar(50) DEFAULT NULL COMMENT '详细信息：几号楼几单元',
+  `floor` tinyint(4) DEFAULT NULL COMMENT '楼层（0表示电梯房，1以上表示多层）',
+  `geo_lat` varchar(20) DEFAULT NULL COMMENT '地理纬度',
+  `geo_lng` varchar(20) DEFAULT NULL COMMENT '地理经度',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of position
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `name` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-  `sex` char(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL,
+  `phone` varchar(11) DEFAULT NULL,
+  `open_id` varchar(50) DEFAULT NULL,
+  `unionid` varchar(50) DEFAULT NULL,
+  `nickname` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `sex` tinyint(4) DEFAULT NULL,
+  `language` varchar(15) DEFAULT NULL,
+  `city` varchar(15) DEFAULT NULL,
+  `province` varchar(15) DEFAULT NULL,
+  `country` varchar(15) DEFAULT NULL,
+  `subscribe_time` timestamp NULL DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_OPEN_ID` (`open_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'webboot', 'm');
-INSERT INTO `user` VALUES ('2', 'guhanjie', 'm');
-INSERT INTO `user` VALUES ('3', 'girl', 'f');
-INSERT INTO `user` VALUES ('4', '帅哥', 'm');
-INSERT INTO `user` VALUES ('5', '美女', 'f');

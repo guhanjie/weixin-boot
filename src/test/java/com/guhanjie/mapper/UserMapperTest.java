@@ -24,7 +24,7 @@ public class UserMapperTest {
 	private UserMapper userMapper;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setup() throws Exception {
 		tableName = "user";
 	}
 	
@@ -34,9 +34,8 @@ public class UserMapperTest {
 		//Create
 		logger.debug("Create one record to table[{}]...\n", tableName);
 		User model = new User();
-		model.setId(id);
 		model.setName("guhanjie");
-		model.setSex("m");
+		model.setSex((byte)'m');
 		long insertCount = userMapper.insertSelective(model);
 		assertEquals(insertCount, 1L);
 		//Retrieve
@@ -45,7 +44,7 @@ public class UserMapperTest {
 		logger.debug(JSON.toJSONString(model, true));
 		//Update
 		logger.debug("Update one record in table[{}]...\n", tableName);
-		model.setSex("f");
+		model.setSex((byte)'f');
 		long updateCount = userMapper.updateByPrimaryKeySelective(model);
 		logger.debug("Update [{}] record(s) in table[{}]...\n", updateCount, tableName);
 		//Delete

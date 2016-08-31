@@ -85,6 +85,7 @@
 				} else if(index == 1) {
 					toPoint = pp;
 				}
+				local.clearResults();
 			}
 		});
 		local.search(place);
@@ -104,7 +105,7 @@
 				return ;
 			}
 			console.log(results);
-			$('#distance').html("起点："+results.getStart()+"，终点："+results.getEnd());
+			$('#distance').html("起点："+results.getStart().point.lng+","+results.getStart().point.lat+"，终点："+results.getEnd().point.lng+","+results.getEnd().point.lat);
 			for(var i=0; i<results.getNumPlans(); i++) {
 				var val = $('#distance').html()+"<br/>";
 				var plan = results.getPlan(i);
