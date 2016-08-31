@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50709
+Source Server Version : 50627
 Source Host           : localhost:3306
 Source Database       : zhmv
 
 Target Server Type    : MYSQL
-Target Server Version : 50709
+Target Server Version : 50627
 File Encoding         : 65001
 
-Date: 2016-08-31 17:34:19
+Date: 2016-08-31 22:39:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,10 +36,6 @@ CREATE TABLE `order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of order
--- ----------------------------
-
--- ----------------------------
 -- Table structure for position
 -- ----------------------------
 DROP TABLE IF EXISTS `position`;
@@ -54,10 +50,6 @@ CREATE TABLE `position` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of position
--- ----------------------------
-
--- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -68,7 +60,7 @@ CREATE TABLE `user` (
   `open_id` varchar(50) DEFAULT NULL,
   `unionid` varchar(50) DEFAULT NULL,
   `nickname` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `sex` tinyint(4) DEFAULT NULL,
+  `sex` char(1) DEFAULT NULL,
   `language` varchar(15) DEFAULT NULL,
   `city` varchar(15) DEFAULT NULL,
   `province` varchar(15) DEFAULT NULL,
@@ -78,8 +70,4 @@ CREATE TABLE `user` (
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_OPEN_ID` (`open_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of user
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;

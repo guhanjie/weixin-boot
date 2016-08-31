@@ -43,7 +43,7 @@
                enableUpdateByExample="false"
                selectByPrimaryKeyQueryId="false"
                selectByExampleQueryId="false">
-               <generatedKey column="id" sqlStatement="MySql" identity="false" />
+               <generatedKey column="id" sqlStatement="MySql" identity="true" />
 		</table>
 		<table tableName="order" domainObjectName="Order" 
 			   enableInsert="true"
