@@ -28,5 +28,7 @@ public class BigDecimalTest {
 	public static void main(String[] args) {
 		BigDecimal b = new BigDecimal("0.0000911");
 		System.out.println(b);
+        BigDecimal b1 = new BigDecimal(1).setScale(2).movePointRight(2);
+        System.out.println(b1);
 	}
 }

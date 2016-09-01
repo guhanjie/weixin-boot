@@ -7,8 +7,6 @@
  */  
 package com.guhanjie.service;
 
-import java.math.BigDecimal;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +19,7 @@ import com.guhanjie.exception.WebExceptionFactory;
 import com.guhanjie.mapper.OrderMapper;
 import com.guhanjie.mapper.PositionMapper;
 import com.guhanjie.model.Order;
+import com.guhanjie.model.Order.VehicleEnum;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 
@@ -50,7 +49,7 @@ public class OrderService {
 	public void putOrder(Order order) {
 		if(order == null) {
 			LOGGER.error("put order error, order is null");
-			throw WebExceptionFactory.exception(WebExceptionEnum.PARAM_NULL);
+			throw WebExceptionFactory.exception(WebExceptionEnum.PARAMETER_NULL);
 		}
 		// 1. 检查用户信息 
 		User user = order.getUser();
@@ -95,9 +94,59 @@ public class OrderService {
 		order.setToId(to.getId());
 		order.setTo(to);
 		// 3. 校验订单有效性
-		BigDecimal distance = order.getDistance();
-
-		//校验金额
+		double price = 0.0;
+		double amount = order.getAmount().doubleValue();
+        double distance = order.getDistance().doubleValue();
+        short fromFloor = from.getFloor();
+        short toFloor = to.getFloor();
+		Short vehicle = order.getVehicle();
+		if(vehicle == null) {
+		    throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "缺失车型信息");
+		}
+		if(VehicleEnum.XIAOMIAN.code() == vehicle) {    //小面车
+		    price = 150.0; //起步价150（10公里内）
+            price += (distance<10) ? 0.0 : (distance-10)*5.0;  //超出后每公里5元
+            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : (toFloor-1)*10.0;
+            if(order.getWaypoints() != null) {
+                for(Position p : order.getWaypoints()) {
+                    price += 50.0; //每增加一个点位装卸货，增加50元
+                    price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*10.0;
+                }
+            }
+        }
+		else if(VehicleEnum.JINBEI.code() == vehicle) {    //金杯车
+		    price = 200.0; //起步价200（10公里内）
+            price += (distance<10) ? 0.0 : (distance-10)*6.0;  //超出后每公里6元
+            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : (toFloor-1)*10.0;
+            if(order.getWaypoints() != null) {
+                for(Position p : order.getWaypoints()) {
+                    price += 50.0; //每增加一个点位装卸货，增加50元
+                    price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*10.0;
+                }
+            }
+        }
+		else if(VehicleEnum.QUANSHUN.code() == vehicle) {   //全顺/依维轲
+		    price = 300.0; //起步价300（10公里内）
+            price += (distance<10) ? 0.0 : (distance-10)*8.0;  //超出后每公里8元
+            price += 50.0; //电梯和1楼搬运按50元收取，每多1层加收20元
+            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
+            price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
+            if(order.getWaypoints() != null) {
+                for(Position p : order.getWaypoints()) {
+                    price += 50.0; //每增加一个点位装卸货，增加50元
+                    price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*20.0;
+                }
+            }
+		}
+		else {    //车型参数非法
+            throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "车型信息有误");
+		}
+		//校验金额（计算金额与前端展示金额误差在1.0以内）
+		if(Math.abs(price-amount) > 1.0) {
+		    throw WebExceptionFactory.exception(WebExceptionEnum.VALIDATE_ERROR, "订单金额有误");
+		}
 		
 		// 4. 生成订单
 		orderMapper.insertSelective(order);
