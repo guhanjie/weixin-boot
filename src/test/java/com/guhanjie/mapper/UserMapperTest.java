@@ -20,7 +20,7 @@ public class UserMapperTest {
 	private String tableName;
 	private Logger logger = LoggerFactory.getLogger(UserMapperTest.class);
 	@Autowired
-	private UserMapper userMapper;
+	private UserMapper mapper;
 	
 	@Before
 	public void setup() throws Exception {
@@ -34,21 +34,32 @@ public class UserMapperTest {
 		User model = new User();
 		model.setName("guhanjie");
 		model.setSex("m");
-		long insertCount = userMapper.insertSelective(model);
+		long insertCount = mapper.insertSelective(model);
 		assertEquals(insertCount, 1L);
 		//Retrieve
 		logger.debug("Select one record from table[{}]...\n", tableName);
-		model = userMapper.selectByPrimaryKey(model.getId());
+		model = mapper.selectByPrimaryKey(model.getId());
 		logger.debug(JSON.toJSONString(model, true));
 		//Update
 		logger.debug("Update one record in table[{}]...\n", tableName);
 		model.setSex("f");
-		long updateCount = userMapper.updateByPrimaryKeySelective(model);
+		long updateCount = mapper.updateByPrimaryKeySelective(model);
 		logger.debug("Update [{}] record(s) in table[{}]...\n", updateCount, tableName);
 		//Delete
 		logger.debug("Delete one record from table[{}]...\n", tableName);
-		long deleteCount = userMapper.deleteByPrimaryKey(model.getId());
+		long deleteCount = mapper.deleteByPrimaryKey(model.getId());
 		assertEquals(deleteCount, 1L);
+	}
+	
+	@Test
+	public void testGeneratedKey() {
+		logger.debug("Create one record to table[{}]...\n", tableName);
+		User model = new User();
+		model.setName("guhanjie");
+		model.setSex("m");
+		long insertCount = mapper.insertSelective(model);
+		logger.debug(JSON.toJSONString(model));
+		assertEquals(insertCount, 1L);
 	}
 
 }

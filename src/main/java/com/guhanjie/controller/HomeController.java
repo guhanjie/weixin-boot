@@ -22,10 +22,4 @@ public class HomeController extends BaseController{
 		return "index";
 	}
 	
-	@RequestMapping(value="/user/{userId}", method=RequestMethod.GET)
-	public String getUserById(@PathVariable("userId") Long id, Model model) {
-		User user = userService.getUser(id);
-		model.addAttribute("user", user);
-		return "user";
-	}
 }

@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="120 seconds" debug="true">
 	<property name="PROJECT_NAME" value="webboot" />
     <property name="PROJECT_LOG_DIR" value="${user.home}/logs/${PROJECT_NAME}" />
-    <property name="log.root.level" value="DEBUG" />
+    <property name="log.root.level" value="INFO" />
     <property name="log.sql.level" value="DEBUG" />
     
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
