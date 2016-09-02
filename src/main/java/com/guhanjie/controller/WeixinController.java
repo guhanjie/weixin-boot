@@ -34,7 +34,7 @@ import com.guhanjie.weixin.msg.MessageKit;
  * @since 			JDK 1.6 
  */
 @Controller
-@RequestMapping("/w")
+@RequestMapping("/wx")
 public class WeixinController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeixinController.class);
@@ -42,7 +42,7 @@ public class WeixinController extends BaseController {
     @Autowired
     private WeixinContants weixinContants;
 
-    @RequestMapping(value="/get",method=RequestMethod.GET)
+    @RequestMapping(value="",method=RequestMethod.GET)
     public void init(HttpServletRequest req,HttpServletResponse resp) throws IOException {
     	String echostr = req.getParameter("echostr");
         if(checkSignature(req)) {
@@ -51,14 +51,14 @@ public class WeixinController extends BaseController {
         }
     }
     
-    @RequestMapping(value="/post",method=RequestMethod.POST)
+    @RequestMapping(value="",method=RequestMethod.POST)
     public void getInfo(HttpServletRequest req,HttpServletResponse resp) throws IOException {
-        Map<String,String> msgMap = MessageKit.reqMsg2Map(req);
-        LOGGER.info("request="+msgMap);
+        Map<String,String> msgMap = MessageKit.reqMsg2Map(req);        
+        LOGGER.debug("Weixin msg request="+msgMap);
         String respCon = MessageKit.handlerMsg(msgMap);
         resp.setContentType("application/xml;charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
-        LOGGER.info("response= "+respCon);
+        LOGGER.debug("Weixin msg response= "+respCon);
         resp.getWriter().write(respCon);
     }    
     

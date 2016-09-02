@@ -60,6 +60,7 @@ public class MessageKit {
         }
         return null;
     }
+    
     private static String req2xml(HttpServletRequest req) throws IOException {
         BufferedReader br = null;
         br = new BufferedReader(new InputStreamReader(req.getInputStream()));
@@ -70,18 +71,56 @@ public class MessageKit {
         }
         return sb.toString();
     }
-    public static String handlerMsg(Map<String, String> msgMap) throws IOException {
-        String msgType = msgMap.get("MsgType");
-        if(msgType.equals(WeixinContants.MSG_EVENT_TYPE)) {
-            
-        } else if(msgType.equals(WeixinContants.MSG_TEXT_TYPE)) {
-            return textTypeHandler(msgMap);
-        } else if(msgType.equals(WeixinContants.MSG_IMAGE_TYPE)) {
-            return imageTypeHandler(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
-        }
-        return null;
-    }
-    private static String imageTypeHandler(Map<String, String> msgMap,String mediaId) throws IOException {
+    
+    /**
+	 * Method Name:	handlerMsg<br/>
+	 * Description:			[处理微信消息]
+	 * @author				GUHANJIE
+	 * @time					2016年9月2日 上午10:58:25
+	 * @param msgMap
+	 * @return
+	 * @throws IOException
+	 */
+	public static String handlerMsg(Map<String, String> msgMap) throws IOException {
+	    String msgType = msgMap.get("MsgType");
+	    //处理事件消息
+	    if(msgType.equals(WeixinContants.MSG_TYPE_EVENT)) {
+	    	String eventType = msgMap.get("Event");
+	    	//订阅事件
+	        if(eventType.equals(WeixinContants.EVENT_SUBSCRIBE)) {
+	        	return handleSubscribeEvent(msgMap);
+	        }
+	        //上报地址位置事件
+	        else if(eventType.equals(WeixinContants.EVENT_LOCATION)) {
+	        	return handleLocationEvent(msgMap);
+	        }
+	    }
+	    //处理文本消息
+	    else if(msgType.equals(WeixinContants.MSG_TYPE_TEXT)) {
+	        return handleTextMsg(msgMap);
+	    }
+	    //处理图片消息
+	    else if(msgType.equals(WeixinContants.MSG_TYPE_IMAGE)) {
+	        return handleImageMsg(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
+	    }
+	    return "";
+	}
+
+	public static String map2xml(Map<String, String> map) throws IOException {
+	    Document d = DocumentHelper.createDocument();
+	    Element root = d.addElement("xml");
+	    Set<String> keys = map.keySet();
+	    for(String key:keys) {
+	        root.addElement(key).addText(map.get(key));
+	    }
+	    StringWriter sw = new StringWriter();
+	    XMLWriter xw = new XMLWriter(sw);
+	    xw.setEscapeText(false);
+	    xw.write(d);
+	    return sw.toString();
+	}
+
+	private static String handleImageMsg(Map<String, String> msgMap,String mediaId) throws IOException {
         Map<String,String> map = new HashMap<String, String>();
         map.put("ToUserName", msgMap.get("FromUserName"));
         map.put("FromUserName", msgMap.get("ToUserName"));
@@ -90,7 +129,8 @@ public class MessageKit {
         map.put("Image", "<MediaId>"+mediaId+"</MediaId>");
         return map2xml(map);
     }
-    private static String textTypeHandler(Map<String, String> msgMap) throws IOException {
+    
+    private static String handleTextMsg(Map<String, String> msgMap) throws IOException {
         Map<String,String> map = new HashMap<String, String>();
         map.put("ToUserName", msgMap.get("FromUserName"));
         map.put("FromUserName", msgMap.get("ToUserName"));
@@ -104,17 +144,24 @@ public class MessageKit {
         map.put("Content", replyContent);
         return map2xml(map);
     }
-    public static String map2xml(Map<String, String> map) throws IOException {
-        Document d = DocumentHelper.createDocument();
-        Element root = d.addElement("xml");
-        Set<String> keys = map.keySet();
-        for(String key:keys) {
-            root.addElement(key).addText(map.get(key));
-        }
-        StringWriter sw = new StringWriter();
-        XMLWriter xw = new XMLWriter(sw);
-        xw.setEscapeText(false);
-        xw.write(d);
-        return sw.toString();
+    
+    private static String handleSubscribeEvent(Map<String, String> msgMap) throws IOException {
+    	String openId = msgMap.get("FromUserName");
+    	String createTime = msgMap.get("CreateTime");
+    	//自动添加关注用户
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("ToUserName", msgMap.get("FromUserName"));
+        map.put("FromUserName", msgMap.get("ToUserName"));
+        map.put("CreateTime", new Date().getTime()+"");
+        map.put("MsgType", "text");
+        map.put("Content", "您好，欢迎关注！");
+    	return map2xml(map);
+    }
+    
+    private static String handleLocationEvent(Map<String, String> msgMap) throws IOException {
+    	String lat = msgMap.get("Latitude");
+    	String lng = msgMap.get("Longitude");
+    	//获取用户上报的地址微信，并绑定到内存中
+    	return "";
     }
 }
