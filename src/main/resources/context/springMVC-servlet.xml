@@ -9,6 +9,7 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
 
 	<context:component-scan base-package="com.guhanjie.controller" />
+	
 	<context:property-placeholder 
 		location="classpath:default.properties, file:${user.home}/default.properties" 
 		ignore-resource-not-found="true" file-encoding="utf-8" />
@@ -39,12 +40,12 @@
 
 	<bean id="exceptionResolver" class="com.guhanjie.exception.WebExceptionHandler" />
 	
-    <!-- <mvc:interceptors>
+    <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/*/preview/**"/>
+            <!-- <mvc:exclude-mapping path="/*/preview/**"/> -->
             <ref bean="interceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors> -->
+    </mvc:interceptors>
 
 </beans>

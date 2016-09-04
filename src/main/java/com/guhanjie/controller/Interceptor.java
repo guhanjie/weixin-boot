@@ -24,7 +24,7 @@ public class Interceptor implements HandlerInterceptor {
         LOGGER.debug("intercept request, getServletPath: [{}]", request.getServletPath());
         LOGGER.debug("intercept request, getPathInfo: [{}]", request.getPathInfo());
         LOGGER.debug("intercept request, getQueryString: [{}]", request.getQueryString());
-        LOGGER.debug("intercept request, getParameterMap: [{}]", request.getParameterMap().toString());
+        LOGGER.debug("intercept request, getParameterMap: [{}]", request.getParameterMap()==null?"":request.getParameterMap().toString());
         LOGGER.debug("intercept request, getMethod: [{}]", request.getMethod());
         LOGGER.debug("intercept request, getContentType: [{}]", request.getContentType());
         LOGGER.debug("intercept request, getRemoteAddr: [{}]", request.getRemoteAddr());
@@ -39,7 +39,7 @@ public class Interceptor implements HandlerInterceptor {
         LOGGER.debug("intercept request, getAuthType: [{}]", request.getAuthType());
         LOGGER.debug("intercept request, getCharacterEncoding: [{}]", request.getCharacterEncoding());
         LOGGER.debug("intercept request, getContentLength: [{}]", request.getContentLength());
-        LOGGER.debug("intercept request, getCookies: [{}]", request.getCookies().toString());
+        LOGGER.debug("intercept request, getCookies: [{}]", request.getCookies()==null?"":request.getCookies().toString());
         LOGGER.debug("intercept request, getPathTranslated: [{}]", request.getPathTranslated());
         LOGGER.debug("intercept request, getRequestedSessionId: [{}]", request.getRequestedSessionId());
         return true;

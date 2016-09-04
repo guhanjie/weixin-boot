@@ -451,4 +451,14 @@ public class User {
         this.updateTime = updateTime;
     }
     
+    //Add custom
+    private Position position;
+    
+    public void setPosition(Position p) {
+        this.position = p;
+    }
+    public Position getPosition() {
+        return position;
+    }
+    
 }

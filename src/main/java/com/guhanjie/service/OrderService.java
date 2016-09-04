@@ -65,6 +65,14 @@ public class OrderService {
 			LOGGER.debug("Add an new user:[{}]", JSON.toJSONString(user));
 			userService.addUser(user);
 		}
+		if(StringUtils.isBlank(user.getPhone())) {    //用户信息默认不含手机号码，第一次用户填写信息时记录手机号码
+		    String phone = order.getPhone();
+		    if(StringUtils.isBlank(phone)) {
+		        throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "缺失联系方式");
+		    }
+		    user.setPhone(phone);
+		    userService.updateUser(user);
+		}
 		order.setUserId(user.getId());
 		order.setUser(user);
 		if(StringUtils.isBlank(order.getContactor())) {

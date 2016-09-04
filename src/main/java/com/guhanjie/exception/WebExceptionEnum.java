@@ -28,11 +28,12 @@ public enum WebExceptionEnum {
 		
 		// 1XX 用户操作相关
 		USER_NOT_EXIST(10100, "user.not.exist", "用户不存在"),
-		USER_LOCKED(10101, "user.locked","用户被锁定"),
-		FRENQUENCY_TO_FAST(10102,"frequency.too.fast","操作太频繁"), 
-		USER_NAME_NOT_EXIST(10103, "user.name.not.exist", "用户名不能为空"),
-		USER_PASSWORD_NOT_EXIST(10104, "user.password.not.exist", "用户密码不能为空"),
-		USER_EMAIL_NOT_EXIST(10105, "user.email.not.exist", "用户邮箱不能为空"),
+		USER_HAS_EXIST(10101, "user.not.exist", "用户已存在"),
+		USER_LOCKED(10102, "user.locked","用户被锁定"),
+		FRENQUENCY_TO_FAST(10103,"frequency.too.fast","操作太频繁"), 
+		USER_NAME_NOT_EXIST(10104, "user.name.not.exist", "用户名不能为空"),
+		USER_PASSWORD_NOT_EXIST(10105, "user.password.not.exist", "用户密码不能为空"),
+		USER_EMAIL_NOT_EXIST(10106, "user.email.not.exist", "用户邮箱不能为空"),
 		
 		// 2XX  商品相关
 		PRODUCT_NOT_SALE(10200, "suite.not.sale","商品不能售卖"),

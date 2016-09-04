@@ -236,4 +236,11 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- Add custom -->
+  <select id="selectByOpenId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from user
+    where open_id = #{openid}
+  </select>
 </mapper>

@@ -1,5 +1,5 @@
 /** 
- * Project Name:		webboot 
+ * Project Name:		weixin-boot 
  * Package Name:	com.guhanjie.util 
  * File Name:			XssSecurityUtils.java 
  * Create Date:		2015年12月21日 下午3:35:41 

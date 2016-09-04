@@ -212,7 +212,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>webboot</finalName>
+		<finalName>weixin-boot</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>

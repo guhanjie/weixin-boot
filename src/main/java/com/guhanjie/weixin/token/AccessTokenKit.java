@@ -7,14 +7,6 @@
  */  
 package com.guhanjie.weixin.token;
 
-import java.io.IOException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +15,9 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.WeixinHttpUtil;
+import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
 import com.guhanjie.weixin.model.AccessToken;
-import com.guhanjie.weixin.model.ErrorEntity;
 
 /**
  * Class Name:		AccessTokenKit<br/>
@@ -51,43 +44,25 @@ public class AccessTokenKit {
     @Scheduled(fixedRate=6000000)
     public synchronized void refreshToken() {
         LOGGER.info("Starting to refresh access token...");
-        HttpGet get = null;
-        CloseableHttpResponse resp = null;
-        CloseableHttpClient client = null;
         try {
-            client = HttpClients.createDefault();
             String url = WeixinContants.API_ACCESS_TOKEN;
             url = url.replaceAll("APPID", weixinContants.APPID);
             url = url.replaceAll("APPSECRET", weixinContants.APPSECRET);
-            get = new HttpGet(url);
-            resp = client.execute(get);
-            int statusCode = resp.getStatusLine().getStatusCode();
-            if(statusCode>=200 && statusCode<300) {
-                HttpEntity entity = resp.getEntity();
-                String content = EntityUtils.toString(entity);
-                try {
-                    AccessToken at = JSONObject.parseObject(content, AccessToken.class);
-                    token = at.getAccess_token();
-                    LOGGER.info("Success to refresh access token.");
-                } catch (Exception e) {
-                    ErrorEntity err = JSONObject.parseObject(content, ErrorEntity.class);
-                    LOGGER.error("Failed to refresh access token, errcode:[{}], errmsg:[{}].", err.getErrcode(), err.getErrmsg());
-                    refreshToken();
+            WeixinHttpUtil.sendGet(url, new WeixinHttpCallback() {
+                @Override
+                public void process(String json) {
+                    AccessToken at = JSONObject.parseObject(json, AccessToken.class);
+                    if(at != null) {
+                        token = at.getAccess_token();
+                        LOGGER.info("Success to refresh access token:[{}].", token);
+                    }
+                    else {
+                        LOGGER.error("Failed to refresh access token.");
+                    }
                 }
-            }
+            });
         } catch (Exception e) {
-            LOGGER.error("Http error while refreshing access token", e);
-        } finally {
-            try {
-                if(resp!=null) resp.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if(client!=null) client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            LOGGER.error("Failed to refresh access token.", e);
         }
     }
     

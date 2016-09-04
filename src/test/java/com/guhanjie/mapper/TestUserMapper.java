@@ -16,9 +16,9 @@ import com.guhanjie.model.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:/context/db-mysql.xml", "classpath:/test-application-context.xml"})
-public class UserMapperTest {
+public class TestUserMapper {
 	private String tableName;
-	private Logger logger = LoggerFactory.getLogger(UserMapperTest.class);
+	private Logger logger = LoggerFactory.getLogger(TestUserMapper.class);
 	@Autowired
 	private UserMapper mapper;
 	

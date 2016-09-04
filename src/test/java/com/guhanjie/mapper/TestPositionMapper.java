@@ -16,9 +16,9 @@ import com.guhanjie.model.Position;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:/context/db-mysql.xml", "classpath:/test-application-context.xml"})
-public class PositionMapperTest {
+public class TestPositionMapper {
 	private String tableName;
-	private Logger logger = LoggerFactory.getLogger(PositionMapperTest.class);
+	private Logger logger = LoggerFactory.getLogger(TestPositionMapper.class);
 	@Autowired
 	private PositionMapper mapper;
 	

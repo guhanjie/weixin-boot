@@ -13,15 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Base64Utils;
 
 public final class HttpUtil {
     
@@ -126,6 +130,48 @@ public final class HttpUtil {
         return stringBuilder.toString();
     }
 
+    public static void sendGet(String url, HttpCallback c) {
+        LOGGER.debug("starting to send http get request[{}]...", url);
+        HttpGet get = null;
+        CloseableHttpClient client = null;
+        CloseableHttpResponse resp = null;
+        HttpEntity entity = null;
+        try {
+            get = new HttpGet(url);
+            client = HttpClients.createDefault();
+            resp = client.execute(get);
+            int statusCode = resp.getStatusLine().getStatusCode();
+            if(statusCode>=200 && statusCode<300) {
+                LOGGER.debug("success to get response for[{}]", url);
+                entity = resp.getEntity();
+                c.setEntity(entity);
+                c.run();
+            }
+            else {
+                LOGGER.warn("got response for[{}], but http status is malform", url);
+            }
+        } catch (Exception e) {
+            LOGGER.error("http error while sending http get request", e);
+        } finally {
+            try {
+                if(resp!=null) {
+                    try {
+                        EntityUtils.consume(resp.getEntity());
+                    } finally {
+                        resp.close();
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("http response close error.");
+            }
+            try {
+                if(client!=null) client.close();
+            } catch (IOException e) {
+                LOGGER.error("http client close error.");
+            }
+        }
+    }
+    
     public static HttpResponse sendDelete(String url) throws IOException {
         DefaultHttpClient httpclient = new DefaultHttpClient();
         try {
@@ -197,4 +243,16 @@ public final class HttpUtil {
 			return scheme + "://" + url;
 		}
 	}
+	
+	public static abstract class HttpCallback implements Runnable {
+	    private HttpEntity entity;
+        public void setEntity(HttpEntity e) {
+            this.entity = e;
+        }
+        public void run() {
+            processEntity(HttpCallback.this.entity);
+        }
+        public abstract void processEntity(HttpEntity e);
+	}
 }
+

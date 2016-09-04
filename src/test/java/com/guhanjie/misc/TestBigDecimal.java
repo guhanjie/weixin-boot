@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * @version			1.0.0 
  * @since 			JDK 1.7 
  */
-public class BigDecimalTest {
+public class TestBigDecimal {
 	/**
 	 * Method Name:	main<br/>
 	 * Description:			[description]

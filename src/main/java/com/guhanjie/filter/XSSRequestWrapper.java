@@ -1,5 +1,5 @@
 /** 
- * Project Name:		webboot 
+ * Project Name:		weixin-boot 
  * Package Name:	com.guhanjie.filter 
  * File Name:			XSSRequestWrapper.java 
  * Create Date:		2015年12月21日 下午3:14:42 

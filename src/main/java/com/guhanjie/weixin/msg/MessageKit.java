@@ -24,8 +24,16 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.XMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.guhanjie.model.Position;
+import com.guhanjie.model.User;
+import com.guhanjie.service.UserService;
+import com.guhanjie.util.SpringContextUtil;
 import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.model.UserInfo;
+import com.guhanjie.weixin.user.UserKit;
 
 /**
  * Class Name:		MessageKit<br/>
@@ -36,6 +44,9 @@ import com.guhanjie.weixin.WeixinContants;
  * @since 			JDK 1.6 
  */
 public class MessageKit {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageKit.class);
+    
     private static Map<String,String> replyMsgs = new HashMap<String,String>();
     static{
         replyMsgs.put("123", "你输入了123");
@@ -121,7 +132,8 @@ public class MessageKit {
 	}
 
 	private static String handleImageMsg(Map<String, String> msgMap,String mediaId) throws IOException {
-        Map<String,String> map = new HashMap<String, String>();
+	    LOGGER.info("starting to handle image message....");
+	    Map<String,String> map = new HashMap<String, String>();
         map.put("ToUserName", msgMap.get("FromUserName"));
         map.put("FromUserName", msgMap.get("ToUserName"));
         map.put("CreateTime", new Date().getTime()+"");
@@ -131,6 +143,7 @@ public class MessageKit {
     }
     
     private static String handleTextMsg(Map<String, String> msgMap) throws IOException {
+        LOGGER.info("starting to handle text message....");
         Map<String,String> map = new HashMap<String, String>();
         map.put("ToUserName", msgMap.get("FromUserName"));
         map.put("FromUserName", msgMap.get("ToUserName"));
@@ -146,9 +159,26 @@ public class MessageKit {
     }
     
     private static String handleSubscribeEvent(Map<String, String> msgMap) throws IOException {
-    	String openId = msgMap.get("FromUserName");
-    	String createTime = msgMap.get("CreateTime");
+        LOGGER.info("starting to handle subscribe event....");
+        String openId = msgMap.get("FromUserName");
     	//自动添加关注用户
+    	try {
+            UserInfo userInfo = UserKit.getUserInfo(openId);
+            UserService userService = SpringContextUtil.getBean(UserService.class);
+            User user = new User();
+            user.setOpenId(userInfo.getOpenid());
+            user.setUnionid(userInfo.getUnionid());
+            user.setNickname(userInfo.getNickname());
+            user.setSex(userInfo.getSex());
+            user.setLanguage(userInfo.getLanguage());
+            user.setCountry(userInfo.getCountry());
+            user.setProvince(userInfo.getProvince());
+            user.setCity(userInfo.getCity());
+            user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
+            userService.addUser(user);
+    	} catch(Exception e) {
+    	    LOGGER.error("error happened in add user info, openId[{}].", openId);
+    	}
         Map<String,String> map = new HashMap<String, String>();
         map.put("ToUserName", msgMap.get("FromUserName"));
         map.put("FromUserName", msgMap.get("ToUserName"));
@@ -159,9 +189,19 @@ public class MessageKit {
     }
     
     private static String handleLocationEvent(Map<String, String> msgMap) throws IOException {
-    	String lat = msgMap.get("Latitude");
+        LOGGER.info("starting to handle location event....");
+        String openId = msgMap.get("FromUserName");
+        String lat = msgMap.get("Latitude");
     	String lng = msgMap.get("Longitude");
     	//获取用户上报的地址微信，并绑定到内存中
+    	User user = new User();
+    	user.setOpenId(openId);
+    	Position p = new Position();
+    	p.setGeoLat(lat);
+    	p.setGeoLng(lng);
+    	user.setPosition(p);
+        UserService userService = SpringContextUtil.getBean(UserService.class);
+    	userService.updateToCache(user);
     	return "";
     }
 }
