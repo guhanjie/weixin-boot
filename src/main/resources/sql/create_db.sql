@@ -13,6 +13,11 @@ File Encoding         : 65001
 Date: 2016-09-01 16:35:10
 */
 
+/*
+ * create database sql: 
+ * CREATE DATABASE `zhmv` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci 
+ */
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
