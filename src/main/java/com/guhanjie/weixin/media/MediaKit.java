@@ -53,7 +53,13 @@ public class MediaKit {
                 @Override
                 public void process(String json) {
                     WeixinMedia t = JSONObject.parseObject(json, WeixinMedia.class);
-                    wm.setMedia_id(t.getMedia_id());
+                    if(t != null) {
+                        wm.setMedia_id(t.getMedia_id());
+                        LOGGER.info("Success to post media:[{}].", t.getMedia_id());
+                    }
+                    else {
+                        LOGGER.error("Failed to post media.");
+                    }
                 }                
             });
         } catch (Exception e) {

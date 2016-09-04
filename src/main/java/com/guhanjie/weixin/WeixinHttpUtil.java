@@ -49,7 +49,7 @@ public class WeixinHttpUtil {
                 String content = EntityUtils.toString(entity);
                 LOGGER.debug("success to get response:[{}]", content);
                 ErrorEntity err = JSONObject.parseObject(content, ErrorEntity.class);
-                if(err != null) {
+                if(err.getErrcode()== null && err.getErrmsg()==null) {
                     LOGGER.error("http[{}] response is error, errcode:[{}], errmsg:[{}].", url, err.getErrcode(), err.getErrmsg());
                     return;
                 }
@@ -83,7 +83,7 @@ public class WeixinHttpUtil {
                 String json = EntityUtils.toString(resp.getEntity());
                 LOGGER.debug("success to get response:[{}]", json);
                 ErrorEntity err = JSONObject.parseObject(json, ErrorEntity.class);
-                if(err != null) {
+                if(err.getErrcode()== null && err.getErrmsg()==null) {
                     LOGGER.error("http[{}] response is error, errcode:[{}], errmsg:[{}].", url, err.getErrcode(), err.getErrmsg());
                     return;
                 }
