@@ -39,7 +39,7 @@ public class UserKit {
                 @Override
                 public void process(String json) {
                     UserInfo ui = JSONObject.parseObject(json, UserInfo.class);
-                    if(ui != null) {
+                    if(ui!=null && ui.getOpenid()!=null) {
                         try {
                             PropertyUtils.copyProperties(user, ui);
                             LOGGER.info("Success to get user info:[{}].", json);

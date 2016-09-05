@@ -52,7 +52,7 @@ public class AccessTokenKit {
                 @Override
                 public void process(String json) {
                     AccessToken at = JSONObject.parseObject(json, AccessToken.class);
-                    if(at != null) {
+                    if(at!=null && at.getAccess_token() != null) {
                         token = at.getAccess_token();
                         LOGGER.info("Success to refresh access token:[{}].", token);
                     }
