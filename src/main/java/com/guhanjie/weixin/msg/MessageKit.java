@@ -177,7 +177,7 @@ public class MessageKit {
             user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
             userService.addUser(user);
     	} catch(Exception e) {
-    	    LOGGER.error("error happened in add user info, openId[{}].", openId);
+    	    LOGGER.error("error happened in add user info, openId[{}].", openId, e);
     	}
         Map<String,String> map = new HashMap<String, String>();
         map.put("ToUserName", msgMap.get("FromUserName"));

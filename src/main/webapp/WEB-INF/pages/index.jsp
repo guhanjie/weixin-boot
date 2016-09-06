@@ -12,7 +12,7 @@
     	<meta name="keywords" content="${meta.keywords}"/>
     	<meta name="description" content="${meta.description}"/>
     	<link rel="shortcut icon" type="image/x-icon" href="${rootPath}/img/favicon.ico">
-        <link rel="stylesheet" href="/resources/css/bootstrap/bootstrap.css">
+        <link rel="stylesheet" href="resources/css/bootstrap/bootstrap.css">
     	<title>Index</title>
     </head>
     <body>
@@ -20,7 +20,7 @@
         <div class="container-fluid">
           <p>balabala~~~</p>
         </div>
-        <script src="/resources/js/jquery/jquery-1.11.3.js"></script>
-        <script src="/resources/js/bootstrap/bootstrap.js"></script>
+        <script src="resources/js/jquery/jquery-1.11.3.js"></script>
+        <script src="resources/js/bootstrap/bootstrap.js"></script>
     </body>
 </html>

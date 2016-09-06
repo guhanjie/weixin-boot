@@ -24,7 +24,8 @@
 	</context:component-scan>
 	
     <task:annotation-driven />
-        
+
+	<bean id="springContextUtil" class="com.guhanjie.util.SpringContextUtil"></bean>
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
         	<list>

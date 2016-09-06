@@ -24,6 +24,7 @@ import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.OrderService;
 import com.guhanjie.service.UserService;
+import com.guhanjie.weixin.WeixinContants;
 
 /**
  * Class Name:		OrderController<br/>
@@ -39,6 +40,9 @@ public class OrderController extends BaseController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 	
+    @Autowired
+    private WeixinContants weixinContants;
+	
 	@Autowired
 	private UserService userService;
 	
@@ -47,6 +51,15 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="",method=RequestMethod.GET)
 	public String order(HttpServletRequest req) {
+	    String openid = (String)req.getSession().getAttribute("openid");
+	    if(openid==null) { //用户未登录，需要网页授权获取用户信息
+	        String url = WeixinContants.OAUTH2_AUTHORIZE;
+            url = url.replaceAll("APPID", weixinContants.APPID);
+            url = url.replaceAll("REDIRECT_URI", weixinContants.OAUTH2_REDIRECT_URI);
+            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_BASE);
+            url = url.replaceAll("STATE", req.getRequestURL().toString());
+	        return "redirect:"+url;
+	    }
 		return "order";
 	}
 	

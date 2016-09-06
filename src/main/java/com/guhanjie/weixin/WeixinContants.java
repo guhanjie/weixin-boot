@@ -47,4 +47,12 @@ public class WeixinContants {
     public final static String API_POST_MEDIA="https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
     public final static String API_GET_MEDIA="https://api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
     public final static String API_USER_INFO="https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+    
+    public final static String OAUTH2_SCOPE_SNSAPI_BASE="snsapi_base";
+    public final static String OAUTH2_SCOPE_SNSAPI_USERINFO="snsapi_userinfo";
+    public final static String OAUTH2_AUTHORIZE="https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
+    public final static String OAUTH2_REDIRECT_URI="https://www.guhanjie.com/weixin-boot/wx/oauth2";
+    public final static String OAUTH2_ACCESS_TOKEN="https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+    public final static String OAUTH2_REFRESH_TOKEN="https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN";
+    public final static String OAUTH2_GET_USER="https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 }

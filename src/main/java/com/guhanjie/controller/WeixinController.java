@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.guhanjie.util.SHA1Util;
 import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.WeixinHttpUtil;
+import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
 import com.guhanjie.weixin.msg.MessageKit;
 
 /**
@@ -52,14 +54,34 @@ public class WeixinController extends BaseController {
     }
     
     @RequestMapping(value="",method=RequestMethod.POST)
-    public void getInfo(HttpServletRequest req,HttpServletResponse resp) throws IOException {
-        Map<String,String> msgMap = MessageKit.reqMsg2Map(req);        
-        LOGGER.debug("Weixin msg request="+msgMap);
-        String respCon = MessageKit.handlerMsg(msgMap);
-        resp.setContentType("application/xml;charset=UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        LOGGER.debug("Weixin msg response= "+respCon);
-        resp.getWriter().write(respCon);
+    public void receiveMsg(HttpServletRequest req,HttpServletResponse resp) throws IOException {
+        if(checkSignature(req)) {
+            Map<String,String> msgMap = MessageKit.reqMsg2Map(req);        
+            LOGGER.debug("Weixin msg request="+msgMap);
+            String respCon = MessageKit.handlerMsg(msgMap);
+            resp.setContentType("application/xml;charset=UTF-8");
+            resp.setCharacterEncoding("UTF-8");
+            LOGGER.debug("Weixin msg response= "+respCon);
+            resp.getWriter().write(respCon);
+        }
+    }    
+    
+    @RequestMapping(value="oauth2",method=RequestMethod.GET)
+    public void oauth2(HttpServletRequest req,HttpServletResponse resp) throws IOException {
+        String code = req.getParameter("code");
+        String state = req.getParameter("state");
+        String url = WeixinContants.OAUTH2_ACCESS_TOKEN;
+        url = url.replaceAll("APPID", weixinContants.APPID);
+        url = url.replaceAll("SECRET", weixinContants.APPSECRET);
+        url = url.replaceAll("CODE", code);
+        WeixinHttpUtil.sendGet(url, new WeixinHttpCallback() {
+            @Override
+            public void process(String json) {
+                // TODO Auto-generated method stub
+                //拿到accesstoken，根据state绑定到对应的人
+            }
+        });
+        //跳转回原来地址
     }    
     
     private boolean checkSignature(HttpServletRequest req) {
