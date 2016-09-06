@@ -7,6 +7,7 @@
 		path = "";
 	}
 	request.setAttribute("rootPath", path);
+    /* 等价于JSP中使用如下EL表达式：${pageContext.request.contextPath} */
 %>
 <!DOCTYPE html>
 <html lang="zh-CN">

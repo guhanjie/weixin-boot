@@ -53,11 +53,8 @@ public class OrderController extends BaseController {
 	@RequestMapping(value="",method=RequestMethod.PUT)
 	public void putOrder(HttpServletRequest req) {
 		//获取用户信息
-		String userId = req.getParameter("user_id");
-		User user = null;
-		if(StringUtils.isNumeric(userId)) {
-			user = userService.getUserById(Integer.parseInt(userId));
-		}
+		String openid = req.getParameter("open_id");
+		User user = userService.getUserByOpenId(openid);
 		//获取起始位置信息
 		String fromAddress = req.getParameter("from_address");
 		String fromLng = req.getParameter("from_lng");

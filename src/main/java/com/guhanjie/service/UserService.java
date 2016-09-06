@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.guhanjie.exception.WebExceptionEnum;
 import com.guhanjie.exception.WebExceptionFactory;
 import com.guhanjie.mapper.UserMapper;
@@ -23,11 +24,17 @@ public class UserService {
 	private UserMapper userMapper;
 	
 	public User getUserById(int id) {
-		LOGGER.debug("Get user[{}]...", id);
+		LOGGER.debug("get user by id[{}]...", id);
 		return userMapper.selectByPrimaryKey(id);
 	}
 	
+	public User getUserByOpenId(String openid) {
+		LOGGER.debug("get user by open id[{}]...", openid);
+		return userMapper.selectByOpenId(openid);
+	}
+	
 	public int addUser(User user) {
+		LOGGER.debug("add user[{}]...", JSON.toJSONString(user));
 	    if(user.getOpenId() != null) {
 	        User u = userMapper.selectByOpenId(user.getOpenId());
 	        if(u != null) {
@@ -39,16 +46,19 @@ public class UserService {
 	}
 
     public int updateUser(User user) {
+		LOGGER.debug("update user[{}]...", JSON.toJSONString(user));
         return userMapper.updateByPrimaryKeySelective(user);
     }
     
     public void updateToCache(User user) {
+		LOGGER.debug("update user cache, user:[{}]...", JSON.toJSONString(user));
         if(user != null && StringUtils.isBlank(user.getOpenId())) {
             CACHE.put(user.getOpenId(), user);
         }            
     }
     
     public User getFromCache(String openid) {
+		LOGGER.debug("get user from cache, openid:[{}].", openid);
         return CACHE.get(openid);
     }
 }

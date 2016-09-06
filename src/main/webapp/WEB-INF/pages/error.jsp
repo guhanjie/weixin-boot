@@ -11,13 +11,13 @@
       <meta name="renderer" content="webkit|ie-comp|ie-stand">
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
       <link rel="shortcut icon" type="image/x-icon" href="${rootPath}/img/favicon.ico">
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common/bootstrap.css">
+      <link rel="stylesheet" href="/resources/css/bootstrap/bootstrap.css">
       <title>Index</title>
     </head>
     <body>
       <div data-page="error.jsp" id="page-body"  class="container" style="min-height:700px;">
           <div id="page-body-content" style="width:515px;margin:0 auto;">
-              <img src="<%=request.getContextPath() %>/resources/img/error.jpg"/>
+              <img src="/resources/img/error.jpg"/>
               <div style="color:#666; font-size:30px;text-align: center;" ondblclick='$("#detailMsg").slideToggle(1000);'>
               	<c:if test="${not empty exception.screenMessage}">
               		${exception.screenMessage}
@@ -38,6 +38,6 @@
               	</c:if>
           </div>
       </div>
-        <script src="${pageContext.request.contextPath}/resources/js/common/jquery-1.11.3.js"></script>
+        <script src="/resources/js/jquery/jquery-1.11.3.js"></script>
     </body>
 </html>
