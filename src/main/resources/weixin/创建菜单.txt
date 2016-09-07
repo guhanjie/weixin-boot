@@ -1,0 +1,43 @@
+POST url:
+https://api.weixin.qq.com/cgi-bin/menu/create?access_token=QR3MT6qlscCWEhkAPFv1W2-e37NLVDzikM1EroBeLDUE2WpjdnDJS-NUS9yrtoRRHMmmj8ZCE3tV6aHWmqL__8kVLtwInURccWUofHEswOu7s0XBp7nlgMkChMtKC2GGFYYjAAAKDD
+
+body:
+{
+  "button":[
+    {	
+      "name": "收费标准",
+       "sub_button": [
+        {
+          "type": "view_limited", 
+          "name": "小面车型", 
+          "media_id": "m1hcEdeKQIqbQuv0NIBWsZ6QltzoD_faVASi7Hwh0HQ"
+        }, 
+        {
+          "type": "view_limited", 
+          "name": "金杯车型", 
+          "media_id": "m1hcEdeKQIqbQuv0NIBWsbFdX1_4fX0GdUpN0Afn9-4"
+        }, 
+        {
+          "type": "view_limited", 
+          "name": "全顺/依维轲", 
+          "media_id": "m1hcEdeKQIqbQuv0NIBWseKqpsmpz6cadA0jlJBoqRE"
+        }, 
+        {
+          "type": "view_limited", 
+          "name": "精品搬家", 
+          "media_id": "m1hcEdeKQIqbQuv0NIBWsXSyBnScKdptJDxSScyNgFM"
+        }
+      ]
+    }, 
+    { 
+      "type":"view",
+      "name":"立即下单",
+      "url":"http://123.206.211.115/weixin-boot/order"
+    },
+    { 
+      "type":"view",
+      "name":"增值服务",
+      "url":"http://123.206.211.115/weixin-boot/order"
+    }
+  ]
+}

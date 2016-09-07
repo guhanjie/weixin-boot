@@ -1,0 +1,100 @@
+POST url：
+https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=QR3MT6qlscCWEhkAPFv1W2-e37NLVDzikM1EroBeLDUE2WpjdnDJS-NUS9yrtoRRHMmmj8ZCE3tV6aHWmqL__8kVLtwInURccWUofHEswOu7s0XBp7nlgMkChMtKC2GGFYYjAAAKDD
+
+body:
+{
+   "type":TYPE,			//素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）
+   "offset":OFFSET,		//从全部素材的该偏移位置开始返回，0表示从第一个素材 返回
+   "count":COUNT		//返回素材的数量，取值在1到20之间
+}
+
+{
+  "item": [
+    {
+      "media_id": "m1hcEdeKQIqbQuv0NIBWsXSyBnScKdptJDxSScyNgFM", 
+      "content": {
+        "news_item": [
+          {
+            "title": "精品搬家", 
+            "author": "上海尊涵小件搬家", 
+            "digest": "传统搬家公司大多数只负责简单的搬运和运输，然而，在实际搬家过程中，整理打包和还原物品的工作量十分巨大，完全依", 
+            "content": "<p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz11DmfjsCR8ZGHQDk904XCdNUcxmfic6yoaPlktsxbQAcTsZpNJjKyFg/0?wx_fmt=jpeg\" data-ratio=\"0.7493112947658402\" data-w=\"\" /><br /></p><p>传统搬家公司大多数只负责简单的搬运和运输，然而，在实际搬家过程中，整理打包和还原物品的工作量十分巨大，完全依靠自己来整理，将要花费几天的时间。</p><p>经历旧家物品打包的辛苦，往往在搬到新家之时，大家都是非常疲惫的，面对这么多需要整理的物品，也是有心无力，多么希望有个人来帮助自己。</p><p><span style=\"color: rgb(255, 41, 65);\"><strong>上海尊涵搬家</strong></span>力求改变国内的搬家理念，向国外服务看齐，力争客户的信赖与交托，把看似繁琐的搬家做到精细化，且不需要您自己动手，完全把你的宝贵时间解放出来。</p><p><span style=\"color: rgb(255, 41, 65);\">精品搬家</span>相比较传统的搬家，更加便捷、安全、舒适。您可以完全不用动手，全程托付给我们，我们将为您 分类打包物品，安装家具保护工具，最终到达新家时，给您整理摆放物品。解决您一切后顾之忧，让您拎包即可入住。</p><p><em><strong><span style=\"color: rgb(0, 209, 0);\">从此搬家不再是头疼的问题，而是优质服务的体验。</span></strong></em></p><p><br /></p><p>收费标准</p><p><br /></p><p>一、单身汪/萌妹子</p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqziaYXoNHkue4B21lJyOQxanojILuvm88xXhSyuSiaw0YCzKEENWcQ7s0A/0?wx_fmt=jpeg\" data-ratio=\"0.8898809523809523\" data-w=\"336\" /><br /><br /></p><ol class=\" list-paddingleft-2\" style=\"list-style-type: decimal;\"><li><p>.起步价500元，包含20公里，超出20公里 ，每公里10元，装载体积6个立方，超出部分每立方150元。</p></li><li><p>电梯收100元搬运费，楼梯加30元一层的人工费。</p></li><li><p>多点装卸，每个点位加收100元。</p></li><li><p>人工平面搬运距离，20米内免费，超过20米，每米10元。</p></li><li><p>停车费、高速路桥费、包装材料费等按实际情况收取。</p></li><li><p>拆装家具家电（不含钢琴），100~200元/件不等，</p></li><li><p>整理打包费：50元/立方，300元起步。</p></li><li><p>到达新家后，开箱复原收费，<span style=\"line-height: 25.6px;\">50元/立方，300元起步。</span></p><p><span style=\"line-height: 25.6px;\"></span></p><p><br /></p></li></ol><p><span style=\"line-height: 25.6px;\"></span><span style=\"line-height: 1.6;\">二、白骨精</span></p><p><span style=\"line-height: 1.6;\"><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz3gx0iaNsXQstRdZ1GeyYxqEGkySzlWJ6X5DFEcqxoatG9BbVo7OEEjQ/0?wx_fmt=jpeg\" data-ratio=\"0.9201101928374655\" data-w=\"\" /><br /></span></p><p style=\"line-height: 25.6px; white-space: normal;\">1.起步价888元，包含20公里，超出20公里 ，每公里10元，装载体积10个立方，超出部分每立方150元。</p><p style=\"line-height: 25.6px; white-space: normal;\">2.电梯收100元搬运费，楼梯加30元一层的人工费。</p><p style=\"line-height: 25.6px; white-space: normal;\">3.多点装卸，每个点位加收100元。</p><p style=\"line-height: 25.6px; white-space: normal;\">4.人工平面搬运距离，20米内免费，超过20米，每米10元。</p><p style=\"line-height: 25.6px; white-space: normal;\">5.停车费、高速路桥费、包装材料费等按实际情况收取。</p><p style=\"line-height: 25.6px; white-space: normal;\">6.拆装家具家电（不含钢琴），100~200元/件不等，钢琴搬运500元/件，每层楼梯50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">7.整理打包费：50元/立方，300元起步。</p><p style=\"line-height: 25.6px; white-space: normal;\">8.到达新家后，开箱复原收费，<span style=\"line-height: 25.6px;\">50元/立方，300元起步。</span></p><p><span style=\"line-height: 1.6;\"></span><br /></p><p>三、在一起</p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz7MDpk5Pem3TAjX3kuIjNrV0g3icF4zbuJamPnyhicAUotkqAjeRv41MA/0?wx_fmt=jpeg\" data-ratio=\"0.9292929292929293\" data-w=\"297\" /></p><p><br /></p><p style=\"line-height: 25.6px; white-space: normal;\">1.起步价1288元，包含20公里，超出20公里 ，每公里15元，装载体积16个立方，超出部分每立方150元。</p><p style=\"line-height: 25.6px; white-space: normal;\">2.电梯收200元搬运费，楼梯加50元一层的人工费。</p><p style=\"line-height: 25.6px; white-space: normal;\">3.多点装卸，每个点位加收200元。</p><p style=\"line-height: 25.6px; white-space: normal;\">4.人工平面搬运距离，20米内免费，超过20米，每米20元。</p><p style=\"line-height: 25.6px; white-space: normal;\">5.停车费、高速路桥费、包装材料费等按实际情况收取。</p><p style=\"line-height: 25.6px; white-space: normal;\">6.拆装家具家电（不含钢琴），100~200元/件不等，搬运钢琴500元/件，每层楼50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">7.整理打包费：50元/立方，300元起步。</p><p style=\"line-height: 25.6px; white-space: normal;\">8.到达新家后，开箱复原收费，<span style=\"line-height: 25.6px;\">50元/立方，300元起步。</span></p><p><br /></p><p>四、全家福</p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzIfSYvczJZQ3KDZOlxDkmLOUe7zJpa9I2y8YVoWqnicMDSjsdrwufFyg/0?wx_fmt=jpeg\" data-ratio=\"0.953168044077135\" data-w=\"\" /><br /></p><p style=\"line-height: 25.6px; white-space: normal;\">1.起步价1688元，包含20公里，超出20公里 ，每公里15元，装载体积20个立方，超出部分每立方150元。</p><p style=\"line-height: 25.6px; white-space: normal;\">2.电梯收200元搬运费，楼梯加50元一层的人工费。</p><p style=\"line-height: 25.6px; white-space: normal;\">3.多点装卸，每个点位加收200元。</p><p style=\"line-height: 25.6px; white-space: normal;\">4.人工平面搬运距离，20米内免费，超过20米，每米25元。</p><p style=\"line-height: 25.6px; white-space: normal;\">5.停车费、高速路桥费、包装材料费等按实际情况收取。</p><p style=\"line-height: 25.6px; white-space: normal;\">6.拆装家具家电（不含钢琴），100~200元/件不等，搬运钢琴500元/件，每层楼50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">7.整理打包费：50元/立方，300元起步。</p><p style=\"line-height: 25.6px; white-space: normal;\">8.到达新家后，开箱复原收费，<span style=\"line-height: 25.6px;\">50元/立方，300元起步。</span></p><p><br /></p><p>五、公司搬</p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzExrL1PcEgiayWkHXUx3jOb5iafxPj8yZ97F6YgSicqq7rbF2TlicuwMv6A/0?wx_fmt=jpeg\" data-ratio=\"0.9102167182662538\" data-w=\"323\" /><br /></p><p style=\"line-height: 25.6px; white-space: normal;\">1.起步价2888元，包含20公里，超出20公里 ，每公里20元，装载体积30个立方，超出部分每立方200元。</p><p style=\"line-height: 25.6px; white-space: normal;\">2.电梯收200元搬运费，楼梯加50元一层的人工费。</p><p style=\"line-height: 25.6px; white-space: normal;\">3.多点装卸，每个点位加收300元。</p><p style=\"line-height: 25.6px; white-space: normal;\">4.人工平面搬运距离，20米内免费，超过20米，每米50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">5.停车费、高速路桥费、包装材料费等按实际情况收取。</p><p style=\"line-height: 25.6px; white-space: normal;\">6.拆装家具家电（不含钢琴），100~200元/件不等，搬运钢琴800元/件，每层楼50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">7.整理打包费：100元/立方，3000元起步。</p><p style=\"line-height: 25.6px; white-space: normal;\">8.到达新家后，开箱复原收费，<span style=\"line-height: 25.6px;\">100元/立方，3000元起步。</span></p><p><br /></p><p>六、展演圈</p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzdLyvC9wPN89L0YMr1ayC9x74suCtP3W3fTGcR1y0tJyEyHzbNAc8gw/0?wx_fmt=jpeg\" data-ratio=\"1.5316804407713498\" data-w=\"\" /><br /></p><p style=\"line-height: 25.6px; white-space: normal;\">1.起步价5888元，包含20公里，超出20公里 ，每公里15元，装载体积40个立方，超出部分每立方200元。</p><p style=\"line-height: 25.6px; white-space: normal;\">2.电梯收200元搬运费，楼梯加50元一层的人工费。</p><p style=\"line-height: 25.6px; white-space: normal;\">3.多点装卸，每个点位加收300元。</p><p style=\"line-height: 25.6px; white-space: normal;\">4.人工平面搬运距离，20米内免费，超过20米，每米50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">5.停车费、高速路桥费、包装材料费等按实际情况收取。</p><p style=\"line-height: 25.6px; white-space: normal;\">6.拆装家具家电（不含钢琴），100~200元/件不等，搬运钢琴800元/件，每层楼50元。</p><p style=\"line-height: 25.6px; white-space: normal;\">7.整理打包费：100元/立方，3000元起步。</p><p style=\"line-height: 25.6px; white-space: normal;\">8.到达新家后，开箱复原收费，<span style=\"line-height: 25.6px;\">100元/立方，3000元起步。</span></p><p><br /></p>", 
+            "content_source_url": "", 
+            "thumb_media_id": "m1hcEdeKQIqbQuv0NIBWsUHmVnhRuhx8OkvukRxRD9Q", 
+            "show_cover_pic": 0, 
+            "url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000021&idx=1&sn=aaa8887a42e0a339f21de6252b102ed3#rd", 
+            "thumb_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz1k7M70ibUIfPOJmibibIPUVhVvFm4IURzwV7tXkkz3hN5y1A7SuLUXicew/0?wx_fmt=jpeg"
+          }
+        ], 
+        "create_time": 1470719164, 
+        "update_time": 1470743308
+      }, 
+      "update_time": 1470743308
+    }, 
+    {
+      "media_id": "m1hcEdeKQIqbQuv0NIBWseKqpsmpz6cadA0jlJBoqRE", 
+      "content": {
+        "news_item": [
+          {
+            "title": "全顺/依维轲", 
+            "author": "上海尊涵小件搬家", 
+            "digest": "起步价300元，包含10公里，超出10公里，每公里8元，距离以百度地图推荐路径为准，包裹限25个以内（单个体积按60cm*50cm*40cm的标准计算，单个包裹限重15kg）", 
+            "content": "<p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzmY9MFBF0tSIT0PSb6u51ZWGcazGNV4wG4jbicyCTQ78JcJicSJ0ucaUg/0?wx_fmt=jpeg\" data-ratio=\"0.6666666666666666\" data-w=\"\" /><br /><span style=\"font-size: 20px;\"><strong>一、收费标准</strong></span></p><ul class=\" list-paddingleft-2\"><li><p>起步价300元（10公里内），超出后每公里8元，距离以百度地图推荐路径为准 。</p></li><li><p>电梯搬运费用按50元标准收取，楼梯加收20元一层的人工费，不计件收费，包裹限25个以内（<span style=\"line-height: 25.6px;\">单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）</span>。</p></li><li><p>如果师傅到达指定地点后临时取消服务，您需支付空驶费150元。</p></li><li><p>如您需要多地点装/卸货，每增加一个点位，加收50元。</p></li><li><p>如果您物品较多，需要多名搬家师傅，请下单时及时说明，每增加一名搬家师傅，需要额外收取150元/人（默认2小时服务时间，超出2小时加收每小时50元）</p></li><li><p>搬家费用不包含高速费、停车费等第三方收取的费用，在服务过程中发生此类费用由客户承担。</p></li></ul><p><br /></p><p><strong style=\"max-width: 100%; color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 20px; line-height: 32px; white-space: pre-wrap; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);\"><span style=\"color:#3e3e3e;font-family:-apple-system-font, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;\"><span style=\"max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;\">二、全顺/依维轲外观及尺寸介绍</span></span></strong></p><p><strong style=\"max-width: 100%; color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 20px; line-height: 32px; white-space: pre-wrap; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);\"><span style=\"color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important;\"><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzoXJhXquic4nEvia1dEKJhr4QX0UMsak3s13VqJIY78jCfReFADgsIOJQ/0?wx_fmt=jpeg\" data-ratio=\"0.6666666666666666\" data-w=\"\" /><br /><span style=\"color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; max-width: 100%; font-size: 16px;\"><span style=\"line-height: 25.6px;\">全顺/依维轲车型</span>能载货的体积为：2.9m*1.9m*2.2m,大概可装4.5个立方的物品，能装冰箱、洗衣机、空调等家电</span></span></strong></p>", 
+            "content_source_url": "", 
+            "thumb_media_id": "m1hcEdeKQIqbQuv0NIBWsdP8lJPvZG01Yn6M28j2AmE", 
+            "show_cover_pic": 0, 
+            "url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000016&idx=1&sn=a136e6caa7bde1cdcb73f6d8379cec1c#rd", 
+            "thumb_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzmY9MFBF0tSIT0PSb6u51ZWGcazGNV4wG4jbicyCTQ78JcJicSJ0ucaUg/0?wx_fmt=jpeg"
+          }
+        ], 
+        "create_time": 1470718058, 
+        "update_time": 1470744775
+      }, 
+      "update_time": 1470744775
+    }, 
+    {
+      "media_id": "m1hcEdeKQIqbQuv0NIBWsbFdX1_4fX0GdUpN0Afn9-4", 
+      "content": {
+        "news_item": [
+          {
+            "title": "金杯车型", 
+            "author": "上海尊涵小件搬家", 
+            "digest": "起步价200元（10公里内），超出后每公里6元，距离以百度地图推荐路径为准 ，电梯免费搬东西，楼梯加收10元一层的人工费，不计件收费，包裹限15个以内（单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）。", 
+            "content": "<p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz5k7MGONOgAy5PzJUe9nlSicWOJoxOibnBBkYnoysmX3H3Pz5dFL46K7Q/0?wx_fmt=jpeg\" data-ratio=\"0.5867768595041323\" data-w=\"\" /><br /><span style=\"font-size: 20px;\"><strong>一、收费标准</strong></span></p><p><span style=\"font-size: 20px;\"></span></p><ul class=\" list-paddingleft-2\"><li><p>起步价200元（10公里内），超出后每公里6元，距离以百度地图推荐路径为准 。</p></li><li><p>电梯免费搬东西，楼梯加收10元一层的人工费，不计件收费，包裹限15个以内（<span style=\"line-height: 25.6px;\">单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）</span>。</p></li><li><p>如果师傅到达指定地点后临时取消服务，您需支付空驶费100元。</p></li><li><p>如您需要多地点装/卸货，每增加一个点位，加收50元。</p></li><li><p>如果您物品较多，需要多名搬家师傅，请下单时及时说明，每增加一名搬家师傅，需要额外收取150元/人（默认2小时服务时间，超出2小时加收每小时50元）</p></li><li><p>搬家费用不包含高速费、停车费等第三方收取的费用，在服务过程中发生此类费用由客户承担。</p></li></ul><p><span style=\"font-size: 20px;\"></span><br /></p><p><span style=\"color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; line-height: 25.6px; white-space: pre-wrap; background-color: rgb(255, 255, 255);\"></span><br /></p><p><br /></p><p><span style=\"font-size: 20px;\"><strong><span style=\"color:#3e3e3e;font-family:-apple-system-font, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif\"><span style=\"background-color: rgb(255, 255, 255);\">二、金杯车型外观及尺寸介绍</span></span></strong></span></p><p><span style=\"color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; line-height: 25.6px; white-space: pre-wrap; background-color: rgb(255, 255, 255);\"><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzqRgSzR7rC3jwGKNGhWoGmzGmBEEvQqmshcJCm4rx7BI9FWawPSBf0g/0?wx_fmt=jpeg\" data-ratio=\"0.7245179063360881\" data-w=\"\" /><br /> 能容纳15个左右60cm*50cm*40cm的纸箱/20个左右的纺织袋/同体积的软包裹，可搬运1台7升的波轮洗衣机，不能搬运大型家具家电</span></p><p><span style=\"color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; line-height: 25.6px; white-space: pre-wrap; background-color: rgb(255, 255, 255);\"></span></p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz2Am6JJCAAAZI3GwWvlslBLqc3lKkErWTKIFSoib0eFFibaO0JpSDt65w/0?wx_fmt=jpeg\" style=\"\" data-ratio=\"0.7245179063360881\" data-w=\"\" /></p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzuxYV7hayQt9bwyvmShUbYNJoD7WUXBCC3tXmoQibFvV2AoE22tMEgtQ/0?wx_fmt=jpeg\" style=\"\" data-ratio=\"0.7245179063360881\" data-w=\"\" /></p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzoeDkBIuWdMS3sQxicibPvML0a0QA134zCyygibNYg99ndLnLSrbjXr86A/0?wx_fmt=jpeg\" style=\"\" data-ratio=\"0.7245179063360881\" data-w=\"\" /></p><p><br /></p><p><span style=\"color: rgb(62, 62, 62); font-family: -apple-system-font, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; line-height: 25.6px; white-space: pre-wrap; background-color: rgb(255, 255, 255);\"><br /></span><br /></p>", 
+            "content_source_url": "", 
+            "thumb_media_id": "m1hcEdeKQIqbQuv0NIBWsSBdniGkNEDgRLt4H3zpaQw", 
+            "show_cover_pic": 0, 
+            "url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000015&idx=1&sn=b1fae9678cf3040b5d0470d26bf3b881#rd", 
+            "thumb_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz5k7MGONOgAy5PzJUe9nlSicWOJoxOibnBBkYnoysmX3H3Pz5dFL46K7Q/0?wx_fmt=jpeg"
+          }
+        ], 
+        "create_time": 1470717406, 
+        "update_time": 1470744467
+      }, 
+      "update_time": 1470744467
+    }, 
+    {
+      "media_id": "m1hcEdeKQIqbQuv0NIBWsZ6QltzoD_faVASi7Hwh0HQ", 
+      "content": {
+        "news_item": [
+          {
+            "title": "小面车型", 
+            "author": "上海尊涵小件搬家", 
+            "digest": "起步价150元（10公里内），超出后每公里5元，距离以百度地图推荐路径为准 ，电梯免费搬东西，楼梯加收10元一层的人工费，不计件收费，包裹限10个以内（单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）", 
+            "content": "<p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz8XarOv0jzCVF93YCcQjmcBfxH7cSxBn3tJ2MtKT1RONpvhVxSWWw5w/0?wx_fmt=jpeg\" data-ratio=\"0.6666666666666666\" data-w=\"\" /><br /></p><p><strong><span style=\"font-size: 20px;\">一</span></strong><span style=\"font-size: 20px;\">、<strong>收费标准</strong></span></p><ul class=\" list-paddingleft-2\"><li><p>起步价150元（10公里内），超出后每公里5元，距离以百度地图推荐路径为准 。</p></li><li><p>电梯免费搬东西，楼梯加收10元一层的人工费，不计件收费，包裹限10个以内（<span style=\"line-height: 25.6px;\">单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）</span>。</p></li><li><p>如果师傅到达指定地点后临时取消服务，您需支付空驶费100元。</p></li><li><p>如您需要多地点装/卸货，每增加一个点位，加收50元。</p></li><li><p>如果您物品较多，需要多名搬家师傅，请下单时及时说明，每增加一名搬家师傅，需要额外收取150元/人（默认2小时服务时间，超出2小时加收每小时50元）</p></li><li><p>搬家费用不包含高速费、停车费等第三方收取的费用，在服务过程中发生此类费用由客户承担。</p></li></ul><p><span style=\"font-size: 20px;\"><strong>二、车型外观及尺寸介绍</strong></span></p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz47SwSFzfZj4raR5vb0S4NLQibNu4fAS39pTh8pV6AlTBEkwrS43l7Cg/0?wx_fmt=jpeg\" data-ratio=\"0.7245179063360881\" data-w=\"\" /><br />能容纳10个左右60cm*50cm*40cm的纸箱/15个左右的编织袋/同体积的软包裹，不能搬运大型家电家具</p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz3E7YpVlRcVy6NfRQlmK2QAlNSXbNLItKm3kDG8cV6XjMfoL2KLIQHA/0?wx_fmt=jpeg\" style=\"\" data-ratio=\"0.7245179063360881\" data-w=\"\" /></p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzXwfcLIqmVmjY8Q5h7HyyDJwlfUia9HM8xsv9VLKu81iaibxhv0PWX4X7Q/0?wx_fmt=jpeg\" style=\"\" data-ratio=\"0.7245179063360881\" data-w=\"\" /></p><p><img data-s=\"300,640\" data-type=\"jpeg\" data-src=\"http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzRGa7MhBXaTvWUIC4RaYxIZDE9ePRZsictSOD7hTXTHO3Fdvf7viczEDQ/0?wx_fmt=jpeg\" style=\"\" data-ratio=\"0.7245179063360881\" data-w=\"\" /></p><p><br /></p><p><br /></p>", 
+            "content_source_url": "", 
+            "thumb_media_id": "m1hcEdeKQIqbQuv0NIBWsX4-HmbUaoPeS-MtPZRCPbo", 
+            "show_cover_pic": 0, 
+            "url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000014&idx=1&sn=74aa9e9cc6784ee47fbb830012a742ca#rd", 
+            "thumb_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz8XarOv0jzCVF93YCcQjmcBfxH7cSxBn3tJ2MtKT1RONpvhVxSWWw5w/0?wx_fmt=jpeg"
+          }
+        ], 
+        "create_time": 1470716253, 
+        "update_time": 1470744822
+      }, 
+      "update_time": 1470744822
+    }
+  ], 
+  "total_count": 4, 
+  "item_count": 4
+}

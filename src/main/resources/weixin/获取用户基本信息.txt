@@ -1,0 +1,19 @@
+GET url:
+https://api.weixin.qq.com/cgi-bin/user/info?access_token=QR3MT6qlscCWEhkAPFv1W2-e37NLVDzikM1EroBeLDUE2WpjdnDJS-NUS9yrtoRRHMmmj8ZCE3tV6aHWmqL__8kVLtwInURccWUofHEswOu7s0XBp7nlgMkChMtKC2GGFYYjAAAKDD&openid=o_05UwXR65RZ-VeZ12CfLH27UiEk&lang=zh_CN
+
+{
+  "subscribe": 1, 
+  "openid": "o_05UwXR65RZ-VeZ12CfLH27UiEk", 
+  "nickname": "空气+", 
+  "sex": 1, 
+  "language": "zh_CN", 
+  "city": "浦东新区", 
+  "province": "上海", 
+  "country": "中国", 
+  "headimgurl": "http://wx.qlogo.cn/mmopen/lhmMH6r25owRiasNgfh1V4ia2HMakl3IZickicFyEpDKDWUqVjic0ghk1KAsTlLFibwwoFOTMdTUex2oZEvj9VZvSmvmBsmibG2bmGib/0", 
+  "subscribe_time": 1473173995, 
+  "unionid": "ozcGQs5-OhyxBVqonbegIO5a6Q_s", 
+  "remark": "", 
+  "groupid": 0, 
+  "tagid_list": [ ]
+}

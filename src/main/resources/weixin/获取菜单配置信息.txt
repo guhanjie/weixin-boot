@@ -1,0 +1,100 @@
+GET url:
+https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=QR3MT6qlscCWEhkAPFv1W2-e37NLVDzikM1EroBeLDUE2WpjdnDJS-NUS9yrtoRRHMmmj8ZCE3tV6aHWmqL__8kVLtwInURccWUofHEswOu7s0XBp7nlgMkChMtKC2GGFYYjAAAKDD
+
+
+{
+  "is_menu_open": 0, 
+  "selfmenu_info": {
+    "button": [
+      {
+        "name": "收费标准", 
+        "sub_button": {
+          "list": [
+            {
+              "type": "news", 
+              "name": "小面车型", 
+              "value": "m1hcEdeKQIqbQuv0NIBWsZ6QltzoD_faVASi7Hwh0HQ", 
+              "news_info": {
+                "list": [
+                  {
+                    "title": "小面车型", 
+                    "author": "上海尊涵小件搬家", 
+                    "digest": "起步价150元（10公里内），超出后每公里5元，距离以百度地图推荐路径为准 ，电梯免费搬东西，楼梯加收10元一层的人工费，不计件收费，包裹限10个以内（单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）", 
+                    "show_cover": 0, 
+                    "cover_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz8XarOv0jzCVF93YCcQjmcBfxH7cSxBn3tJ2MtKT1RONpvhVxSWWw5w/0?wx_fmt=jpeg", 
+                    "content_url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000014&idx=1&sn=74aa9e9cc6784ee47fbb830012a742ca#rd", 
+                    "source_url": ""
+                  }
+                ]
+              }
+            }, 
+            {
+              "type": "news", 
+              "name": "金杯车型", 
+              "value": "m1hcEdeKQIqbQuv0NIBWsbFdX1_4fX0GdUpN0Afn9-4", 
+              "news_info": {
+                "list": [
+                  {
+                    "title": "金杯车型", 
+                    "author": "上海尊涵小件搬家", 
+                    "digest": "起步价200元（10公里内），超出后每公里6元，距离以百度地图推荐路径为准 ，电梯免费搬东西，楼梯加收10元一层的人工费，不计件收费，包裹限15个以内（单个体积按60cm*50cm*40cm标准计算，单个包裹限重15公斤）。", 
+                    "show_cover": 0, 
+                    "cover_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz5k7MGONOgAy5PzJUe9nlSicWOJoxOibnBBkYnoysmX3H3Pz5dFL46K7Q/0?wx_fmt=jpeg", 
+                    "content_url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000015&idx=1&sn=b1fae9678cf3040b5d0470d26bf3b881#rd", 
+                    "source_url": ""
+                  }
+                ]
+              }
+            }, 
+            {
+              "type": "news", 
+              "name": "全顺/依维轲", 
+              "value": "m1hcEdeKQIqbQuv0NIBWseKqpsmpz6cadA0jlJBoqRE", 
+              "news_info": {
+                "list": [
+                  {
+                    "title": "全顺/依维轲", 
+                    "author": "上海尊涵小件搬家", 
+                    "digest": "起步价300元，包含10公里，超出10公里，每公里8元，距离以百度地图推荐路径为准，包裹限25个以内（单个体积按60cm*50cm*40cm的标准计算，单个包裹限重15kg）", 
+                    "show_cover": 0, 
+                    "cover_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqzmY9MFBF0tSIT0PSb6u51ZWGcazGNV4wG4jbicyCTQ78JcJicSJ0ucaUg/0?wx_fmt=jpeg", 
+                    "content_url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000016&idx=1&sn=a136e6caa7bde1cdcb73f6d8379cec1c#rd", 
+                    "source_url": ""
+                  }
+                ]
+              }
+            }, 
+            {
+              "type": "news", 
+              "name": "精品搬家", 
+              "value": "m1hcEdeKQIqbQuv0NIBWsXSyBnScKdptJDxSScyNgFM", 
+              "news_info": {
+                "list": [
+                  {
+                    "title": "精品搬家", 
+                    "author": "上海尊涵小件搬家", 
+                    "digest": "传统搬家公司大多数只负责简单的搬运和运输，然而，在实际搬家过程中，整理打包和还原物品的工作量十分巨大，完全依", 
+                    "show_cover": 0, 
+                    "cover_url": "http://mmbiz.qpic.cn/mmbiz/CzDSMiazguLvRBfqIFRXiaD72Nm38GGPqz1k7M70ibUIfPOJmibibIPUVhVvFm4IURzwV7tXkkz3hN5y1A7SuLUXicew/0?wx_fmt=jpeg", 
+                    "content_url": "http://mp.weixin.qq.com/s?__biz=MzI0MzUyNzkzNQ==&mid=100000021&idx=1&sn=aaa8887a42e0a339f21de6252b102ed3#rd", 
+                    "source_url": ""
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "type": "img", 
+        "name": "立即下单", 
+        "value": "go4ZTSkGgWUOCIsEOgK2TLwhm1XpAt2wJCryadD4eQjoQvvQAE5teKs_xfcZLvO8"
+      }, 
+      {
+        "type": "img", 
+        "name": "增值服务", 
+        "value": "TcKt3wdPiO3Z9zBzJBGOqt6NWk24i0wgk9FyjHscOg-U_A9ImXOPCJIWTG0iag9o"
+      }
+    ]
+  }
+}

@@ -40,12 +40,12 @@
 
 	<bean id="exceptionResolver" class="com.guhanjie.exception.WebExceptionHandler" />
 	
-    <mvc:interceptors>
+    <!-- <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <!-- <mvc:exclude-mapping path="/*/preview/**"/> -->
+            <mvc:exclude-mapping path="/*/preview/**"/>
             <ref bean="interceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors> -->
 
 </beans>
