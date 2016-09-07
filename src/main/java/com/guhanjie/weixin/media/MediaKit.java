@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.WeixinHttpUtil;
 import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
 import com.guhanjie.weixin.model.WeixinMedia;
@@ -45,7 +45,7 @@ public class MediaKit {
         LOGGER.debug("starting to post media: path[{}] type[{}]...", path, type);
         final WeixinMedia wm = new WeixinMedia();
         try {
-            String url = WeixinContants.API_POST_MEDIA;
+            String url = WeixinConstants.API_POST_MEDIA;
             url = url.replace("TYPE", type);
             FileBody fb = new FileBody(new File(path));
             HttpEntity entity = MultipartEntityBuilder.create().addPart("media", fb).build();
@@ -74,7 +74,7 @@ public class MediaKit {
         CloseableHttpResponse resp = null;        
         try {
             client = HttpClients.createDefault();
-            String url = WeixinContants.API_GET_MEDIA;
+            String url = WeixinConstants.API_GET_MEDIA;
             url = url.replace("MEDIA_ID", mediaId);
             url = url.replace("ACCESS_TOKEN", AccessTokenKit.getToken());
             HttpGet get = new HttpGet(url);

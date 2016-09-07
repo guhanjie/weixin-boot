@@ -46,7 +46,7 @@ public class TestGetAccessToken {
         CloseableHttpClient client = null;
         try {
             client = HttpClients.createDefault();
-            String url = WeixinContants.API_ACCESS_TOKEN;
+            String url = WeixinConstants.API_ACCESS_TOKEN;
             url = url.replaceAll("APPID", "***");
             url = url.replaceAll("APPSECRET", "***");
             get = new HttpGet(url);

@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.WeixinHttpUtil;
 import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
 import com.guhanjie.weixin.model.UserInfo;
@@ -33,7 +33,7 @@ public class UserKit {
         LOGGER.info("Starting to get user[{}] info...", openid);
         final UserInfo user = new UserInfo();
         try {
-            String url = WeixinContants.API_USER_INFO;
+            String url = WeixinConstants.API_USER_INFO;
             url = url.replaceAll("OPENID", openid);
             WeixinHttpUtil.sendGet(url, new WeixinHttpCallback() {
                 @Override

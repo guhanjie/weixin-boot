@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.WeixinHttpUtil;
 import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
 import com.guhanjie.weixin.model.AccessToken;
@@ -35,7 +35,7 @@ public class AccessTokenKit {
     private static volatile String token;
     
     @Autowired
-    private WeixinContants weixinContants;
+    private WeixinConstants weixinContants;
     
     public static String getToken() {
         return token;
@@ -45,7 +45,7 @@ public class AccessTokenKit {
     public synchronized void refreshToken() {
         LOGGER.info("Starting to refresh access token...");
         try {
-            String url = WeixinContants.API_ACCESS_TOKEN;
+            String url = WeixinConstants.API_ACCESS_TOKEN;
             url = url.replaceAll("APPID", weixinContants.APPID);
             url = url.replaceAll("APPSECRET", weixinContants.APPSECRET);
             WeixinHttpUtil.sendGet(url, new WeixinHttpCallback() {

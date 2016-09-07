@@ -31,7 +31,7 @@ import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.UserService;
 import com.guhanjie.util.SpringContextUtil;
-import com.guhanjie.weixin.WeixinContants;
+import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.model.UserInfo;
 import com.guhanjie.weixin.user.UserKit;
 
@@ -95,23 +95,23 @@ public class MessageKit {
 	public static String handlerMsg(Map<String, String> msgMap) throws IOException {
 	    String msgType = msgMap.get("MsgType");
 	    //处理事件消息
-	    if(msgType.equals(WeixinContants.MSG_TYPE_EVENT)) {
+	    if(msgType.equals(WeixinConstants.MSG_TYPE_EVENT)) {
 	    	String eventType = msgMap.get("Event");
 	    	//订阅事件
-	        if(eventType.equals(WeixinContants.EVENT_SUBSCRIBE)) {
+	        if(eventType.equals(WeixinConstants.EVENT_SUBSCRIBE)) {
 	        	return handleSubscribeEvent(msgMap);
 	        }
 	        //上报地址位置事件
-	        else if(eventType.equals(WeixinContants.EVENT_LOCATION)) {
+	        else if(eventType.equals(WeixinConstants.EVENT_LOCATION)) {
 	        	return handleLocationEvent(msgMap);
 	        }
 	    }
 	    //处理文本消息
-	    else if(msgType.equals(WeixinContants.MSG_TYPE_TEXT)) {
+	    else if(msgType.equals(WeixinConstants.MSG_TYPE_TEXT)) {
 	        return handleTextMsg(msgMap);
 	    }
 	    //处理图片消息
-	    else if(msgType.equals(WeixinContants.MSG_TYPE_IMAGE)) {
+	    else if(msgType.equals(WeixinConstants.MSG_TYPE_IMAGE)) {
 	        return handleImageMsg(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
 	    }
 	    return "";
