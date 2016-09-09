@@ -1,0 +1,82 @@
+/*#order-index>.car-type {
+    padding: 4px 15px 0;
+    background-color: #fff;
+    border-bottom: 1px solid #ededed;
+}*/
+.car-type>.car-type-title{
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 35px;
+    padding: 10px 0;
+    font-size: 16px;
+    line-height: 35px;
+    color: #333;
+    text-align: center;
+}
+.car-type>.car-type-title>label{ 
+	display: table-cell; 
+	border-right: 1px solid #ddd;  
+}
+.car-type>.car-type-title>label:last-child{border-right: 0px;}
+.car-type>.car-type-title>label:first-child{ }
+.car-type-title>label>span{vertical-align: middle;}
+.car-type-title>label.checked i {
+	color: #007dbc;
+}
+
+/*
+.car-type>.car-type-title>label.no-open span{
+    color: #ccc;
+}
+.car-type>.car-type-title>label.no-open span em{
+    font-size: 12px;
+    line-height: 34px;
+    vertical-align: bottom;
+}
+*/
+
+.car-type-tips{
+    position: relative;
+    line-height: 32px;
+    color: #999;
+    border-top:1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+}
+.car-type-tips>.arrow{
+    position: absolute;
+    left: 16%;
+    top: -16px;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-bottom-color: #dbdbdb;
+}
+.car-type-tips>.arrow>div{
+    margin-top: -4px;
+    margin-left: -6px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #fff;
+}
+.car-type-tips>p{
+	display: none;
+    padding-right: 60px;
+    overflow: hidden; /*自动隐藏文字*/
+    text-overflow: ellipsis;/*文字隐藏后添加省略号*/
+    white-space: nowrap;/*强制不换行*/
+    line-height: 18px;
+    margin: 12px 0;
+}
+.car-type-tips>a{
+    position: absolute;
+    right: 0;
+    top: 23px;
+    line-height: 32px;
+}
+
+.address-detail, .address-floor {
+	display: inline-block;
+	width: 48%;
+}
