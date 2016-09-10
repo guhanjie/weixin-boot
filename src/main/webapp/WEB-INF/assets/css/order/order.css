@@ -3,13 +3,21 @@
     background-color: #fff;
     border-bottom: 1px solid #ededed;
 }*/
+#baiduMap {
+	display: none;
+}
+.text-primary {
+	font-weight: 600;
+	color: #3C92DD;
+}
+
 .car-type>.car-type-title{
     display: table;
     table-layout: fixed;
     width: 100%;
     height: 35px;
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 35px;
     color: #333;
     text-align: center;
@@ -21,9 +29,6 @@
 .car-type>.car-type-title>label:last-child{border-right: 0px;}
 .car-type>.car-type-title>label:first-child{ }
 .car-type-title>label>span{vertical-align: middle;}
-.car-type-title>label.checked i {
-	color: #007dbc;
-}
 
 /*
 .car-type>.car-type-title>label.no-open span{
@@ -41,7 +46,7 @@
     line-height: 32px;
     color: #999;
     border-top:1px solid #dbdbdb;
-    border-bottom: 1px solid #dbdbdb;
+    /* border-bottom: 1px solid #dbdbdb; */
 }
 .car-type-tips>.arrow{
     position: absolute;
@@ -72,6 +77,8 @@
 .car-type-tips>a{
     position: absolute;
     right: 0;
+    font-size: smaller;
+	color: #3C92DD;
     top: 23px;
     line-height: 32px;
 }
@@ -79,4 +86,28 @@
 .address-detail, .address-floor {
 	display: inline-block;
 	width: 48%;
+}
+.weui_cell_warn {
+	border: 1px red dashed;
+}
+.weui_cell_warn .text-primary {
+	color: #E64340;
+}
+select.weui_select {
+	color: #999999;
+	z-index: 0;
+}
+.weui_cell.remark {
+	display: block;
+}
+p.order_price {
+	text-align: center; 
+	color: #FF7F00; 
+	font-family: Consolas, sans-serif;
+	font-weight: bold; 
+	font-size: 20px;
+}
+p.order_price span {	
+	font-size: 2em;
+	font-weight: 500;
 }
