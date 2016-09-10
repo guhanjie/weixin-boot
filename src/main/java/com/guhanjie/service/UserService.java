@@ -33,6 +33,11 @@ public class UserService {
 		return userMapper.selectByOpenId(openid);
 	}
 	
+   public User getUserByPhone(String phone) {
+        LOGGER.debug("get user by phone[{}]...", phone);
+        return userMapper.selectByPhone(phone);
+    }
+	
 	public int addUser(User user) {
 		LOGGER.debug("add user[{}]...", JSON.toJSONString(user));
 	    if(user.getOpenId() != null) {

@@ -7,6 +7,8 @@
  */  
 package com.guhanjie.service;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,17 +55,21 @@ public class OrderService {
 		}
 		// 1. 检查用户信息 
 		User user = order.getUser();
-		if(user == null) {	//若用户id不存在，说明首次进入，添加user记录
+		if(user == null) {	//若用户不存在，首次进入添加user记录
 			LOGGER.warn("user first in while putting order:[{}]", order.getId());
 			if(StringUtils.isBlank(order.getPhone())) {
 				LOGGER.error("put order error, user not exist, order:[{}]", order.getId());
 				throw WebExceptionFactory.exception(WebExceptionEnum.USER_NOT_EXIST);
 			}
-			user = new User();
-			user.setName(order.getContactor());
-			user.setPhone(order.getPhone());
-			LOGGER.debug("Add an new user:[{}]", JSON.toJSONString(user));
-			userService.addUser(user);
+			user = userService.getUserByPhone(order.getPhone());
+			if(user == null) {
+	            user = new User();
+	            user.setName(order.getContactor());
+	            user.setPhone(order.getPhone());
+	            user.setCreateTime(new Date());
+	            LOGGER.debug("Add an new user:[{}]", JSON.toJSONString(user));
+	            userService.addUser(user);
+			}
 		}
 		if(StringUtils.isBlank(user.getPhone())) {    //用户信息默认不含手机号码，第一次用户填写信息时记录手机号码
 		    String phone = order.getPhone();
@@ -157,6 +163,7 @@ public class OrderService {
 		}
 		
 		// 4. 生成订单
+		order.setCreateTime(new Date());
 		orderMapper.insertSelective(order);
 	}
 	

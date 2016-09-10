@@ -71,7 +71,7 @@ CREATE TABLE `user` (
   `province` varchar(15) DEFAULT NULL,
   `country` varchar(15) DEFAULT NULL,
   `subscribe_time` timestamp NULL DEFAULT NULL,
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_OPEN_ID` (`open_id`) USING BTREE

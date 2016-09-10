@@ -3,7 +3,7 @@ $(function() {
 	order = {};
 	order["open_id"] = $('input[name="open_id"]').val();
 	order["vehicle"] = 1;
-	
+
 	//车型
 	$('.car-type').on('click', '.car-type-label', function(e) {
 		$(this).siblings('.car-type-label').removeClass('text-primary');
@@ -11,7 +11,10 @@ $(function() {
 		$(this).addClass('text-primary');
 		$(this).find('i').removeClass().addClass('icon-ok-sign');
 		var carType = $(this).data('type');
+		$('input[name="vehicle"]').val(order["vehicle"]);
 		order["vehicle"] = carType;
+		var price = [150, 200, 300];
+		$('.order_sumary .price  em').text(price[carType-1]);
 		var arrowLeft = ['16%', '50%', '83%'];
 		$('.car-type-tips .arrow').css('left', arrowLeft[carType-1]);
 		$('.car-type-tips').find('p').hide();
@@ -38,7 +41,7 @@ $(function() {
         setText   : '预约服务',
         cancelText: '马上服务',
         onSelect  : function(val){
-            order["start_time"] = new Date(val);
+            order["start_time"] = new Date(val).getTime();
             var str  = val.replace(/-/g, "/");
             var date = new Date(str);
             var weektime = ($('.dw-sel').text()).substring(0,3);
@@ -60,17 +63,55 @@ $(function() {
             $('#start_time').val(showtime);
         },
         onCancel : function(){
-            order["start_time"] = new Date();
-            $('#start_time').val('马上用车');
+            order["start_time"] = new Date().getTime();
+            $('#start_time').val('马上服务');
         }
     };//options
     $('#start_time').mobiscroll().datetime(options);
-	
+
     //计算价格
-    $('#submit').on('click', function() {
-    	
-    });
-	
+	$('body').on('click', function() {
+    	order["amount"] = undefined;
+    	var distance = order["distance"] || 0;
+    	distance = distance.toFixed(1);
+    	$('.order_sumary .distance em').text(distance);
+    	var fromFloor = $('select[name="from_floor"]').val() || 0;
+    	var toFloor = $('select[name="to_floor"]').val() || 0;
+    	if(!distance) {
+    		return;
+    	}
+    	var price = 0;
+    	if(order["vehicle"] == 1) {	//小面车型
+    		price = 150.0; //起步价150（10公里内）
+            price += (distance<10) ? 0.0 : (distance-10)*5.0;  //超出后每公里5元
+            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : (toFloor-1)*10.0;
+    	}
+    	else if(order["vehicle"] == 2) {	//金杯车型
+		    price = 200.0; //起步价200（10公里内）
+            price += (distance<10) ? 0.0 : (distance-10)*6.0;  //超出后每公里6元
+            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : (toFloor-1)*10.0;
+    	}
+    	else if(order["vehicle"] == 3) {   //全顺/依维轲
+		    price = 300.0; //起步价300（10公里内）
+            price += (distance<10) ? 0.0 : (distance-10)*8.0;  //超出后每公里8元
+            price += 50.0; //电梯和1楼搬运按50元收取，每多1层加收20元
+            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
+            price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
+    	}
+    	order["amount"] = price.toFixed(1);
+    	$('.order_sumary .price em').text(price);
+		$('input[name="vehicle"]').val(order["vehicle"]);
+		$('input[name="from_lng"]').val(order["from_lng"]);
+		$('input[name="from_lat"]').val(order["from_lat"]);
+		$('input[name="to_lng"]').val(order["to_lng"]);
+		$('input[name="to_lat"]').val(order["to_lat"]);
+		$('input[name="distance"]').val(order["distance"]);
+		$('input[name="amount"]').val(order["amount"]);
+    	return;
+	});
+			
 	$('textarea[name="remark"]').on('input', function() {
 		var max = 200;
 		var text = $(this).val();
@@ -99,7 +140,8 @@ $(function() {
 		order["to_address"] = $('input[name="to_address"]').val();
 		order["to_detail"] = $('input[name="to_detail"]').val();
 		order["to_floor"] = $('select[name="to_floor"]').val();
-		order["start_time"] = !order["start_time"] || new Date();
+		order["start_time"] = order["start_time"] || new Date().getTime();
+		$('input[name="start_time"]').val(order["start_time"]);
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
 		order["remark"] = $('textarea[name="remark"]').val();
@@ -143,33 +185,47 @@ $(function() {
 			$('input[name="contactor"]').closest('.weui_cell').addClass('weui_cell_warn');
 			return;
 		}
-		if (!order["phone"] || !/^((86-)?\d{11})|(\d{3}-\d{8})|(\d{4}-\d{7,8})$/.test(order["phone"])) {
+		if (!order["phone"] || !/(^(86-)?\d{11}$)|(^\d{3}-\d{8}$)|(^\d{4}-\d{7,8}$)/.test(order["phone"])) {
 			$.weui.topTips('请输入正确的手机号码');
 			$('input[name="phone"]').closest('.weui_cell').addClass('weui_cell_warn');
 			return;
 		}
-		$.weui.loading('数据加载中...');
+		if(!order["distance"]) {
+			$.weui.topTips('距离计算失败，请输入正确地址');
+			return;
+		}
+		if(!order["amount"]) {
+			$.weui.topTips('请输入确切信息以确定价格');
+			return;
+		}
+		$.weui.loading('订单提交中...');
 		console.log(order);
-		setTimeout($.weui.hideLoading, 3000);
+		$.ajax({
+		    type: 'POST',
+		    url: 'order',
+		    data: $('form').serialize(),
+		    success: function(data){
+	    		$.weui.hideLoading();
+		    	if(data.success) {
+					$.weui.loading('订单提交成功');
+					setTimeout($.weui.hideLoading, 1000);
+					var vehicleName = ['小面', '金杯', '全顺/依维柯'];
+					$('#res_vehicle').text(vehicleName[order["vehicle"]]);
+					$('#res_from_address').text(order["from_address"]);
+					$('#res_to_address').text(order["to_address"]);
+					$('#res_contactor').text(order["contactor"]);
+					$('#res_start_time').text(new Date(order["start_time"]).toLocaleString());
+					$('form').remove();
+					$('.weui_msg').show();
+		    	}
+		    	else {
+					$.weui.topTips('订单信息有误，提交失败');
+		    	}
+		      },
+		      error: function(xhr, type){
+					$.weui.topTips('订单信息有误，提交失败');
+		      }
+		  })
 	});
-
-	$('#ddd').on('click', '#btnDialog', function(e) {
-		$.weui.dialog({
-			title : '自定义标题',
-			content : '自定义内容',
-			buttons : [ {
-				label : '知道了',
-				type : 'default',
-				onClick : function() {
-					console.log('知道了......');
-				}
-			}, {
-				label : '好的',
-				type : 'primary',
-				onClick : function() {
-					console.log('好的......');
-				}
-			} ]
-		});
-	});
+	
 })

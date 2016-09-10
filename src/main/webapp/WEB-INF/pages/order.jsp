@@ -22,6 +22,9 @@
   <div id="baiduMap"></div>
   <form>
     <input type="hidden" name="open_id" value="${openId}"/>
+    <input type="hidden" name="amount"/>
+    <input type="hidden" name="distance"/>
+    <input type="hidden" name="vehicle"/>
     <div class="weui_cells_title">
       <div class="car-type">
         <div class="car-type-title">
@@ -78,6 +81,7 @@
             <option value="7">7楼-加收60元</option>
             <option value="8">8楼-加收70元</option>
           </select>
+          <span class="arrow"></span>
         </div>
       </div>
       <div class="weui_cell">
@@ -149,13 +153,74 @@
       </div>
     </div>
     <p class="weui_cells_tips">提示：计费距离以百度推荐路径为准，价格根据实际情况可调</p>
-    <p class="weui_cells_tips order_price">
-          <span>150</span>元
+    <p class="weui_cells_tips order_sumary">
+          <span class="distance">全程<em>0</em>公里</span>
+          <span class="price"><em>150</em>元</span>
     </p>
     <div class="weui_btn_area">
       <a class="weui_btn weui_btn_primary" id="submit">确认下单</a>
     </div>
   </form>
+  
+<div class="weui_msg" style="display: none;">
+    <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+    <div class="weui_text_area">
+        <h2 class="weui_msg_title">操作成功</h2>
+        <p class="weui_msg_desc">订单已提交，我们会尽快为您安排服务</p>
+    </div>
+    <div class="weui_cells_title">订单详情如下：</div>
+    <div class="weui_cells">
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>预订车型</p>
+            </div>
+            <div class="weui_cell_ft">
+                <span id="res_vehicle"></span>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>起始地</p>
+            </div>
+            <div class="weui_cell_ft">
+                <span id="res_from_address"></span>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>目的地</p>
+            </div>
+            <div class="weui_cell_ft">
+                <span id="res_to_address"></span>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>联系人</p>
+            </div>
+            <div class="weui_cell_ft">
+                <span id="res_contactor"></span>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>服务时间</p>
+            </div>
+            <div class="weui_cell_ft">
+                <span id="res_start_time"></span>
+            </div>
+        </div>
+    </div>
+    <div class="weui_opr_area">
+        <p class="weui_btn_area">
+            <a href="javascript:;" class="weui_btn weui_btn_primary">确定</a>
+        </p>
+    </div>
+    <div class="weui_extra_area">
+        <!-- <a href="">查看详情</a> -->
+    </div>
+</div>
+  
   <script src="resources/js/zepto/zepto-1.1.6.js"></script>
   <script src="resources/js/weui/weui.js"></script>
   <script src="resources/js/3rds/mobiscroll.zepto.js"></script>

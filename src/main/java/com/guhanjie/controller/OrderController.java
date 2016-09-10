@@ -8,6 +8,8 @@
 package com.guhanjie.controller;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.guhanjie.model.Order;
 import com.guhanjie.model.Position;
@@ -50,8 +53,9 @@ public class OrderController extends BaseController {
 		return "order";
 	}
 	
-	@RequestMapping(value="",method=RequestMethod.PUT)
-	public void putOrder(HttpServletRequest req) {
+	@RequestMapping(value="",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> putOrder(HttpServletRequest req) {
 		//获取用户信息
 		String openid = req.getParameter("open_id");
 		User user = userService.getUserByOpenId(openid);
@@ -90,6 +94,8 @@ public class OrderController extends BaseController {
 		String contactor = req.getParameter("contactor");
 		String phone = req.getParameter("phone");
 		String remark = req.getParameter("remark");		
+		String _startTime = req.getParameter("start_time");
+		Date startTime = StringUtils.isBlank(_startTime) ? new Date() : new Date(Long.parseLong(_startTime));
 		//封装信息
 		Order order = new Order();
 		order.setUser(user);
@@ -97,6 +103,7 @@ public class OrderController extends BaseController {
 		order.setTip(tip);
 		order.setFrom(from);
 		order.setTo(to);
+		order.setStartTime(startTime);
 		order.setDistance(distance);
 		order.setVehicle(vehicle);
 		order.setContactor(contactor);
@@ -105,5 +112,6 @@ public class OrderController extends BaseController {
 		
 		//下单
 		orderService.putOrder(order);
+		return success();
 	}
 }

@@ -93,21 +93,58 @@
 .weui_cell_warn .text-primary {
 	color: #E64340;
 }
+input.address-detail {
+	border-right: 1px solid #A6A6A6;
+}
 select.weui_select {
-	color: #999999;
+    font-size: 15px;
+	color: #A6A6A6;
 	z-index: 0;
+	padding-left: 10px;
 }
 .weui_cell.remark {
 	display: block;
 }
-p.order_price {
+select.address-floor+.arrow {
+	position: absolute;
+	right: 20px;
+	text-align: right;
+	line-height: 44px;
+    color: #888;
+}
+select.address-floor+.arrow:after {
+    content: " ";
+    display: inline-block;
+	line-height: 44px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    height: 6px;
+    width: 6px;
+    border-width: 2px 2px 0 0;
+    border-color: #c8c8cd;
+    border-style: solid;
+    position: relative;
+    bottom: 2px;
+}
+
+p.order_sumary {
 	text-align: center; 
-	color: #FF7F00; 
+	color: #D1CFC7;
 	font-family: Consolas, sans-serif;
 	font-weight: bold; 
-	font-size: 20px;
+	font-size: 18px;
 }
-p.order_price span {	
+p.order_sumary .distance  em{
+	font-size: 24px;
+	font-weight: 500;
+	color: #FF7F00; 
+}
+p.order_sumary .price  em{
 	font-size: 2em;
 	font-weight: 500;
+    font-style: normal;
+	color: #FF7F00; 
+}
+.weui_msg.weui_cells_title, .weui_msg.weui_cells{
+    text-align: left;
 }
