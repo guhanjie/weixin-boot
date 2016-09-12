@@ -174,42 +174,42 @@
     <div class="weui_cells_title">订单详情如下：</div>
     <div class="weui_cells">
         <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>预订车型</p>
+            <div class="weui_cell_hd">
+                <p><i class="weui_icon_success_circle"></i>预订车型</p>
             </div>
-            <div class="weui_cell_ft">
+            <div class="weui_cell_bd weui_cell_primary">
                 <span id="res_vehicle"></span>
             </div>
         </div>
         <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>起始地</p>
+            <div class="weui_cell_hd">
+                <p><i class="weui_icon_success_circle"></i>起始地</p>
             </div>
-            <div class="weui_cell_ft">
+            <div class="weui_cell_bd weui_cell_primary">
                 <span id="res_from_address"></span>
             </div>
         </div>
         <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>目的地</p>
+            <div class="weui_cell_hd">
+                <p><i class="weui_icon_success_circle"></i>目的地</p>
             </div>
-            <div class="weui_cell_ft">
+            <div class="weui_cell_bd weui_cell_primary">
                 <span id="res_to_address"></span>
             </div>
         </div>
         <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>联系人</p>
+            <div class="weui_cell_hd">
+                <p><i class="weui_icon_success_circle"></i>联系人</p>
             </div>
-            <div class="weui_cell_ft">
+            <div class="weui_cell_bd weui_cell_primary">
                 <span id="res_contactor"></span>
             </div>
         </div>
         <div class="weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>服务时间</p>
+            <div class="weui_cell_hd">
+                <p><i class="weui_icon_success_circle"></i>服务时间</p>
             </div>
-            <div class="weui_cell_ft">
+            <div class="weui_cell_bd weui_cell_primary">
                 <span id="res_start_time"></span>
             </div>
         </div>

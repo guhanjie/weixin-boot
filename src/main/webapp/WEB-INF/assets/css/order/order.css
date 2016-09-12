@@ -140,6 +140,9 @@ p.order_sumary .price  em{
     font-style: normal;
 	color: #FF7F00; 
 }
-.weui_msg.weui_cells_title, .weui_msg.weui_cells{
+.weui_msg .weui_cells_title{
     text-align: left;
+}
+.weui_msg .weui_cell p i{
+	padding-right: 0.2em;
 }
