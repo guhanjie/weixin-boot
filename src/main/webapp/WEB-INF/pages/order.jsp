@@ -18,7 +18,7 @@
 <link rel="stylesheet" type="text/css" href="resources/css/3rds/lxn.mobiscroll.scroller.wap2.css">
 <title>尊涵搬家服务</title>
 </head>
-<body>
+<body ontouchstart>
   <div id="baiduMap"></div>
   <form>
     <input type="hidden" name="open_id" value="${openId}"/>
@@ -96,17 +96,19 @@
           <input type="hidden" name="to_lng" />
           <input class="weui_input" id="to_address" name="to_address" type="text" placeholder="请输入目的地" />
           <input class="weui_input address-detail" name="to_detail" type="text" placeholder="几号几室" />
-          <select class="weui_select address-floor" name="to_floor">
-            <option value="0">电梯-免费</option>
-            <option value="1">1楼-免费</option>
-            <option value="2">2楼-加收10元</option>
-            <option value="3">3楼-加收20元</option>
-            <option value="4">4楼-加收30元</option>
-            <option value="5">5楼-加收40元</option>
-            <option value="6">6楼-加收50元</option>
-            <option value="7">7楼-加收60元</option>
-            <option value="8">8楼-加收70元</option>
-          </select>
+          <div class="floor_select">
+            <select class="weui_select address-floor" name="to_floor">
+              <option value="0">电梯-免费</option>
+              <option value="1">1楼-免费</option>
+              <option value="2">2楼-加收10元</option>
+              <option value="3">3楼-加收20元</option>
+              <option value="4">4楼-加收30元</option>
+              <option value="5">5楼-加收40元</option>
+              <option value="6">6楼-加收50元</option>
+              <option value="7">7楼-加收60元</option>
+              <option value="8">8楼-加收70元</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="weui_cell">
