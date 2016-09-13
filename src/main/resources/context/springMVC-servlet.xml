@@ -42,9 +42,9 @@
 	
     <mvc:interceptors>
         <mvc:interceptor>
-            <bean id="interceptor" class="com.guhanjie.controller.Interceptor"></bean>
             <mvc:mapping path="/order"/>
             <!-- <mvc:exclude-mapping path="/*/preview/**"/> -->
+            <ref bean="OAuthIntercepter"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
