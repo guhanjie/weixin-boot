@@ -58,4 +58,35 @@ public class UserKit {
         }
         return user;
     }
+    
+    public static UserInfo getUserInfoByOauth2(final String openid, final String accsstoken) {
+        LOGGER.info("Starting to get user[{}] info by oauth2.0...", openid);
+        final UserInfo user = new UserInfo();
+        try {
+            String url = WeixinConstants.OAUTH2_GET_USER_INFO;
+            url = url.replaceAll("OPENID", openid);
+            url = url.replaceAll("ACCESS_TOKEN", accsstoken);
+            WeixinHttpUtil.sendGet(url, new WeixinHttpCallback() {
+                @Override
+                public void process(String json) {
+                    UserInfo ui = JSONObject.parseObject(json, UserInfo.class);
+                    if(ui!=null && ui.getOpenid()!=null) {
+                        try {
+                            PropertyUtils.copyProperties(user, ui);
+                            LOGGER.info("Success to get user info:[{}] by oauth2.0.", json);
+                        }
+                        catch (Exception e) {
+                            LOGGER.error("error in coping user properties");
+                        }
+                    }
+                    else {
+                        LOGGER.error("Failed to get user[{}] info by oauth2.0.", openid);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.error("Failed to get user[{}] info by oauth2.0.", openid);
+        }
+        return user;
+    }
 }

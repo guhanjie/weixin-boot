@@ -101,6 +101,7 @@ public class WeixinController extends BaseController {
                     String openid = at.getOpenid();
                     LOGGER.info("User authentication successful, access token:[{}], openid:[{}].", token, openid);
                 	session.setAttribute(AppConstants.SESSION_KEY_ACCESS_TOKEN, token);
+                	session.setAttribute(AppConstants.SESSION_KEY_OPEN_ID, openid);
                 	try {
 	                	String returnURL = (String)session.getAttribute(AppConstants.SESSION_KEY_RETURN_URL);
 	                	if(StringUtils.isBlank(returnURL)) {

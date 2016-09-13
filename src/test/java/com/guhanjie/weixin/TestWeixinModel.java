@@ -83,7 +83,26 @@ public class TestWeixinModel {
                         "}";
         UserInfo user = JSON.parseObject(response, UserInfo.class);
         //System.out.println(Arrays.asList(user.getTagid_list()).toString());
+        System.out.println(user.getOpenid());
+        assertNotNull(user);
+    }
+    
+    @Test
+    public void testUserInfoByOauth2() {
+    	String response = "{\"openid\":\"OPENID\",  " + 
+    					" \"nickname\": \"NICKNAME\",  " + 
+    					" \"sex\":\"1\",   " + 
+    					" \"province\":\"PROVINCE\",  " + 
+    					" \"city\":\"CITY\",  " + 
+    					" \"country\":\"COUNTRY\",    " + 
+    					" \"headimgurl\":    \"http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ" + 
+    					"4eMsv84eavHiaiceqxibJxCfHe/46\",  " + 
+    					"\"privilege\":[ \"PRIVILEGE1\", \"PRIVILEGE2\"     ],    " + 
+    					" \"unionid\": \"o6_bmasdasdsad6_2sgVt7hMZOPfL\" " + 
+    					"} ";
+        UserInfo user = JSON.parseObject(response, UserInfo.class);
         System.out.println(user.getNickname());
         assertNotNull(user);
+    	
     }
 }

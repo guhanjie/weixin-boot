@@ -155,10 +155,10 @@ $(function() {
 				$.weui.topTips('请输入起始地');
 				$('input[name="from_address"]').addClass('weui_cell_warn');
 			}
-			else if(!order["from_detail"]) {
-				$.weui.topTips('请输入起始地的详细信息');
-				$('input[name="from_detail"]').addClass('weui_cell_warn');
-			}
+//			else if(!order["from_detail"]) {
+//				$.weui.topTips('请输入起始地的详细信息');
+//				$('input[name="from_detail"]').addClass('weui_cell_warn');
+//			}
 			else if(!order["from_floor"]) {
 				$.weui.topTips('请输入起始地的楼层信息');
 				$('select[name="from_floor"]').addClass('weui_cell_warn');
@@ -170,10 +170,10 @@ $(function() {
 				$.weui.topTips('请输入目的地');
 				$('input[name="to_address"]').closest('.weui_cell').addClass('weui_cell_warn');
 			}
-			else if(!order["to_detail"]) {
-				$.weui.topTips('请输入目的地的详细信息');
-				$('input[name="to_detail"]').addClass('weui_cell_warn');
-			}
+//			else if(!order["to_detail"]) {
+//				$.weui.topTips('请输入目的地的详细信息');
+//				$('input[name="to_detail"]').addClass('weui_cell_warn');
+//			}
 			else if(!order["to_floor"]) {
 				$.weui.topTips('请输入起始地的楼层信息');
 				$('select[name="to_floor"]').addClass('weui_cell_warn');

@@ -27,7 +27,7 @@ public class Interceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 	    String openid = (String)request.getSession().getAttribute(AppConstants.SESSION_KEY_OPEN_ID);
 	    if(openid==null) { //用户未登录，需要网页授权获取用户信息
-	    	LOGGER.info("user non login, redirect to weixin auth...");
+	    	LOGGER.info("user non login, redirect to weixin oauth2.0...");
 	    	HttpSession session = request.getSession();
 	    	String lasturl = request.getRequestURI();
 	    	session.setAttribute(AppConstants.SESSION_KEY_RETURN_URL, lasturl);
@@ -37,7 +37,7 @@ public class Interceptor implements HandlerInterceptor {
 	        String url = WeixinConstants.OAUTH2_AUTHORIZE;
             url = url.replaceAll("APPID", weixinContants.APPID);
             url = url.replaceAll("REDIRECT_URI", weixinContants.OAUTH2_REDIRECT_URI);
-            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_BASE);
+            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_USERINFO);
             url = url.replaceAll("STATE", state);
             response.sendRedirect(url);
 	        return false;
