@@ -20,4 +20,5 @@ public interface AppConstants {
 	public static final String SESSION_KEY_ACCESS_TOKEN = "access_token"; 
 	public static final String SESSION_KEY_RETURN_URL = "return_url"; 
 	public static final String SESSION_KEY_OAUTH_STATE = "state"; 
+	public static final String SESSION_KEY_USER = "user"; 
 }

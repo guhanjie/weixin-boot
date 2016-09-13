@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.guhanjie.model.Order;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
@@ -56,6 +57,7 @@ public class OrderController extends BaseController {
 	@RequestMapping(value="",method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> putOrder(HttpServletRequest req) {
+		LOGGER.info("putting new order for user[]...", JSON.toJSONString(getUser(req)));
 		//获取用户信息
 		String openid = req.getParameter("open_id");
 		User user = userService.getUserByOpenId(openid);

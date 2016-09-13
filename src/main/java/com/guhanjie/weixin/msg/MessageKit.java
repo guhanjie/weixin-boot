@@ -168,6 +168,7 @@ public class MessageKit {
             User user = new User();
             user.setOpenId(userInfo.getOpenid());
             user.setUnionid(userInfo.getUnionid());
+            user.setName(userInfo.getNickname());
             user.setNickname(userInfo.getNickname());
             user.setSex(userInfo.getSex());
             user.setLanguage(userInfo.getLanguage());

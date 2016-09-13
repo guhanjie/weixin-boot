@@ -4,19 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.guhanjie.exception.WebException;
 import com.guhanjie.exception.WebExceptionEnum;
+import com.guhanjie.model.User;
 
 public abstract class BaseController {
 
     @Autowired			//Spring上下文已经将这个web应用的servletContext注入到上下文中去了，只要注入进来即可。
     protected ServletContext servletContext;
 	
+    protected User getUser(HttpServletRequest request) {
+    	HttpSession session = request.getSession();
+    	Object user = session.getAttribute(AppConstants.SESSION_KEY_USER);
+    	if(user != null && user instanceof User) {
+    		return (User)user;
+    	}
+    	return null;
+    }
+    
     /**
      * 返回成功（不带任何结果值）
      * @return {"success": true}

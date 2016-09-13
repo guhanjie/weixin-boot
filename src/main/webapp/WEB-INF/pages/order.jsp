@@ -21,7 +21,7 @@
 <body ontouchstart>
   <div id="baiduMap"></div>
   <form>
-    <input type="hidden" name="open_id" value="${openId}"/>
+    <input type="hidden" name="open_id" value="${user.openId}"/>
     <input type="hidden" name="amount"/>
     <input type="hidden" name="distance"/>
     <input type="hidden" name="vehicle"/>
@@ -128,7 +128,7 @@
           </label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-          <input class="weui_input" name="contactor" type="text" placeholder="请输入联系人姓名" />
+          <input class="weui_input" name="contactor" type="text" placeholder="请输入联系人姓名" value="${user.name}"/>
         </div>
       </div>
       <div class="weui_cell">
@@ -138,7 +138,7 @@
           </label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-          <input class="weui_input" name="phone" type="tel" placeholder="请输入联系电话" />
+          <input class="weui_input" name="phone" type="tel" placeholder="请输入联系电话" value="${user.phone}" />
         </div>
       </div>
       <div class="weui_cell remark">

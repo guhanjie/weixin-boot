@@ -9,13 +9,11 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.guhanjie.weixin.WeixinConstants;
 
-@Component(value = "interceptor")
 public class Interceptor implements HandlerInterceptor {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(Interceptor.class);
@@ -37,7 +35,7 @@ public class Interceptor implements HandlerInterceptor {
 	        String url = WeixinConstants.OAUTH2_AUTHORIZE;
             url = url.replaceAll("APPID", weixinContants.APPID);
             url = url.replaceAll("REDIRECT_URI", weixinContants.OAUTH2_REDIRECT_URI);
-            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_USERINFO);
+            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_BASE);
             url = url.replaceAll("STATE", state);
             response.sendRedirect(url);
 	        return false;

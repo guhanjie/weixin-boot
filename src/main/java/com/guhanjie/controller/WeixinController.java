@@ -9,6 +9,7 @@ package com.guhanjie.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,14 +24,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.guhanjie.model.User;
+import com.guhanjie.service.UserService;
 import com.guhanjie.util.SHA1Util;
 import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.WeixinHttpUtil;
 import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
 import com.guhanjie.weixin.model.AccessToken;
+import com.guhanjie.weixin.model.UserInfo;
 import com.guhanjie.weixin.msg.MessageKit;
+import com.guhanjie.weixin.user.UserKit;
 
 /**
  * Class Name:		WeixinController<br/>
@@ -48,6 +52,9 @@ public class WeixinController extends BaseController {
     
     @Autowired
     private WeixinConstants weixinContants;
+    
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value="",method=RequestMethod.GET)
     public void init(HttpServletRequest req,HttpServletResponse resp) throws IOException {
@@ -75,6 +82,7 @@ public class WeixinController extends BaseController {
     
     @RequestMapping(value="oauth2",method=RequestMethod.GET)
     public void oauth2(HttpServletRequest req,HttpServletResponse resp) throws IOException {
+    	LOGGER.debug("entering oauth2 return url for weixin...");
     	final HttpSession session = req.getSession();
     	final HttpServletResponse response = resp;
     	String originState = (String)session.getAttribute(AppConstants.SESSION_KEY_OAUTH_STATE);
@@ -103,6 +111,23 @@ public class WeixinController extends BaseController {
                 	session.setAttribute(AppConstants.SESSION_KEY_ACCESS_TOKEN, token);
                 	session.setAttribute(AppConstants.SESSION_KEY_OPEN_ID, openid);
                 	try {
+	                	User user = userService.getUserByOpenId(openid);
+	                	if(user == null) {
+	                		UserInfo userInfo = UserKit.getUserInfoByOauth2(openid, token);
+	                		user = new User();
+	                        user.setOpenId(userInfo.getOpenid());
+	                        user.setUnionid(userInfo.getUnionid());
+	                        user.setName(userInfo.getNickname());
+	                        user.setNickname(userInfo.getNickname());
+	                        user.setSex(userInfo.getSex());
+	                        user.setLanguage(userInfo.getLanguage());
+	                        user.setCountry(userInfo.getCountry());
+	                        user.setProvince(userInfo.getProvince());
+	                        user.setCity(userInfo.getCity());
+	                        user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
+	                        userService.addUser(user);
+	                	}
+                		session.setAttribute(AppConstants.SESSION_KEY_USER, user);
 	                	String returnURL = (String)session.getAttribute(AppConstants.SESSION_KEY_RETURN_URL);
 	                	if(StringUtils.isBlank(returnURL)) {
 								response.getWriter().write("Welcome, user authentication successful.");
@@ -113,12 +138,12 @@ public class WeixinController extends BaseController {
 	                		response.sendRedirect(returnURL);
 	                	}
                 	}
-                	catch (IOException e) {
-                		e.printStackTrace();
+                	catch (Exception e) {
+                		LOGGER.error("error in user authentication in weixin oauth2.0.", e);
                 	}
                 }
                 else {
-                    LOGGER.error("User authentication failed, response[{}] error.", JSON.toJSONString(at));
+                    LOGGER.error("User authentication failed in weixin oauth2.0, response[{}] error.", json);
                 }
             }
         });
