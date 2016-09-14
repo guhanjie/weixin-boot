@@ -156,21 +156,21 @@ public class WeixinController extends BaseController {
         String signature = req.getParameter("signature");
         String timestamp = req.getParameter("timestamp");
         String nonce = req.getParameter("nonce");
-    	String[] arrs = {weixinContants.TOKEN,nonce,timestamp};
-        Arrays.sort(arrs);
-        StringBuffer sb = new StringBuffer();
-        for(String a:arrs) {
-            sb.append(a);
+        if(signature!=null && timestamp!=null && nonce!=null) {
+	    	String[] arrs = {weixinContants.TOKEN,nonce,timestamp};
+	        Arrays.sort(arrs);
+	        StringBuffer sb = new StringBuffer();
+	        for(String a:arrs) {
+	            sb.append(a);
+	        }
+	        String sha1 = SHA1Util.sha1(sb.toString());
+	        if(sha1.equals(signature)) {
+	            LOGGER.debug("Success to check weixin request signature.");
+	            return true;
+	        }
         }
-        String sha1 = SHA1Util.sha1(sb.toString());
-        if(sha1.equals(signature)) {
-            LOGGER.debug("Success to check weixin request signature.");
-            return true;
-        }
-        else {
-        	LOGGER.warn("Failed to check weixin request signature, this msg may be fake!");
-        	return false;
-        }
+    	LOGGER.warn("Failed to check weixin request signature, this msg may be fake!");
+    	return false;
     }
     
 //    @RequestMapping("/at")
