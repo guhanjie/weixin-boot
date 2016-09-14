@@ -584,6 +584,16 @@ public class Order {
     	public String desc() {
     		return desc;
     	}
+    	
+    	public static VehicleEnum valueOf(short code) {
+    		VehicleEnum[] enums = VehicleEnum.values();
+    		for(VehicleEnum e : enums) {
+    			if(e.code() == code) {
+    				return e;
+    			}
+    		}
+    		return null;
+    	}
     }
     
     /**

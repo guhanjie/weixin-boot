@@ -7,6 +7,7 @@
  */  
 package com.guhanjie.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,6 +25,8 @@ import com.guhanjie.model.Order;
 import com.guhanjie.model.Order.VehicleEnum;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
+import com.guhanjie.weixin.WeixinConstants;
+import com.guhanjie.weixin.msg.MessageKit;
 
 /**
  * Class Name:		OrderService<br/>
@@ -47,6 +50,9 @@ public class OrderService {
 	
 	@Autowired
 	private OrderMapper orderMapper;
+	
+	@Autowired
+	private WeixinConstants weixinConstants;
 	
 	public void putOrder(Order order) {
 		if(order == null) {
@@ -165,6 +171,19 @@ public class OrderService {
 		// 4. 生成订单
 		order.setCreateTime(new Date());
 		orderMapper.insertSelective(order);
+		
+		// 5. 发送微信消息给客户
+		StringBuffer sb = new StringBuffer("主人，您有新的订单：");
+		sb.append("订单金额：").append(order.getAmount()).append("元\n");
+		sb.append("路程：").append(order.getDistance()).append("公里\n");
+		sb.append("联系人：").append(order.getContactor()).append("\n");
+		sb.append("电话：").append(order.getPhone()).append("\n");
+		sb.append("车型：").append(VehicleEnum.valueOf(order.getVehicle()).desc()).append("\n");
+		sb.append("预订时间：").append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(order.getStartTime())).append("\n");
+		sb.append("起始地：").append(order.getFrom().getAddress()).append(" ").append(order.getFrom().getDetail()).append(" 第").append(order.getFrom().getFloor()).append("楼\n");
+		sb.append("目的地：").append(order.getTo().getAddress()).append(" ").append(order.getTo().getDetail()).append(" 第").append(order.getTo().getFloor()).append("楼\n");
+		sb.append("备注：").append(order.getRemark()).append("\n");
+		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
 	}
 	
 }

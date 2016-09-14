@@ -209,7 +209,7 @@ $(function() {
 		    	if(data.success) {
 					$.weui.loading('订单提交成功');
 					setTimeout($.weui.hideLoading, 1000);
-					var vehicleName = ['小面', '金杯', '全顺/依维柯'];
+					var vehicleName = ['小面车型', '金杯车型', '全顺/依维柯'];
 					$('#res_vehicle').text(vehicleName[order["vehicle"]]);
 					$('#res_from_address').text(order["from_address"]);
 					$('#res_to_address').text(order["to_address"]);
