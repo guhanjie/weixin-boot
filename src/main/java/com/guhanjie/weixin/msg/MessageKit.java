@@ -19,6 +19,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -27,11 +29,15 @@ import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSONObject;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.UserService;
 import com.guhanjie.util.SpringContextUtil;
 import com.guhanjie.weixin.WeixinConstants;
+import com.guhanjie.weixin.WeixinHttpUtil;
+import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
+import com.guhanjie.weixin.model.ErrorEntity;
 import com.guhanjie.weixin.model.UserInfo;
 import com.guhanjie.weixin.user.UserKit;
 
@@ -205,4 +211,36 @@ public class MessageKit {
     	userService.updateToCache(user);
     	return "";
     }
+    
+    public static void sendKFMsg(String openid, String content) {
+    	LOGGER.info("starting to send message[{}] to KF[{}]...", content, openid);
+        try {
+            String url = WeixinConstants.API_KF_SEND_MSG;
+            String str = new String("{" + 
+					            				"    \"touser\":\"OPENID\"," + 
+					            				"    \"msgtype\":\"text\"," + 
+					            				"    \"text\":" + 
+					            				"    {" + 
+					            				"         \"content\":\"ContentText\"" + 
+					            				"    }" + 
+					            				"}");
+            str.replaceAll("OPENID", openid);
+            str.replaceAll("ContentText", content);
+            HttpEntity entity = new StringEntity(str);
+	        WeixinHttpUtil.sendPost(url, entity, new WeixinHttpCallback() {
+		            @Override
+		            public void process(String json) {
+		            	ErrorEntity t = JSONObject.parseObject(json, ErrorEntity.class);
+		                if(t!=null && t.getErrcode()!=null && t.getErrmsg()!=null) {
+		                    if(t.getErrcode().equals("0") && t.getErrmsg().equals("ok"))
+		                    LOGGER.info("Success to post message to KF.");
+		                    return;
+		                }
+		                LOGGER.error("Failed to post message to KF, error:[{}].", json);
+		            }
+		        });
+	    } catch (Exception e) {
+	        LOGGER.error("error to post message[{}] to KF[{}].", content, openid);
+	    } 
+	}
 }
