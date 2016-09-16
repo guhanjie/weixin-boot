@@ -8,14 +8,16 @@
     
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5p %logger{36} [%file:%line] - %m%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5p %logger{16} [%file:%line] - %m%n</pattern>
+			<charset>UTF-8</charset>
 		</encoder>
 	</appender>
 	
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>${PROJECT_LOG_DIR}/${PROJECT_NAME}.log</File>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5p %logger{36} [%file:%line] - %m%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5p %logger{16} [%file:%line] - %m%n</pattern>
+			<charset>UTF-8</charset>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${PROJECT_LOG_DIR}/${PROJECT_NAME}_%d{yyyy-MM-dd}.log</fileNamePattern>

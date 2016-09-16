@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -213,7 +214,7 @@ public class MessageKit {
     }
     
     public static void sendKFMsg(String openid, String content) {
-    	LOGGER.info("starting to send message[{}] to KF[{}]...", content, openid);
+    	LOGGER.info("starting to send message to KF[{}]...", openid);
         try {
             String url = WeixinConstants.API_KF_SEND_MSG;
             String str = new String("{" + 
@@ -224,9 +225,10 @@ public class MessageKit {
 					            				"         \"content\":\"ContentText\"" + 
 					            				"    }" + 
 					            				"}");
-            str.replaceAll("OPENID", openid);
-            str.replaceAll("ContentText", content);
-            HttpEntity entity = new StringEntity(str);
+            str = str.replaceAll("OPENID", openid);
+            str = str.replaceAll("ContentText", content);
+            LOGGER.debug("message content: [{}]", str);
+            HttpEntity entity = new StringEntity(str, ContentType.APPLICATION_JSON);
 	        WeixinHttpUtil.sendPost(url, entity, new WeixinHttpCallback() {
 		            @Override
 		            public void process(String json) {

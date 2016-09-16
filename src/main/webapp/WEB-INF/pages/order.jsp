@@ -170,53 +170,69 @@
     <div class="weui_text_area">
         <h2 class="weui_msg_title">操作成功</h2>
         <p class="weui_msg_desc">订单已提交，我们会尽快为您安排服务</p>
-    </div>
-    <div class="weui_cells_title">订单详情如下：</div>
-    <div class="weui_cells">
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <p><i class="weui_icon_success_circle"></i>预订车型</p>
+        <div class="weui_cells_title">订单详情如下：</div>
+        <div class="weui_cells">
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>预估路程</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_distance"></span>
+                </div>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <span id="res_vehicle"></span>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>预计费用</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_amount"></span>
+                </div>
             </div>
-        </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <p><i class="weui_icon_success_circle"></i>起始地</p>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>预订车型</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_vehicle"></span>
+                </div>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <span id="res_from_address"></span>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>起始地</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_from_address"></span>
+                </div>
             </div>
-        </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <p><i class="weui_icon_success_circle"></i>目的地</p>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>目的地</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_to_address"></span>
+                </div>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <span id="res_to_address"></span>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>联系人</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_contactor"></span>
+                </div>
             </div>
-        </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <p><i class="weui_icon_success_circle"></i>联系人</p>
-            </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <span id="res_contactor"></span>
-            </div>
-        </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <p><i class="weui_icon_success_circle"></i>服务时间</p>
-            </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <span id="res_start_time"></span>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>服务时间</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_start_time"></span>
+                </div>
             </div>
         </div>
     </div>
     <div class="weui_opr_area">
         <p class="weui_btn_area">
-            <a href="javascript:;" class="weui_btn weui_btn_primary">确定</a>
+            <!-- <a href="javascript:;" class="weui_btn weui_btn_primary">确定</a> -->
         </p>
     </div>
     <div class="weui_extra_area">

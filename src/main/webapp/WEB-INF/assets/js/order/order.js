@@ -11,8 +11,8 @@ $(function() {
 		$(this).addClass('text-primary');
 		$(this).find('i').removeClass().addClass('icon-ok-sign');
 		var carType = $(this).data('type');
-		$('input[name="vehicle"]').val(order["vehicle"]);
 		order["vehicle"] = carType;
+		$('input[name="vehicle"]').val(order["vehicle"]);
 		var price = [150, 200, 300];
 		$('.order_sumary .price  em').text(price[carType-1]);
 		var arrowLeft = ['16%', '50%', '83%'];
@@ -141,7 +141,7 @@ $(function() {
 		order["to_detail"] = $('input[name="to_detail"]').val();
 		order["to_floor"] = $('select[name="to_floor"]').val();
 		order["start_time"] = order["start_time"] || new Date().getTime();
-		$('input[name="start_time"]').val(order["start_time"]);
+		//$('input[name="start_time"]').val(order["start_time"]);
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
 		order["remark"] = $('textarea[name="remark"]').val();
@@ -150,34 +150,34 @@ $(function() {
 			$.weui.topTips('未选择正确车型');
 			return;
 		}
-		if(!order["from_address"] || !order["from_detail"] || !order["from_floor"]) {
-			if(!order["from_address"]) {
-				$.weui.topTips('请输入起始地');
-				$('input[name="from_address"]').addClass('weui_cell_warn');
-			}
-//			else if(!order["from_detail"]) {
-//				$.weui.topTips('请输入起始地的详细信息');
-//				$('input[name="from_detail"]').addClass('weui_cell_warn');
-//			}
-			else if(!order["from_floor"]) {
-				$.weui.topTips('请输入起始地的楼层信息');
-				$('select[name="from_floor"]').addClass('weui_cell_warn');
-			}
+		if(!order["from_address"]) {
+			$.weui.topTips('请输入起始地');
+			$('input[name="from_address"]').addClass('weui_cell_warn');
 			return;
 		}
-		if(!order["to_address"] || !order["to_detail"] || !order["to_floor"]) {
-			if(!order["to_address"]) {
-				$.weui.topTips('请输入目的地');
-				$('input[name="to_address"]').closest('.weui_cell').addClass('weui_cell_warn');
-			}
-//			else if(!order["to_detail"]) {
-//				$.weui.topTips('请输入目的地的详细信息');
-//				$('input[name="to_detail"]').addClass('weui_cell_warn');
-//			}
-			else if(!order["to_floor"]) {
-				$.weui.topTips('请输入起始地的楼层信息');
-				$('select[name="to_floor"]').addClass('weui_cell_warn');
-			}
+//		if(!order["from_detail"]) {
+//			$.weui.topTips('请输入起始地的详细信息');
+//			$('input[name="from_detail"]').addClass('weui_cell_warn');
+//			return;
+//		}
+		if(!order["from_floor"]) {
+			$.weui.topTips('请输入起始地的楼层信息');
+			$('select[name="from_floor"]').addClass('weui_cell_warn');
+			return;
+		}
+		if(!order["to_address"]) {
+			$.weui.topTips('请输入目的地');
+			$('input[name="to_address"]').closest('.weui_cell').addClass('weui_cell_warn');
+			return;
+		}
+//		if(!order["to_detail"]) {
+//			$.weui.topTips('请输入目的地的详细信息');
+//			$('input[name="to_detail"]').addClass('weui_cell_warn');
+//			return;
+//		}
+		if(!order["to_floor"]) {
+			$.weui.topTips('请输入起始地的楼层信息');
+			$('select[name="to_floor"]').addClass('weui_cell_warn');
 			return;
 		}
 		if (!order["contactor"]) {
@@ -199,11 +199,19 @@ $(function() {
 			return;
 		}
 		$.weui.loading('订单提交中...');
-		console.log(order);
+		//console.log(order);
+		//console.log($('form').serialize());
+		//var formData = $('form').serialize();
+		var formData = '';
+		for(i in order) {
+			formData += '&'+i+'='+order[i];
+		}
+		formData = formData.substring(1);
+		//console.log(formData);
 		$.ajax({
 		    type: 'POST',
 		    url: 'order',
-		    data: $('form').serialize(),
+		    data: formData,
 		    success: function(data){
 	    		$.weui.hideLoading();
 		    	if(data.success) {
@@ -211,6 +219,8 @@ $(function() {
 					setTimeout($.weui.hideLoading, 1000);
 					var vehicleName = ['小面车型', '金杯车型', '全顺/依维柯'];
 					$('#res_vehicle').text(vehicleName[order["vehicle"]]);
+					$('#res_distance').text(order["distance"]+' 公里');
+					$('#res_amount').text(order["amount"]+' 元');
 					$('#res_from_address').text(order["from_address"]);
 					$('#res_to_address').text(order["to_address"]);
 					$('#res_contactor').text(order["contactor"]);

@@ -173,7 +173,7 @@ public class OrderService {
 		orderMapper.insertSelective(order);
 		
 		// 5. 发送微信消息给客户
-		StringBuffer sb = new StringBuffer("主人，您有新的订单：");
+		StringBuffer sb = new StringBuffer("主人，您有新的订单：\n");
 		sb.append("订单金额：").append(order.getAmount()).append("元\n");
 		sb.append("路程：").append(order.getDistance()).append("公里\n");
 		sb.append("联系人：").append(order.getContactor()).append("\n");

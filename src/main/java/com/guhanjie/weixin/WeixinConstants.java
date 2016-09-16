@@ -27,7 +27,7 @@ public class WeixinConstants {
 	public String APPSECRET;
 	@Value("${weixin.token}")
 	public String TOKEN;
-	@Value("${weixin.kf.openid:o_05Uwe4_9GGQ93ESXg27RCw6HqE}")	//,o_05UwXR65RZ-VeZ12CfLH27UiEk
+	@Value("${weixin.kf.openid:o_05UwXR65RZ-VeZ12CfLH27UiEk}")	//,o_05Uwe4_9GGQ93ESXg27RCw6HqE
 	public String KF_OPENIDS;
 	
     public final static String MSG_TYPE_TEXT = "text";									//文本消息
