@@ -115,6 +115,7 @@ $(function() {
 				val += plan.getDistance(true) + "\n"; // 获取距离
 				console.log(val);
 				order["distance"] = plan.getDistance(false) / 1000;
+				document.body.click();
 				console.log("最终距离结果：" + order["distance"]);
 			}
 		}
