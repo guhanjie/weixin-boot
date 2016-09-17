@@ -70,10 +70,13 @@ $(function() {
     $('#start_time').mobiscroll().datetime(options);
 
     //计算价格
-	$('body').on('click', function() {
+	$('body').on('change click touchend', function(e) {
     	order["amount"] = undefined;
     	var distance = order["distance"] || 0;
-    	distance = distance.toFixed(1);
+    	if(!$('input[name="from_address"]').val() || !$('input[name="to_address"]').val()) {
+    		distance = 0;
+    	}
+    	distance = Math.ceil(distance);
     	$('.order_sumary .distance em').text(distance);
     	var fromFloor = $('select[name="from_floor"]').val() || 0;
     	var toFloor = $('select[name="to_floor"]').val() || 0;
@@ -84,14 +87,14 @@ $(function() {
     	if(order["vehicle"] == 1) {	//小面车型
     		price = 150.0; //起步价150（10公里内）
             price += (distance<10) ? 0.0 : (distance-10)*5.0;  //超出后每公里5元
-            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : (toFloor-1)*10.0;
+            price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
     	}
     	else if(order["vehicle"] == 2) {	//金杯车型
 		    price = 200.0; //起步价200（10公里内）
             price += (distance<10) ? 0.0 : (distance-10)*6.0;  //超出后每公里6元
-            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : (toFloor-1)*10.0;
+            price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
     	}
     	else if(order["vehicle"] == 3) {   //全顺/依维轲
 		    price = 300.0; //起步价300（10公里内）
@@ -101,7 +104,7 @@ $(function() {
             price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
     	}
     	order["amount"] = price.toFixed(1);
-    	$('.order_sumary .price em').text(price);
+    	$('.order_sumary .price em').text(order["amount"]);
 		$('input[name="vehicle"]').val(order["vehicle"]);
 		$('input[name="from_lng"]').val(order["from_lng"]);
 		$('input[name="from_lat"]').val(order["from_lat"]);

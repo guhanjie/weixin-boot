@@ -74,13 +74,13 @@
             <select class="weui_select address-floor" name="from_floor">
               <option value="0">电梯-免费</option>
               <option value="1">1楼-免费</option>
-              <option value="2">2楼-加收10元</option>
-              <option value="3">3楼-加收20元</option>
-              <option value="4">4楼-加收30元</option>
-              <option value="5">5楼-加收40元</option>
-              <option value="6">6楼-加收50元</option>
-              <option value="7">7楼-加收60元</option>
-              <option value="8">8楼-加收70元</option>
+              <option value="2">2楼-加收20元</option>
+              <option value="3">3楼-加收30元</option>
+              <option value="4">4楼-加收40元</option>
+              <option value="5">5楼-加收50元</option>
+              <option value="6">6楼-加收60元</option>
+              <option value="7">7楼-加收70元</option>
+              <option value="8">8楼-加收80元</option>
             </select>
           </div>
         </div>
@@ -100,13 +100,13 @@
             <select class="weui_select address-floor" name="to_floor">
               <option value="0">电梯-免费</option>
               <option value="1">1楼-免费</option>
-              <option value="2">2楼-加收10元</option>
-              <option value="3">3楼-加收20元</option>
-              <option value="4">4楼-加收30元</option>
-              <option value="5">5楼-加收40元</option>
-              <option value="6">6楼-加收50元</option>
-              <option value="7">7楼-加收60元</option>
-              <option value="8">8楼-加收70元</option>
+              <option value="2">2楼-加收20元</option>
+              <option value="3">3楼-加收30元</option>
+              <option value="4">4楼-加收40元</option>
+              <option value="5">5楼-加收50元</option>
+              <option value="6">6楼-加收60元</option>
+              <option value="7">7楼-加收70元</option>
+              <option value="8">8楼-加收80元</option>
             </select>
           </div>
         </div>
