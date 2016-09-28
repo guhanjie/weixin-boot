@@ -1,0 +1,60 @@
+HTML
+=============
+<form>
+  <div class="weui_cells_title">制卡进度查询</div>
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">姓名</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" name="name" type="text" placeholder="请在此输入姓名" />
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">身份证</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" name="idcard" type="text" placeholder="请在此输入身份证号" />
+        </div>
+    </div>
+</div>
+<p class="weui_cells_tips">提示:目前只能查询金融社保卡制卡进度</p>
+<div class="weui_btn_area">
+    <a class="weui_btn weui_btn_primary" id="button" href="javascript:">查询</a>
+</div>
+</form>
+
+CSS
+=============
+@import https://res.wx.qq.com/open/libs/weui/0.4.3/weui.css
+body{
+  background-color: #FBF9FE;
+}
+.weui_label{
+  width: 4em;
+}
+
+JS
+=============
+//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js
+//rawgit.com/progrape/weui.js/master/dist/weui.js
+$(function(){
+    $('#button').on('click', function(e){
+        var pairs = $('form').serialize().split(/&/gi);
+        var data = {};
+        pairs.forEach(function(pair) {
+            pair = pair.split('=');
+            data[pair[0]] = decodeURIComponent(pair[1] || '');
+        });
+        if(!data.name){
+            $.weui.topTips('请输入姓名');
+            return;
+        }
+        if(!data.idcard || !/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/.test(data.idcard)){
+            $.weui.topTips('请输入正确的身份证号码');
+            return;
+        }
+    })
+})

@@ -13,7 +13,7 @@
 <meta name="description" content="尊涵搬家服务，拉货、搬家按公里数计费，快速安全将货物送达。让用户以最经济的方式获得高质量、高性价比的同城货物运输体验。咨询热线：18916840930">
 <link rel="stylesheet" href="resources/css/fontawesome/font-awesome.css">
 <link rel="stylesheet" href="resources/css/weui/weui.css">
-<title>尊涵搬家服务</title>
+<title>尊涵搬家服务-订单支付</title>
 </head>
 <body ontouchstart>
   <div id="baiduMap"></div>
