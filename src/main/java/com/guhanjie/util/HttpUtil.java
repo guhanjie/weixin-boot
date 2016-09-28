@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.KeyStore;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -29,6 +32,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public final class HttpUtil {
     
@@ -185,6 +190,28 @@ public final class HttpUtil {
                 LOGGER.error("http client close error.");
             }
         }
+    }
+    
+    public static void https(String passwd) {
+//    	char[] pwdChars = passwd.toCharArray();
+//    	//指定读取证书格式为PKCS12
+//    	KeyStore keyStore = KeyStore.getInstance("PKCS12");
+//    	//读取本机存放的PKCS12证书文件
+//    	Resource pkcResource = new ClassPathResource("weixin/apiclient_cert.p12");
+//    	InputStream instream  = pkcResource.getInputStream();
+//    	try {
+//    	//指定PKCS12的密码(商户ID)
+//    	keyStore.load(instream, pwdChars);
+//    	} finally {
+//    	instream.close();
+//    	}
+//    	SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, pwdChars).build();
+//    	//指定TLS版本
+//    	SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+//    					sslcontext,new String[] { "TLSv1" }, null, 
+//    					SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+//		//设置httpclient的SSLSocketFactory
+//		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
     }
     
     public static HttpResponse sendDelete(String url) throws IOException {

@@ -9,6 +9,7 @@ package com.guhanjie.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -183,6 +184,14 @@ public class OrderService {
 		sb.append("目的地：").append(order.getTo().getAddress()).append(" ").append(order.getTo().getDetail()).append(" 第").append(order.getTo().getFloor()).append("楼\n");
 		sb.append("备注：").append(order.getRemark()).append("\n");
 		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
+	}
+	
+	public List<Order> getOrdersByUser(User user) {
+		List<Order> result = null;
+		if(user!=null && user.getId()!=null) {
+			result = orderMapper.selectByUserId(user.getId());
+		}
+		return result;
 	}
 	
 }

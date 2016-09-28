@@ -1,5 +1,7 @@
 package com.guhanjie.mapper;
 
+import java.util.List;
+
 import com.guhanjie.model.Order;
 
 public interface OrderMapper {
@@ -50,4 +52,8 @@ public interface OrderMapper {
      * @mbggenerated Thu Sep 01 14:34:30 CST 2016
      */
     int updateByPrimaryKey(Order record);
+    
+    //------------------------- custom add -----------------------------
+    List<Order> selectByUserId(Integer userid);
+    //--------------------------------------------------------------------
 }

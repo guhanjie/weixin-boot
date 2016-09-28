@@ -143,7 +143,7 @@ public class WeixinController extends BaseController {
                 	}
                 }
                 else {
-                    LOGGER.error("User authentication failed in weixin oauth2.0, response[{}] error.", json);
+                    LOGGER.error("User authentication failed in weixin oauth2.0, error response:[{}].", json);
                 }
             }
         });

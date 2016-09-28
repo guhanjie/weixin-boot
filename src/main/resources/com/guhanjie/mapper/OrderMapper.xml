@@ -24,6 +24,30 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  
+  <!-- Add custom on 2016-9-28 15:53:39 -->
+  <resultMap id="FullResultMap" type="com.guhanjie.model.Order">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="tip" jdbcType="DECIMAL" property="tip" />
+    <result column="from_id" jdbcType="INTEGER" property="fromId" />
+    <result column="waypoints_ids" jdbcType="VARCHAR" property="waypointsIds" />
+    <result column="to_id" jdbcType="INTEGER" property="toId" />
+    <result column="distance" jdbcType="DECIMAL" property="distance" />
+    <result column="vehicle" jdbcType="SMALLINT" property="vehicle" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="contactor" jdbcType="VARCHAR" property="contactor" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <association column="user_id" javaType="com.guhanjie.model.User" property="user" select="com.guhanjie.mapper.UserMapper.selectByPrimaryKey"/>
+    <association column="from_id" javaType="com.guhanjie.model.Position" property="from" select="com.guhanjie.mapper.PositionMapper.selectByPrimaryKey"/>
+    <association column="to_id" javaType="com.guhanjie.model.Position" property="to" select="com.guhanjie.mapper.PositionMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbggenerated
@@ -260,4 +284,11 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- Add custom -->
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="FullResultMap">
+    select <include refid="Base_Column_List" />
+    from zhmv.order 
+    where user_id = #{userid} order by start_time desc 
+  </select>
 </mapper>

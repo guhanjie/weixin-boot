@@ -14,6 +14,8 @@
     	<link rel="shortcut icon" type="image/x-icon" href="${rootPath}/img/favicon.ico">
         <link rel="stylesheet" href="resources/css/bootstrap/bootstrap.css">
     	<title>Index</title>
+        <!-- 获取上下文 -->
+        <%-- ${pageContext.request.contextPath} --%>
     </head>
     <body>
         <h1>Hello world...</h1>

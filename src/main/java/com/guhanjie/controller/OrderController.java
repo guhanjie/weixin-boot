@@ -9,18 +9,22 @@ package com.guhanjie.controller;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.guhanjie.model.Order;
@@ -115,5 +119,16 @@ public class OrderController extends BaseController {
 		//下单
 		orderService.putOrder(order);
 		return success();
+	}
+	
+	@RequestMapping(value="search",method=RequestMethod.GET)
+	public String searchOrder(HttpServletRequest req, Model model) {
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
+//		User user = new User();
+//		user.setId(4);
+		List<Order> orders = orderService.getOrdersByUser(user);
+		model.addAttribute("orders", orders);
+		return "order_search";
 	}
 }
