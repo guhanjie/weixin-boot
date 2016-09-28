@@ -607,6 +607,7 @@ public class Order {
     public static enum StatusEnum {
     	//位表示法
     	NEW((short)0x01, "新建订单"),
+        CANCEL((short)0x02, "取消订单"),
     	SENDING((short)0x05, "开始送货"),
     	FINISH((short)0x19, "支付完成");
     	

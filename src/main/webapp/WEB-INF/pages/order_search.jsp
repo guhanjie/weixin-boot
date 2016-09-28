@@ -1,37 +1,85 @@
-(function ($) {
-  $.fn.slideDown = function (duration) {    
-    // get old position to restore it then
-    var position = this.css('position');
-    
-    // show element if it is hidden (it is needed if display is none)
-    this.show();
-    
-    // place it so it displays as usually but hidden
-    this.css({
-      position: 'absolute',
-      visibility: 'hidden'
-    });
-
-    // get naturally height
-    var height = this.height();
-    
-    // set initial css for animation
-    this.css({
-      position: position,
-      visibility: 'visible',
-      overflow: 'hidden',
-      height: 0
-    });
-
-    // animate to gotten height
-    this.animate({
-      height: height
-    }, duration);
-  };
-})(Zepto);
-
-$(function () {
-  $('.slide-trigger').on('click', function () {
-    $('.slide').slideDown(500);
-  });
-});
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="keywords" content="搬家,货运,上门,服务,上海,市内搬家,同城搬家" />
+<meta name="description" content="尊涵搬家服务，拉货、搬家按公里数计费，快速安全将货物送达。让用户以最经济的方式获得高质量、高性价比的同城货物运输体验。咨询热线：18916840930">
+<link rel="stylesheet" href="../resources/css/fontawesome/font-awesome.css">
+<link rel="stylesheet" href="../resources/css/weui/weui.css">
+<link rel="stylesheet" href="../resources/css/order/order.css">
+<title>尊涵搬家服务-订单查询</title>
+</head>
+<body ontouchstart>
+  <div class="weui_cells_title order-list">您的订单列表</div>
+  <div class="weui_cells weui_cells_access">
+    <c:if test="${orders==null or empty orders}">
+      <div class="weui_cell" href="#">
+        <div class="weui_cell_hd">
+          <i class="icon-info-sign text-primary "></i>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <p>您还没有创建过任何订单哦~</p>
+        </div>
+        <div class="weui_cell_ft">
+          <a href="../order">立刻去下单</a>
+        </div>
+      </div>
+    </c:if>
+    <c:if test="${not empty orders}">
+      <c:forEach items="${orders}" var="item">
+        <a class="weui_cell" href="#">
+          <div class="weui_cell_hd">
+            <!-- <i class="icon-double-angle-down text-primary"> </i> -->
+          </div>
+          <div class="weui_cell_bd weui_cell_primary order-item">
+            <p>
+              服务时间： <span class="text-blue"> <fmt:formatDate value="${item.startTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
+            </p>
+            <p>
+              <i class="icon icon-circle-blank text-red"></i>${item.from.address}
+              <br />
+              <i class="icon icon-circle text-blue"></i>${item.to.address}
+            </p>
+            <div class="order-detail">
+              <p>路程：${item.distance}公里</p>
+              <p>车型：${item.vehicle==1?'小面':(item.vehicle==2)?'金杯':'全顺/依维柯'}</p>
+              <p>联系人：${item.contactor}</p>
+              <p>电话：${item.phone}</p>
+            </div>
+          </div>
+          <div class="weui_cell_ft">
+            <c:choose>
+              <c:when test="${item.status == 25}">
+                <span class="text-primary">已支付</span>
+              </c:when>
+              <c:when test="${item.status == 05}">
+                <span class="text-primary">正在送货</span>
+              </c:when>
+              <c:when test="${item.status == 02}">
+                <span class="text-bold">已取消</span>
+              </c:when>
+              <c:when test="${item.status == 01 && item.startTime.time - now.time > 1*24*60*60*1000}">
+                <span class="btn_cancel">取消</span>
+              </c:when>
+              <c:otherwise>
+                  <span class="btn_success gloming">去支付</span>
+              </c:otherwise>
+            </c:choose>
+          </div>
+        </a>
+      </c:forEach>
+    </c:if>
+  </div>
+  <script src="../resources/js/zepto/zepto-1.1.6.js"></script>
+  <script src="../resources/js/weui/weui.js"></script>
+  <script src="../resources/js/order/order_search.js"></script>
+</body>
+</html>

@@ -23,6 +23,7 @@ import com.guhanjie.exception.WebExceptionFactory;
 import com.guhanjie.mapper.OrderMapper;
 import com.guhanjie.mapper.PositionMapper;
 import com.guhanjie.model.Order;
+import com.guhanjie.model.Order.StatusEnum;
 import com.guhanjie.model.Order.VehicleEnum;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
@@ -170,6 +171,7 @@ public class OrderService {
 		
 		// 4. 生成订单
 		order.setCreateTime(new Date());
+		order.setStatus(StatusEnum.NEW.code());
 		orderMapper.insertSelective(order);
 		
 		// 5. 发送微信消息给客户

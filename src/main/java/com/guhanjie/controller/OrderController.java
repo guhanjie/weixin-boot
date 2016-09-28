@@ -24,7 +24,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.guhanjie.model.Order;
@@ -124,11 +123,12 @@ public class OrderController extends BaseController {
 	@RequestMapping(value="search",method=RequestMethod.GET)
 	public String searchOrder(HttpServletRequest req, Model model) {
 		HttpSession session = req.getSession();
-		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
-//		User user = new User();
-//		user.setId(4);
+//		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
+		User user = new User();
+		user.setId(3);
 		List<Order> orders = orderService.getOrdersByUser(user);
 		model.addAttribute("orders", orders);
+		model.addAttribute("now", new Date());
 		return "order_search";
 	}
 }
