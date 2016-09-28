@@ -7,15 +7,10 @@
  */  
 package com.guhanjie.weixin.msg;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,10 +18,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +25,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.UserService;
+import com.guhanjie.util.HttpUtil;
 import com.guhanjie.util.SpringContextUtil;
+import com.guhanjie.util.XmlUtil;
 import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.WeixinHttpUtil;
 import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
@@ -61,33 +54,15 @@ public class MessageKit {
         replyMsgs.put("run", "祝你一路平安!");
     }
     
-    @SuppressWarnings("unchecked")
-    public static Map<String,String> reqMsg2Map(HttpServletRequest req) throws IOException {
-        String xml = req2xml(req);
+    public static Map<String,String> reqMsg2Map(HttpServletRequest req) {
         try {
-            Map<String,String> maps = new HashMap<String, String>();
-            Document document = DocumentHelper.parseText(xml);
-            Element root = document.getRootElement();
-            List<Element> eles = root.elements();
-            for(Element e:eles) {
-                maps.put(e.getName(), e.getTextTrim());
-            }
+            Document xml = HttpUtil.getRequest2Xml(req);
+            Map<String,String> maps = XmlUtil.xml2map(xml);
             return maps;
-        } catch (DocumentException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("error in parsing request to xml from weixin.", e); 
         }
         return null;
-    }
-    
-    private static String req2xml(HttpServletRequest req) throws IOException {
-        BufferedReader br = null;
-        br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String str = null;
-        StringBuffer sb = new StringBuffer();
-        while((str=br.readLine())!=null) {
-            sb.append(str);
-        }
-        return sb.toString();
     }
     
     /**
@@ -99,43 +74,33 @@ public class MessageKit {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String handlerMsg(Map<String, String> msgMap) throws IOException {
+	public static String handlerMsg(Map<String, String> msgMap) {
 	    String msgType = msgMap.get("MsgType");
-	    //处理事件消息
-	    if(msgType.equals(WeixinConstants.MSG_TYPE_EVENT)) {
-	    	String eventType = msgMap.get("Event");
-	    	//订阅事件
-	        if(eventType.equals(WeixinConstants.EVENT_SUBSCRIBE)) {
-	        	return handleSubscribeEvent(msgMap);
-	        }
-	        //上报地址位置事件
-	        else if(eventType.equals(WeixinConstants.EVENT_LOCATION)) {
-	        	return handleLocationEvent(msgMap);
-	        }
-	    }
-	    //处理文本消息
-	    else if(msgType.equals(WeixinConstants.MSG_TYPE_TEXT)) {
-	        return handleTextMsg(msgMap);
-	    }
-	    //处理图片消息
-	    else if(msgType.equals(WeixinConstants.MSG_TYPE_IMAGE)) {
-	        return handleImageMsg(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
+	    try {
+    	    //处理事件消息
+    	    if(msgType.equals(WeixinConstants.MSG_TYPE_EVENT)) {
+    	    	String eventType = msgMap.get("Event");
+    	    	//订阅事件
+    	        if(eventType.equals(WeixinConstants.EVENT_SUBSCRIBE)) {
+    	        	return handleSubscribeEvent(msgMap);
+    	        }
+    	        //上报地址位置事件
+    	        else if(eventType.equals(WeixinConstants.EVENT_LOCATION)) {
+    	        	return handleLocationEvent(msgMap);
+    	        }
+    	    }
+    	    //处理文本消息
+    	    else if(msgType.equals(WeixinConstants.MSG_TYPE_TEXT)) {
+    	        return handleTextMsg(msgMap);
+    	    }
+    	    //处理图片消息
+    	    else if(msgType.equals(WeixinConstants.MSG_TYPE_IMAGE)) {
+    	        return handleImageMsg(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
+    	    }
+	    } catch(IOException e) {
+	        LOGGER.error("error to handle msg for weixin.", e);
 	    }
 	    return "";
-	}
-
-	public static String map2xml(Map<String, String> map) throws IOException {
-	    Document d = DocumentHelper.createDocument();
-	    Element root = d.addElement("xml");
-	    Set<String> keys = map.keySet();
-	    for(String key:keys) {
-	        root.addElement(key).addText(map.get(key));
-	    }
-	    StringWriter sw = new StringWriter();
-	    XMLWriter xw = new XMLWriter(sw);
-	    xw.setEscapeText(false);
-	    xw.write(d);
-	    return sw.toString();
 	}
 
 	private static String handleImageMsg(Map<String, String> msgMap,String mediaId) throws IOException {
@@ -146,7 +111,7 @@ public class MessageKit {
         map.put("CreateTime", new Date().getTime()+"");
         map.put("MsgType", "image");
         map.put("Image", "<MediaId>"+mediaId+"</MediaId>");
-        return map2xml(map);
+        return XmlUtil.map2xmlstr(map);
     }
     
     private static String handleTextMsg(Map<String, String> msgMap) throws IOException {
@@ -162,7 +127,7 @@ public class MessageKit {
             replyContent = replyMsgs.get(con);
         }
         map.put("Content", replyContent);
-        return map2xml(map);
+        return XmlUtil.map2xmlstr(map);
     }
     
     private static String handleSubscribeEvent(Map<String, String> msgMap) throws IOException {
@@ -193,7 +158,7 @@ public class MessageKit {
         map.put("CreateTime", new Date().getTime()+"");
         map.put("MsgType", "text");
         map.put("Content", "您好，欢迎关注！");
-    	return map2xml(map);
+    	return XmlUtil.map2xmlstr(map);
     }
     
     private static String handleLocationEvent(Map<String, String> msgMap) throws IOException {

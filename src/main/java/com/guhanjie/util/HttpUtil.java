@@ -24,6 +24,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,17 +94,6 @@ public final class HttpUtil {
         return ip.equals("0:0:0:0:0:0:0:1")?"127.0.0.1":ip;
     }  
     
-    public static int getResponseCode(String url) throws IOException {
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(url);
-        try {
-            HttpResponse response = httpclient.execute(httpGet);
-            return response.getStatusLine().getStatusCode();
-        } finally {
-            httpclient.getConnectionManager().shutdown();
-        }
-    }
-
     public static String getRequestBody(HttpServletRequest request, String charsetName) throws ServletException {
         HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(request);
         StringBuilder stringBuilder = new StringBuilder();
@@ -128,6 +120,29 @@ public final class HttpUtil {
             }
         }
         return stringBuilder.toString();
+    }
+    
+    public static Document getRequest2Xml(HttpServletRequest req) throws IOException, DocumentException {
+        BufferedReader br = null;
+        br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String str = null;
+        StringBuffer sb = new StringBuffer();
+        while((str=br.readLine())!=null) {
+            sb.append(str);
+        }
+        String xml = sb.toString();
+        return DocumentHelper.parseText(xml);
+    }
+
+    public static int getResponseCode(String url) throws IOException {
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+        try {
+            HttpResponse response = httpclient.execute(httpGet);
+            return response.getStatusLine().getStatusCode();
+        } finally {
+            httpclient.getConnectionManager().shutdown();
+        }
     }
 
     public static void sendGet(String url, HttpCallback c) {
