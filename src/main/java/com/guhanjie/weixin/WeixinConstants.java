@@ -29,6 +29,8 @@ public class WeixinConstants {
 	public String TOKEN;
 	@Value("${weixin.kf.openid:o_05UwXR65RZ-VeZ12CfLH27UiEk}")	//,o_05Uwe4_9GGQ93ESXg27RCw6HqE
 	public String KF_OPENIDS;
+	@Value("${weixin.mch.id:1378339302}")
+	public String MCH_ID;
 	
     public final static String MSG_TYPE_TEXT = "text";									//文本消息
     public final static String MSG_TYPE_IMAGE = "image";								//图片消息
@@ -51,6 +53,9 @@ public class WeixinConstants {
     public final static String API_USER_INFO="https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
     public final static String API_KF_SEND_MSG="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN";
     
+    public final static String API_PAY_UNIFIEDORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public final static String API_PAY_CALLBACK = "http://www.guhanjie.top/weixin-boot/wx/paycallback";
+    
     public final static String OAUTH2_SCOPE_SNSAPI_BASE="snsapi_base";
     public final static String OAUTH2_SCOPE_SNSAPI_USERINFO="snsapi_userinfo";
     public final static String OAUTH2_AUTHORIZE="https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
@@ -58,4 +63,5 @@ public class WeixinConstants {
     public final static String OAUTH2_ACCESS_TOKEN="https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
     public final static String OAUTH2_REFRESH_TOKEN="https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN";
     public final static String OAUTH2_GET_USER_INFO="https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+    
 }

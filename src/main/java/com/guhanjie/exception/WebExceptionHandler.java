@@ -19,22 +19,25 @@ public class WebExceptionHandler implements HandlerExceptionResolver {
 	public static final Logger LOGGER = LoggerFactory.getLogger(WebExceptionHandler.class);
 
 	@Override
-	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {		
-		LOGGER.error(exception.getMessage(), exception);
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
+		if(exception == null) {
+			exception = WebExceptionFactory.exception(WebExceptionEnum.SYSTEM_ERROR, "original exception is null");
+		}
+		LOGGER.error(exception.getClass().getName() + ":" + exception.getMessage(), exception);
 		
 		if (!(exception instanceof WebException)) {
 			String debugMessage = exception.getMessage();
 			if(debugMessage == null){
 				debugMessage="no message";
 			}
-			debugMessage =debugMessage.trim();
+			debugMessage = "exception: "+exception.getClass().getSimpleName() + ", cause: " + debugMessage.trim();
 			exception = WebExceptionFactory.exception(WebExceptionEnum.SYSTEM_ERROR, debugMessage, exception);
 		}		
 		WebException ee = (WebException)exception;
-		String causeMsg = ee.getCauseMessage();
+		String causeMsg = ee.getScreenMessage();
 		//最多显示800个字符，以免将底层堆栈返回给客户端
 		if(causeMsg != null && causeMsg.length()>800){
-			causeMsg = causeMsg.substring(0, 800);
+			causeMsg = causeMsg.substring(0, 800) + "...";
 		}		
 		//status
 		response.setStatus(ee.getHttpStatus());

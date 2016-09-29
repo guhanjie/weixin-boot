@@ -291,4 +291,56 @@
     from zhmv.order 
     where user_id = #{userid} order by start_time desc 
   </select>
+  
+  <update id="updateByStatus">
+    update zhmv.order
+    <set>
+      <if test="param1.amount != null">
+        amount = #{param1.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="param1.tip != null">
+        tip = #{param1.tip,jdbcType=DECIMAL},
+      </if>
+      <if test="param1.fromId != null">
+        from_id = #{param1.fromId,jdbcType=INTEGER},
+      </if>
+      <if test="param1.waypointsIds != null">
+        waypoints_ids = #{param1.waypointsIds,jdbcType=VARCHAR},
+      </if>
+      <if test="param1.toId != null">
+        to_id = #{param1.toId,jdbcType=INTEGER},
+      </if>
+      <if test="param1.distance != null">
+        distance = #{param1.distance,jdbcType=DECIMAL},
+      </if>
+      <if test="param1.vehicle != null">
+        vehicle = #{param1.vehicle,jdbcType=SMALLINT},
+      </if>
+      <if test="param1.status != null">
+        status = #{param1.status,jdbcType=SMALLINT},
+      </if>
+      <if test="param1.userId != null">
+        user_id = #{param1.userId,jdbcType=INTEGER},
+      </if>
+      <if test="param1.contactor != null">
+        contactor = #{param1.contactor,jdbcType=VARCHAR},
+      </if>
+      <if test="param1.phone != null">
+        phone = #{param1.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="param1.remark != null">
+        remark = #{param1.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="param1.startTime != null">
+        start_time = #{param1.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="param1.createTime != null">
+        create_time = #{param1.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="param1.updateTime != null">
+        update_time = #{param1.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{param1.id,jdbcType=INTEGER} and status = #{param2,jdbcType=SMALLINT} 
+  </update>
 </mapper>

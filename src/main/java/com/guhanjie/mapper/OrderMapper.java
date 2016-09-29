@@ -55,5 +55,7 @@ public interface OrderMapper {
     
     //------------------------- custom add -----------------------------
     List<Order> selectByUserId(Integer userid);
+    
+    int updateByStatus(Order record, short oldstaus);
     //--------------------------------------------------------------------
 }

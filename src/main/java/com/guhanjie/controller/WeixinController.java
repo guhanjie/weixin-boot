@@ -178,8 +178,4 @@ public class WeixinController extends BaseController {
     	return false;
     }
     
-//    @RequestMapping("/at")
-//    public void testAccessToken(HttpServletResponse resp) throws IOException {
-//        resp.getWriter().println(WeixinContext.getAccessToken());
-//    }
 }

@@ -37,6 +37,7 @@
 }
 .order-list {
 	font-size: 20px;
+	margin-top: 1.4em;
 }
 span.btn_cancel {
 	padding: 5px 5px 2px;
@@ -69,6 +70,10 @@ span.btn_success.gloming {
 .text-primary {
 	font-weight: 600;
 	color: #3C92DD;
+}
+.text-success {
+	font-weight: 600;
+	color: #A5DE37;
 }
 
 .car-type>.car-type-title{

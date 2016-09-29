@@ -196,4 +196,21 @@ public class OrderService {
 		return result;
 	}
 	
+	public Order getOrderById(Integer orderId) {
+		return orderMapper.selectByPrimaryKey(orderId);
+	}
+	
+	public boolean cancelOrder(Order order) {
+		long startTime = order.getStartTime().getTime();
+		long now = System.currentTimeMillis();
+		//只有订单状态为新建，且距离服务时间1天之外，才可取消订单
+		if(order.getStatus()==StatusEnum.NEW.code() && (startTime-now) > 1*24*60*60*1000) {
+			order.setStatus(StatusEnum.CANCEL.code());
+			if(orderMapper.updateByStatus(order, StatusEnum.NEW.code()) == 1) {
+				return true;
+			}
+		}
+		throw WebExceptionFactory.exception(WebExceptionEnum.ORDER_CANCEL_ERROR, "当前订单状态无法取消");
+	}
+	
 }

@@ -35,17 +35,17 @@
     </c:if>
     <c:if test="${not empty orders}">
       <c:forEach items="${orders}" var="item">
-        <a class="weui_cell" href="#">
+        <a class="weui_cell" data-id="${item.id}" href="#">
           <div class="weui_cell_hd">
             <!-- <i class="icon-double-angle-down text-primary"> </i> -->
           </div>
           <div class="weui_cell_bd weui_cell_primary order-item">
             <p>
-              服务时间： <span class="text-blue"> <fmt:formatDate value="${item.startTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
+              服务时间： <span class="text-blue"> <fmt:formatDate value="${item.startTime}" pattern="yyyy年MM月dd日 HH:mm:ss"/></span>
             </p>
             <p>
-              <i class="icon icon-circle-blank text-red"></i>${item.from.address}
-              <br />
+              <i class="icon icon-circle-blank text-red"></i>${item.from.address} 
+              <br /> 
               <i class="icon icon-circle text-blue"></i>${item.to.address}
             </p>
             <div class="order-detail">
@@ -57,20 +57,20 @@
           </div>
           <div class="weui_cell_ft">
             <c:choose>
-              <c:when test="${item.status == 25}">
+              <c:when test="${item.status == 29}">
                 <span class="text-primary">已支付</span>
               </c:when>
-              <c:when test="${item.status == 05}">
-                <span class="text-primary">正在送货</span>
-              </c:when>
-              <c:when test="${item.status == 02}">
+              <%-- <c:when test="${item.status == 05}">
+                <span class="text-success">正在送货</span>
+              </c:when> --%>
+              <c:when test="${item.status == 03}">
                 <span class="text-bold">已取消</span>
               </c:when>
               <c:when test="${item.status == 01 && item.startTime.time - now.time > 1*24*60*60*1000}">
                 <span class="btn_cancel">取消</span>
               </c:when>
               <c:otherwise>
-                  <span class="btn_success gloming">去支付</span>
+                <span class="btn_success gloming">去支付</span>
               </c:otherwise>
             </c:choose>
           </div>

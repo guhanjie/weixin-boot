@@ -21,11 +21,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.guhanjie.exception.WebException;
 import com.guhanjie.model.Order;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
@@ -125,10 +127,37 @@ public class OrderController extends BaseController {
 		HttpSession session = req.getSession();
 //		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
 		User user = new User();
-		user.setId(3);
+		user.setId(4);
 		List<Order> orders = orderService.getOrdersByUser(user);
 		model.addAttribute("orders", orders);
 		model.addAttribute("now", new Date());
 		return "order_search";
+	}
+	
+	@RequestMapping(value="cancel",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> cancelOrder(Integer orderid) {
+		Order order = orderService.getOrderById(orderid);
+		if(order == null) {
+			return fail("无效的订单号");
+		}
+		try {
+			orderService.cancelOrder(order);
+			return success();
+		} catch(WebException e) {
+			return fail(e.getScreenMessage());
+		}
+	}
+	
+	@RequestMapping(value="pay",method=RequestMethod.GET)
+	public String payOrder(HttpServletRequest req, Model model) {
+		HttpSession session = req.getSession();
+//		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
+		User user = new User();
+		user.setId(4);
+		List<Order> orders = orderService.getOrdersByUser(user);
+		model.addAttribute("orders", orders);
+		model.addAttribute("now", new Date());
+		return "order_pay";
 	}
 }
