@@ -7,10 +7,13 @@
  */  
 package com.guhanjie.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,6 +36,8 @@ import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.OrderService;
 import com.guhanjie.service.UserService;
+import com.guhanjie.weixin.WeixinConstants;
+import com.guhanjie.weixin.pay.PayKit;
 
 /**
  * Class Name:		OrderController<br/>
@@ -47,7 +52,10 @@ import com.guhanjie.service.UserService;
 public class OrderController extends BaseController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
-		
+
+    @Autowired
+    private WeixinConstants weixinContants;
+    
 	@Autowired
 	private UserService userService;
 	
@@ -127,7 +135,7 @@ public class OrderController extends BaseController {
 		HttpSession session = req.getSession();
 //		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
 		User user = new User();
-		user.setId(4);
+		user.setId(3);
 		List<Order> orders = orderService.getOrdersByUser(user);
 		model.addAttribute("orders", orders);
 		model.addAttribute("now", new Date());
@@ -150,14 +158,34 @@ public class OrderController extends BaseController {
 	}
 	
 	@RequestMapping(value="pay",method=RequestMethod.GET)
-	public String payOrder(HttpServletRequest req, Model model) {
-		HttpSession session = req.getSession();
+    @ResponseBody
+	public Map<String, Object> payOrder(HttpServletRequest req, Integer orderid) {
+        Order order = orderService.getOrderById(orderid);
+        if(order == null) {
+            return fail("无效的订单号");
+        }
+        try {
+            PayKit.unifiedorder(req, order, weixinContants.APPID, weixinContants.MCH_ID);
+        }
+        catch (IOException e) {
+            LOGGER.error("error in weixin pay unified order.");
+        }
+        final String nonceStr = String.valueOf(new Random().nextInt(10000));
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("appId", weixinContants.APPID);                                  //公众号id
+        map.put("timeStamp", String.valueOf(System.currentTimeMillis()/1000));         //时间戳
+        map.put("nonceStr", nonceStr);                                                   //随机字符串
+        map.put("package", "prepay_id=");                                             //订单详情扩展字符串
+        map.put("signType", "MD5");                                                       //签名方式
+        map.put("paySign", PayKit.sign(map, ""));                                   //签名
+        
+//		HttpSession session = req.getSession();
 //		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
-		User user = new User();
-		user.setId(4);
-		List<Order> orders = orderService.getOrdersByUser(user);
-		model.addAttribute("orders", orders);
-		model.addAttribute("now", new Date());
-		return "order_pay";
+//		User user = new User();
+//		user.setId(4);
+//		List<Order> orders = orderService.getOrdersByUser(user);
+//		model.addAttribute("orders", orders);
+//		model.addAttribute("now", new Date());
+		return success(map);
 	}
 }

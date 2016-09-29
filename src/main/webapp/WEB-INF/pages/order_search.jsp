@@ -18,68 +18,137 @@
 <title>尊涵搬家服务-订单查询</title>
 </head>
 <body ontouchstart>
-  <div class="weui_cells_title order-list">您的订单列表</div>
-  <div class="weui_cells weui_cells_access">
-    <c:if test="${orders==null or empty orders}">
-      <div class="weui_cell" href="#">
-        <div class="weui_cell_hd">
-          <i class="icon-info-sign text-primary "></i>
-        </div>
-        <div class="weui_cell_bd weui_cell_primary">
-          <p>您还没有创建过任何订单哦~</p>
-        </div>
-        <div class="weui_cell_ft">
-          <a href="../order">立刻去下单</a>
-        </div>
-      </div>
-    </c:if>
-    <c:if test="${not empty orders}">
-      <c:forEach items="${orders}" var="item">
-        <a class="weui_cell" data-id="${item.id}" href="#">
+  <div class="container order-list">
+    <div class="weui_cells_title">您的订单列表</div>
+    <div class="weui_cells weui_cells_access">
+      <c:if test="${orders==null or empty orders}">
+        <div class="weui_cell">
           <div class="weui_cell_hd">
-            <!-- <i class="icon-double-angle-down text-primary"> </i> -->
+            <i class="icon-info-sign text-blue"> </i>
           </div>
-          <div class="weui_cell_bd weui_cell_primary order-item">
-            <p>
-              服务时间： <span class="text-blue"> <fmt:formatDate value="${item.startTime}" pattern="yyyy年MM月dd日 HH:mm:ss"/></span>
-            </p>
-            <p>
-              <i class="icon icon-circle-blank text-red"></i>${item.from.address} 
-              <br /> 
-              <i class="icon icon-circle text-blue"></i>${item.to.address}
-            </p>
-            <div class="order-detail">
-              <p>路程：${item.distance}公里</p>
-              <p>车型：${item.vehicle==1?'小面':(item.vehicle==2)?'金杯':'全顺/依维柯'}</p>
-              <p>联系人：${item.contactor}</p>
-              <p>电话：${item.phone}</p>
-            </div>
+          <div class="weui_cell_bd weui_cell_primary">
+            <p> 您还没有创建任何订单哦~ </p>
           </div>
           <div class="weui_cell_ft">
-            <c:choose>
-              <c:when test="${item.status == 29}">
-                <span class="text-primary">已支付</span>
-              </c:when>
-              <%-- <c:when test="${item.status == 05}">
-                <span class="text-success">正在送货</span>
-              </c:when> --%>
-              <c:when test="${item.status == 03}">
-                <span class="text-bold">已取消</span>
-              </c:when>
-              <c:when test="${item.status == 01 && item.startTime.time - now.time > 1*24*60*60*1000}">
-                <span class="btn_cancel">取消</span>
-              </c:when>
-              <c:otherwise>
-                <span class="btn_success gloming">去支付</span>
-              </c:otherwise>
-            </c:choose>
+            <a class="text-primary" href="../order">立刻去下单</a>
           </div>
-        </a>
-      </c:forEach>
-    </c:if>
+        </div>
+      </c:if>
+      <c:if test="${not empty orders}">
+        <c:forEach items="${orders}" var="item">
+          <a class="weui_cell order-item" data-id="${item.id}" href="#pay">
+            <div class="weui_cell_hd">
+              <!-- <i class="icon-double-angle-down text-primary"> </i> -->
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+              <p>
+                服务时间： <span class="text-blue" id="start_time"> <fmt:formatDate value="${item.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
+              </p>
+              <p>
+                <i class="icon icon-circle-blank text-red"></i><span id="from-address">${item.from.address}</span>
+                <br /> 
+                <i class="icon icon-circle text-blue"></i><span id="to-address">${item.to.address}</span>
+              </p>
+              <div class="order-detail">
+                <p>金额：<span id="amount" class="text-red">${item.amount} 元</span></p>
+                <p>路程：<span id="distance">${item.distance}公里</span></p>
+                <p>车型：<span id="vehicle">${item.vehicle==1?'小面车型':(item.vehicle==2)?'金杯车型':'全顺/依维柯'}</span></p>
+                <p>联系人：${item.contactor}</p>
+                <p>电话：${item.phone}</p>
+              </div>
+            </div>
+            <div class="weui_cell_ft">
+              <c:choose>
+                <c:when test="${item.status == 29}">
+                  <span class="btn_status text-primary">已支付</span>
+                </c:when>
+                <%-- <c:when test="${item.status == 05}">
+                  <span class="btn_status text-success">正在送货</span>
+                </c:when> --%>
+                <c:when test="${item.status == 03}">
+                  <span class="btn_status text-bold">已取消</span>
+                </c:when>
+                <c:when test="${item.status == 01 && item.startTime.time - now.time > 1*24*60*60*1000}">
+                  <span class="btn_cancel">取消</span>
+                </c:when>
+                <c:otherwise>
+                  <span class="btn_success gloming">去支付</span>
+                </c:otherwise>
+              </c:choose>
+            </div>
+          </a>
+        </c:forEach>
+      </c:if>
+    </div>
+  </div>
+  <div class="weui_msg" style="display:none;">
+    <div class="weui_icon_area"><i class="weui_icon_safe weui_icon_safe_success"></i></div>
+    <div class="weui_text_area">
+        <h2 class="weui_msg_title">订单支付</h2>
+        <p class="weui_msg_desc">请您完成支付，尊涵搬家竭诚为您服务！</p>
+        <div class="weui_cells order-item">
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>服务时间：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_start_time"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>服务车型：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_vehicle"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>起始地：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_from_address"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>目的地：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_to_address"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>行驶路程：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_distance"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>订单金额：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_amount" class="text-red"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="weui_opr_area">
+        <p class="weui_btn_area">
+            <a href="javascript:;" class="weui_btn weui_btn_primary order-pay">微信支付</a>
+        </p>
+    </div>
+    <div class="weui_extra_area">
+        <a class="btn_back" href="#">返回订单列表</a>
+    </div>
   </div>
   <script src="../resources/js/zepto/zepto-1.1.6.js"></script>
   <script src="../resources/js/weui/weui.js"></script>
+  <script src="../resources/js/order/pay.js"></script>
   <script src="../resources/js/order/order_search.js"></script>
 </body>
 </html>

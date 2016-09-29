@@ -51,6 +51,11 @@ public class XmlUtil {
         return maps;
     }
     
+    public static Map<String, String> xmlstr2map(String str) throws DocumentException {
+        Document xml = str2xml(str);
+        return xml2map(xml);
+    }
+    
     public static String map2xmlstr(Map<String, String> map) throws IOException {
         if(map == null) {
             return null;

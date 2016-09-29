@@ -31,7 +31,8 @@ public class TestWeixinModel {
     @Test
     public void testErrorEntity() {
 //        String response = "{\"errcode\":40013,\"errmsg\":\"invalid appid hint: [.n0.QA0680ken1]\"}";
-        String response = "{\"access_token\":\"8gPGuN0Lzs7c8MRTKfMznUYARZWpR1u3FLVesB611r5scDuZT1C5w3htEXCCjGN1RJG2GYZjSxXkIOdbqcwgY9rTXLwpN9Ru8KSCaukj-weYgN9E7sr7Nq2zZ4mtYTDWQDJfAIAUHN\",\"expires_in\":7200}";
+//        String response = "{\"access_token\":\"8gPGuN0Lzs7c8MRTKfMznUYARZWpR1u3FLVesB611r5scDuZT1C5w3htEXCCjGN1RJG2GYZjSxXkIOdbqcwgY9rTXLwpN9Ru8KSCaukj-weYgN9E7sr7Nq2zZ4mtYTDWQDJfAIAUHN\",\"expires_in\":7200}";
+        String response = "<xml><body>JSAPI支付测试</body></xml>";
         System.out.println(response);
         ErrorEntity e = JSON.parseObject(response, ErrorEntity.class);
         System.out.println("object="+e);

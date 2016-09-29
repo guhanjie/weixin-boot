@@ -80,14 +80,16 @@ public class WeixinHttpUtil {
             resp = client.execute(post);
             int sc = resp.getStatusLine().getStatusCode();
             if(sc>=200&&sc<300) {
-                String json = EntityUtils.toString(resp.getEntity());
-                LOGGER.debug("success to get response:[{}]", json);
-                ErrorEntity err = JSONObject.parseObject(json, ErrorEntity.class);
-                if(err.getErrcode()!= null || err.getErrmsg()!=null) {
-                    LOGGER.error("http[{}] response is error, errcode:[{}], errmsg:[{}].", url, err.getErrcode(), err.getErrmsg());
-                    return;
+                String respEntity = EntityUtils.toString(resp.getEntity());
+                LOGGER.debug("success to get response:[{}]", respEntity);
+                if(resp.getEntity().getContentType().getValue().equalsIgnoreCase("application/json")) {
+                    ErrorEntity err = JSONObject.parseObject(respEntity, ErrorEntity.class);
+                    if(err.getErrcode()!= null || err.getErrmsg()!=null) {
+                        LOGGER.error("http[{}] response is error, errcode:[{}], errmsg:[{}].", url, err.getErrcode(), err.getErrmsg());
+                        return;
+                    }
                 }
-                c.process(json);
+                c.process(respEntity);
                 LOGGER.debug("success to finish http post request.");
             }
         } catch (Exception e) {
@@ -99,6 +101,6 @@ public class WeixinHttpUtil {
     }
     
     public static abstract class WeixinHttpCallback {
-        public abstract void process(String json);
+        public abstract void process(String respBody);
     }
 }

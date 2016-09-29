@@ -1,8 +1,3 @@
-/*#order-index>.car-type {
-    padding: 4px 15px 0;
-    background-color: #fff;
-    border-bottom: 1px solid #ededed;
-}*/
 @-webkit-keyframes glowing {
   from {
     -webkit-box-shadow: 0 0 0 rgba(165, 222, 55, 0.3);
@@ -31,18 +26,24 @@
 	box-shadow: 0 0 0 rgba(165, 222, 55, 0.3); 
   } 
 }
-            
-#baiduMap {
-	display: none;
+
+.wraper {
+	height: 100%;
 }
-.order-list {
+.order-list .weui_cells_title{
 	font-size: 20px;
 	margin-top: 1.4em;
 }
+.order-detail {
+	display: none;
+}
+span.btn_status {
+	padding: 0 7px;
+}
 span.btn_cancel {
-	padding: 5px 5px 2px;
-    border-radius: 5px;
+	padding: 5px;
     border: 1px #c3c0c0 solid;
+    border-radius: 4px;
     box-shadow: inset 0 0 0 1px #d3cecd, 2px 2px 5px #b9b2b2;
 }
 span.btn_success { 
@@ -75,7 +76,10 @@ span.btn_success.gloming {
 	font-weight: 600;
 	color: #A5DE37;
 }
-
+   
+#baiduMap {
+	display: none;
+}
 .car-type>.car-type-title{
     display: table;
     table-layout: fixed;
@@ -205,13 +209,17 @@ p.order_sumary .price  em{
     font-style: normal;
 	color: #FF7F00; 
 }
-.weui_msg .weui_cells_title{
+.weui_msg .weui_msg_title{
+	font-size: 30px;
+    font-weight: 600;
+    color: #09bb07;
+}
+.weui_msg .weui_cells_title, .weui_msg .weui_cell_bd{
     text-align: left;
+}
+.weui_msg .weui_cell p {
+	font-size: 16px;
 }
 .weui_msg .weui_cell p i{
 	padding-right: 0.2em;
-}
-
-.order-detail {
-	display: none;
 }
