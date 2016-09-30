@@ -31,6 +31,8 @@ public class WeixinConstants {
 	public String KF_OPENIDS;
 	@Value("${weixin.mch.id:1378339302}")
 	public String MCH_ID;
+	@Value("${weixin.mch.key}")
+	public String MCH_KEY;
 	
     public final static String MSG_TYPE_TEXT = "text";									//文本消息
     public final static String MSG_TYPE_IMAGE = "image";								//图片消息
@@ -54,6 +56,7 @@ public class WeixinConstants {
     public final static String API_KF_SEND_MSG="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN";
     
     public final static String API_PAY_UNIFIEDORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public final static String API_PAY_ORDERQUERY = "https://api.mch.weixin.qq.com/pay/orderquery";
     public final static String API_PAY_CALLBACK = "http://www.guhanjie.top/weixin-boot/wx/paycallback";
     
     public final static String OAUTH2_SCOPE_SNSAPI_BASE="snsapi_base";

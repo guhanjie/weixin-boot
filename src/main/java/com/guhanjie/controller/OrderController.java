@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.guhanjie.exception.WebException;
+import com.guhanjie.exception.WebExceptionEnum;
+import com.guhanjie.exception.WebExceptionFactory;
 import com.guhanjie.model.Order;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
@@ -164,28 +166,25 @@ public class OrderController extends BaseController {
         if(order == null) {
             return fail("无效的订单号");
         }
+        String prepayId = null;
         try {
-            PayKit.unifiedorder(req, order, weixinContants.APPID, weixinContants.MCH_ID);
+        	prepayId = PayKit.unifiedorder(req, order, weixinContants.APPID, weixinContants.MCH_ID, weixinContants.MCH_KEY);
         }
         catch (IOException e) {
             LOGGER.error("error in weixin pay unified order.");
+        }
+        if(StringUtils.isBlank(prepayId)) {
+        	throw WebExceptionFactory.exception(WebExceptionEnum.PAY_ERROR, "支付系统有误，目前无法支付");
         }
         final String nonceStr = String.valueOf(new Random().nextInt(10000));
         Map<String, String> map = new HashMap<String, String>();
         map.put("appId", weixinContants.APPID);                                  //公众号id
         map.put("timeStamp", String.valueOf(System.currentTimeMillis()/1000));         //时间戳
         map.put("nonceStr", nonceStr);                                                   //随机字符串
-        map.put("package", "prepay_id=");                                             //订单详情扩展字符串
+        map.put("package", "prepay_id="+prepayId);                              //订单详情扩展字符串
         map.put("signType", "MD5");                                                       //签名方式
-        map.put("paySign", PayKit.sign(map, ""));                                   //签名
+        map.put("paySign", PayKit.sign(map, weixinContants.MCH_KEY)); //签名
         
-//		HttpSession session = req.getSession();
-//		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
-//		User user = new User();
-//		user.setId(4);
-//		List<Order> orders = orderService.getOrdersByUser(user);
-//		model.addAttribute("orders", orders);
-//		model.addAttribute("now", new Date());
 		return success(map);
 	}
 }

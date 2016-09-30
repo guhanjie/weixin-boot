@@ -1,4 +1,4 @@
-function onBridgeReady(param){
+function onBridgeReady(param, success, fail){
    WeixinJSBridge.invoke(
        'getBrandWCPayRequest', param,
 //       {
@@ -12,29 +12,17 @@ function onBridgeReady(param){
        function(res){     
     	   // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
            if(res.err_msg == "get_brand_wcpay_request：ok" ) {     // 支付成功
-        	   $('body').html('<div class="weui_msg">'
-        			   				 +'   <div class="weui_icon_area">'
-        			   				 +'  		<i class="weui_icon_success weui_icon_msg"></i>'
-        			   				 +'	</div>'
-        			   				 +'	<div class="weui_text_area">'
-        			   				 +'		<h2 class="weui_msg_title">支付成功</h2>'
-        			   				 +'		<p class="weui_msg_desc">尊涵搬家，竭诚为您服务！</p>'
-        			   				 +'	</div>'
-        			   				 +'</div>')
+        	   if(success && typeof success == "function") {
+        		   success.apply(this);
+        	   }
            }
            else if(res.err_msg == "get_brand_wcpay_request：cancel" ) {     // 支付过程中用户取消
         	   
            }
            else if(res.err_msg == "get_brand_wcpay_request：fail" ) {     // 支付失败
-        	   $('body').html('<div class="weui_msg">'
-		   				 +'   <div class="weui_icon_area">'
-		   				 +'  		<i class="weui_icon_warn weui_icon_msg"></i>'
-		   				 +'	</div>'
-		   				 +'	<div class="weui_text_area">'
-		   				 +'		<h2 class="weui_msg_title">支付失败</h2>'
-		   				 +'		<p class="weui_msg_desc">给您带来不便，敬请谅解。<br/>请返回重新尝试，或直接面付。</p>'
-		   				 +'	</div>'
-		   				 +'</div>')
+        	   if(fail && typeof fail == "function") {
+        		   fail.apply(this);
+        	   }
 		   }
        }
    ); 

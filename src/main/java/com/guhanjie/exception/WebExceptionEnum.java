@@ -46,7 +46,10 @@ public enum WebExceptionEnum {
 		ORDER_AUTHORIZATION_ERROR(10301, "auth.apply.error", "订单写入授权失败"),
 		ORDER_CANCEL_ERROR(10302, "order.cancel.error", "订单不能取消"),
 		CAN_NOT_FIND_ORDER(10303, "can't find order", "找不到对应的订单"),
-		CRM_SYNC_ERROR(10304, "crm.sync.error", "订单同步CRM发送错误");		
+		CRM_SYNC_ERROR(10304, "crm.sync.error", "订单同步CRM发送错误"),
+	
+		// 4XX 支付相关
+		PAY_ERROR(10400, "pay error", "支付出错");
 		
 		private Integer code;
 		private String message;

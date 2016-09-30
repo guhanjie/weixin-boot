@@ -56,7 +56,7 @@ public class XmlUtil {
         return xml2map(xml);
     }
     
-    public static String map2xmlstr(Map<String, String> map) throws IOException {
+    public static String map2xmlstr(Map<String, ?> map) throws IOException {
         if(map == null) {
             return null;
         }
@@ -64,13 +64,20 @@ public class XmlUtil {
         Element root = d.addElement("xml");
         Set<String> keys = map.keySet();
         for(String key:keys) {
-            root.addElement(key).addText(map.get(key));
+        	Object value = map.get(key);
+        	if(value instanceof Number){
+        		root.addElement(key).addText(value.toString());
+        	}
+        	else {
+        		root.addElement(key).addCDATA(value.toString());
+        	}
         }
         StringWriter sw = new StringWriter();
         XMLWriter xw = new XMLWriter(sw);
-        xw.setEscapeText(false);
+        xw.setEscapeText(true);
         xw.write(d);
-        return sw.toString();
+        String str = sw.toString();
+        return str.substring(str.indexOf("<xml>"));
     }
     
 }

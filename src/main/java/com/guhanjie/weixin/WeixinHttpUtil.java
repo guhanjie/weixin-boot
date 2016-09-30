@@ -74,7 +74,7 @@ public class WeixinHttpUtil {
         try {
             client = HttpClients.createDefault();
             url = url.replace("ACCESS_TOKEN", AccessTokenKit.getToken());
-            LOGGER.debug("sending http post request[{}]...", url);
+            LOGGER.debug("sending http post to url:[{}]...", url);
             post = new HttpPost(url);
             post.setEntity(entity);
             resp = client.execute(post);

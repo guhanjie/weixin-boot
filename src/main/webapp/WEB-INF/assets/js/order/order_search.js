@@ -73,7 +73,34 @@ $(function () {
 		    dataType:  'json',
 		    success: function(data){
 		    	if(data.success) {
-		    		onBridgeReady(data.content);
+		    		onBridgeReady(data.content, 
+		    		function() {
+		         	   $('body').html('<div class="weui_msg">'
+  			   				 +'   <div class="weui_icon_area">'
+  			   				 +'  		<i class="weui_icon_success weui_icon_msg"></i>'
+  			   				 +'	</div>'
+  			   				 +'	<div class="weui_text_area">'
+  			   				 +'		<h2 class="weui_msg_title">支付成功</h2>'
+  			   				 +'		<p class="weui_msg_desc">尊涵搬家，竭诚为您服务！</p>'
+  			   				 +'	</div>'
+  			   				 +'</div>')
+		    			
+		    		}, function() {
+		         	   $('body').html('<div class="weui_msg">'
+				   				 +'   <div class="weui_icon_area">'
+				   				 +'  		<i class="weui_icon_warn weui_icon_msg"></i>'
+				   				 +'	</div>'
+				   				 +'	<div class="weui_text_area">'
+				   				 +'		<h2 class="weui_msg_title">支付失败</h2>'
+				   				 +'		<p class="weui_msg_desc">给您带来不便，敬请谅解。<br/>请返回重新尝试，或直接面付。</p>'
+				   				 +'	</div>'
+				   				 +'	<div class="weui_opr_area">'
+				   				 +'		<p class="weui_btn_area">'
+				   				 +'			<a href="search" class="weui_btn weui_btn_primary">重新支付</a>'
+				   				 +'		</p>'
+				   				 +'	</div>'
+				   				 +'</div>')
+		    		});
 		    	}
 		    	else {
 					$.weui.topTips(data.content);
