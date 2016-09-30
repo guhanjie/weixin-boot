@@ -142,14 +142,32 @@ public class PayKit {
         return prepayId.toString();
     }
     
-    public static void search(final String orderid, final String appid, final String mchid, final String mchkey) throws IOException {
-        LOGGER.info("starting to search payment for order:[{}]...", orderid);
+    /**
+     * Method Name:	search<br/>
+     * Description:			[该接口提供所有微信支付订单的查询，商户可以通过查询订单接口主动查询订单状态，完成下一步的业务逻辑。]<br/>
+     * 								需要调用查询接口的情况：<br/>
+	 * 								◆ 当商户后台、网络、服务器等出现异常，商户系统最终未接收到支付通知；<br/>
+	 * 								◆ 调用支付接口后，返回系统错误或未知交易状态情况；<br/>
+	 *								◆ 调用被扫支付API，返回USERPAYING的状态；<br/>
+	 * 								◆ 调用关单或撤销接口API之前，需确认支付状态；
+     * @author				GUHANJIE
+     * @time					2016年9月30日 下午2:25:42
+     * @param orderid
+     * @param appid
+     * @param mchid
+     * @param mchkey
+     * @throws IOException
+     */
+    public static boolean search(final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
+        LOGGER.info("starting to search payment for order:[{}]...", order.getId());
+        
+        final Boolean res = new Boolean(false);
 
     	final String nonceStr = String.valueOf(new Random().nextInt(10000));
         Map<String, String> map = new HashMap<String, String>();
         map.put("appid", appid);                                                                      //公众账号ID
         map.put("mch_id", mchid);                                                                  //商户号
-        map.put("out_trade_no", orderid);                                                       	//商户订单号
+        map.put("out_trade_no", String.valueOf(order.getId()));                       //商户订单号
         map.put("nonce_str", nonceStr);                                                         //随机字符串
         map.put("sign", sign(map, mchkey));                                         			//签名
 
@@ -207,13 +225,25 @@ public class PayKit {
 //                    String cash_fee = map.get("cash_fee");											//货币种类
                     LOGGER.info("success to search weixin payment for order:[{}]: "
                     				+ "openid=[{}], trade_state=[{}], total_fee=[{}], out_trade_no=[{}], time_end=[{}], trade_state_desc=[{}]", 
-                    				orderid, openid, trade_state, total_fee, out_trade_no, time_end, trade_state_desc);
+                    				order.getId(), openid, trade_state, total_fee, out_trade_no, time_end, trade_state_desc);
+                    if(trade_state.equals("SUCCESS")) {
+                    	if(order.getAmount().intValue() == Integer.valueOf(total_fee)) {
+                    		//支付成功
+                    	}
+                    	else {
+                    		//支付金额有误
+                    	}
+                    }
+                    else {
+                    	//支付不成功
+                    }
                 }
                 catch (DocumentException e) {
                     LOGGER.error("error in parsing response xml:[{}]", respBody, e);
                 }
             }
         });
+        return res;
     }
     
     public static String sign(Map<String, String> params, String secretKey) {

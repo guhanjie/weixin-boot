@@ -32,12 +32,12 @@ body:
     { 
       "type":"view",
       "name":"立即下单",
-      "url":"http://123.206.211.115/weixin-boot/order"
+      "url":"http://www.guhanjie.top/weixin-boot/order"
     },
     { 
       "type":"view",
       "name":"增值服务",
-      "url":"http://123.206.211.115/weixin-boot/order"
+      "url":"http://www.guhanjie.top/weixin-boot/order"
     }
   ]
 }

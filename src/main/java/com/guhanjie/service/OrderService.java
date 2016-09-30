@@ -203,8 +203,8 @@ public class OrderService {
 	public boolean cancelOrder(Order order) {
 		long startTime = order.getStartTime().getTime();
 		long now = System.currentTimeMillis();
-		//只有订单状态为新建，且距离服务时间1天之外，才可取消订单
-		if(order.getStatus()==StatusEnum.NEW.code() && (startTime-now) > 1*24*60*60*1000) {
+		//只有订单状态为新建，且距离服务时间4小时之前，才可取消订单
+		if(order.getStatus()==StatusEnum.NEW.code() && (startTime-now) > 4*60*60*1000) {
 			order.setStatus(StatusEnum.CANCEL.code());
 			if(orderMapper.updateByStatus(order, StatusEnum.NEW.code()) == 1) {
 				return true;

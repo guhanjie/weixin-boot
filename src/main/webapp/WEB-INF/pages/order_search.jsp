@@ -68,7 +68,7 @@
                 <c:when test="${item.status == 03}">
                   <span class="btn_status text-bold">已取消</span>
                 </c:when>
-                <c:when test="${item.status == 01 && item.startTime.time - now.time > 1*24*60*60*1000}">
+                <c:when test="${item.status == 01 && item.startTime.time - now.time > 4*60*60*1000}">
                   <span class="btn_cancel">取消</span>
                 </c:when>
                 <c:otherwise>
