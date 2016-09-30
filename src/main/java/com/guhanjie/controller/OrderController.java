@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +39,7 @@ import com.guhanjie.model.User;
 import com.guhanjie.service.OrderService;
 import com.guhanjie.service.UserService;
 import com.guhanjie.weixin.WeixinConstants;
+import com.guhanjie.weixin.msg.MessageKit;
 import com.guhanjie.weixin.pay.PayKit;
 
 /**
@@ -186,5 +187,48 @@ public class OrderController extends BaseController {
         map.put("paySign", PayKit.sign(map, weixinContants.MCH_KEY)); //签名
         
 		return success(map);
+	}
+	
+	@RequestMapping(value="paycallback",method=RequestMethod.GET)
+	public void paycallback(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		LOGGER.debug("getting callback from weixin pay...");
+		Map<String, String> map = MessageKit.reqMsg2Map(req);
+		String return_code = map.get("return_code");
+		if(!"SUCCESS".equals(return_code)) {
+			LOGGER.warn("error in callback from weixin pay, cause:[{}]", map.get("return_msg"));
+			return; 
+		}
+		//验签
+		String sign = map.get("sign");
+		if(sign==null || !sign.equals(PayKit.sign(map, weixinContants.MCH_KEY))) {
+        	LOGGER.warn("signature validation failed, this callback request maybe fake!");
+			return;
+		}
+		
+		String result_code = map.get("result_code");				//业务结果 SUCCESS/FAIL
+		if(!"SUCCESS".equals(result_code)) {
+			LOGGER.warn("error in callback from weixin pay, cause: err_code=[{}], err_code_des=[{}]", map.get("err_code"), map.get("err_code_des"));
+			return;
+		}
+		String out_trade_no = map.get("out_trade_no");			//商户订单号
+		String total_fee = map.get("total_fee");							//订单金额	
+		String time_end = map.get("time_end");						//支付完成时间
+		String openid = map.get("openid");								//用户OpenIds
+		
+		//更新订单支付状态
+		Order order = orderService.getOrderById(Integer.valueOf(out_trade_no));
+		if(order==null || order.getAmount().intValue()==Integer.valueOf(total_fee)/100) {
+			LOGGER.warn("error in callback from weixin pay, cause: err_code=[{}], err_code_des=[{}]", map.get("err_code"), map.get("err_code_des"));
+			return;
+		}
+        resp.setContentType("application/xml;charset=UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        String respCon = "<xml>"
+        						+ "	<return_code><![CDATA[SUCCESS]]></return_code>"
+        						+ "	<return_msg><![CDATA[OK]]></return_msg>"
+        						+ "</xml>";
+        LOGGER.debug("Weixin msg response= "+respCon);
+        resp.getWriter().write(respCon);
+		resp.getWriter().flush();
 	}
 }

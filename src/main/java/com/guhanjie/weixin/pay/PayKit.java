@@ -125,7 +125,7 @@ public class PayKit {
                     	return;
                     }
                     if(result_code==null || !result_code.equals("SUCCESS")) {
-                    	LOGGER.error("fail to get response for weixin unified order api, cause: err_code[{}], err_code_des[{}]", err_code, err_code_des);
+                    	LOGGER.error("error in weixin unified order, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
                     	return;
                     }
                     String trade_type = map.get("trade_type");                                  //交易类型JSAPI
@@ -206,7 +206,7 @@ public class PayKit {
                     	return;
                     }
                     if(result_code==null || !result_code.equals("SUCCESS")) {
-                    	LOGGER.error("fail to get response for weixin search payment api, cause: err_code[{}], err_code_des[{}]", err_code, err_code_des);
+                    	LOGGER.error("error in weixin search payment, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
                     	return;
                     }
                     String device_info = map.get("device_info");                                        //设备号
@@ -245,7 +245,7 @@ public class PayKit {
         });
         return res;
     }
-    
+        
     public static String sign(Map<String, String> params, String secretKey) {
     	if(params == null || params.isEmpty()) {
     		LOGGER.error("signaute params can not be null or empty.");
