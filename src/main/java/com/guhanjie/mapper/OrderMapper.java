@@ -1,6 +1,7 @@
 package com.guhanjie.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.guhanjie.model.Order;
 
@@ -56,6 +57,12 @@ public interface OrderMapper {
     //------------------------- custom add -----------------------------
     List<Order> selectByUserId(Integer userid);
     
+    List<Order> selectByQualifiedPage(Map<String, Object> param);
+    
+    int countSelective(Map<String, Object> param);
+    
     int updateByStatus(Order record, short oldstaus);
+    
+    int updateByPayStatus(Order record, short oldstatus, short oldPayStatus);
     //--------------------------------------------------------------------
 }

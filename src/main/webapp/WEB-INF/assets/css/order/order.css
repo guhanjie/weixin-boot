@@ -46,13 +46,13 @@ span.btn_cancel {
     border-radius: 4px;
     box-shadow: inset 0 0 0 1px #d3cecd, 2px 2px 5px #b9b2b2;
 }
-span.btn_success { 
+span.btn_success, span.btn_pay { 
     color: #A5DE37;
     padding: 5px;    
     border: 2px solid #A5DE37;
     border-radius: 4px;    
 }
-span.btn_success.gloming {	
+span.btn_success.gloming, span.btn_pay.gloming {	
 	-webkit-animation: glowing 3s infinite;
     animation: glowing 3s infinite;    
 }
@@ -75,6 +75,14 @@ span.btn_success.gloming {
 .text-success {
 	font-weight: 600;
 	color: #A5DE37;
+}
+.pagenation {
+	text-align: center;
+	font-weight: bold;
+}
+.pagenation i {
+	color: #ccc99b;
+	cursor: pointer;
 }
    
 #baiduMap {
@@ -171,6 +179,27 @@ span.btn_success.gloming {
     right: 1px;
     top: 18px;
 }
+.addway {
+	position: relative;
+    margin: 2px;
+}
+.addway i {
+	position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -54px;
+    z-index: 9;
+    cursor: pointer;
+    color: #7b7962;
+}
+.waypoint .remove{
+	font-size: small;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    cursor: pointer;
+}
+
 .weui_cell_warn {
 	border: 1px red dashed;
 }

@@ -14,7 +14,6 @@ $(function () {
               label: '放弃',
               type: 'default',
               onClick: function (){
-                  console.log('知道了......');
               }
           }, {
               label: '确定',
@@ -36,7 +35,7 @@ $(function () {
             		    	}
             		    },
             		  	error: function(xhr, type){
-            				$.weui.topTips('订单取消失败');
+            				$.weui.topTips('订单支付失败');
             		    }
             		  });
               }
@@ -45,6 +44,45 @@ $(function () {
   });
   
   $('.order-list').on('click', '.btn_success', function() {
+	  var orderid = $(this).parents('.order-item').data('id');
+	  var $that = $(this);
+	  $.weui.dialog({
+          title: '订单支付成功',
+          content: '是否确定用户已完成该订单支付？',
+          buttons: [{
+              label: '取消',
+              type: 'default',
+              onClick: function (){
+              }
+          }, {
+              label: '确定',
+              type: 'primary',
+              onClick: function (){
+            	  $.ajax({
+            		    type: 'POST',
+            		    url: 'payed',
+            		    data: {'orderid': orderid},
+            		    dataType:  'json',
+            		    success: function(data){
+            		    	if(data.success) {
+            		    		var $parent = $that.parents('.weui_cell_ft');
+            		    		$that.remove();
+            		    		$parent.append('<span class="btn_status text-primary">已支付</span>');
+            		    	}
+            		    	else {
+            					$.weui.topTips(data.content);
+            		    	}
+            		    },
+            		  	error: function(xhr, type){
+            				$.weui.topTips('订单取消失败');
+            		    }
+            		  });
+              }
+          }]
+      });
+  });
+  
+  $('.order-list').on('click', '.btn_pay', function() {
 		var $item = $(this).parents('.order-item');
 		$('.order-list').hide();
 		$('.weui_msg .order-item').data('id', $item.data('id'));

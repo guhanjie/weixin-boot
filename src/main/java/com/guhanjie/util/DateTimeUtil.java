@@ -13,6 +13,11 @@ public class DateTimeUtil {
 
 	private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<SimpleDateFormat>();
 	
+    public final static String defaultFormat = "yyyy-MM-dd HH:mm:ss";
+    public final static String defaultShotFormat = "yyyy-MM-dd";
+    public final static String yyyymmddFormat = "yyyyMMdd";
+    public final static String defaultUTCFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	
 	private static final Object object = new Object();
 	
 	/**
@@ -142,6 +147,40 @@ public class DateTimeUtil {
 		return date;
 	}
 
+	/**
+     * 将时间转换成字符串，格式yyyy-MM-dd HH:mm:ss(2011-07-20 16:43:43)
+     * 如果传入的date=null，返回null
+     * @param format
+     * @return
+     */
+    public static String getDateString(Date date) {
+        return getDateString(date, defaultFormat);
+    }
+    
+    /**
+     * 将毫秒转换成时间字符串，格式yyyy-MM-dd HH:mm:ss(2011-07-20 16:43:43)
+     * 对参数未作验证
+     * 
+     * @param second
+     * @return
+     */
+    public static String getDateString(long ms) {
+        return getDateString(new Date(ms), defaultFormat);
+    }
+    /**
+     * 获得当前时间，格式自定义
+     * 
+     * @param format
+     * @return
+     */
+    public static String getDateString(Date date, String format) {
+        if(date == null){
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
+    }
+	
 	/**
 	 * 判断字符串是否为日期字符串
 	 * @param date 日期字符串
@@ -571,6 +610,10 @@ public class DateTimeUtil {
 		return getInteger(date, Calendar.SECOND);
 	}
 
+	public static Date getDate(String date, String pattern) {
+	    return StringToDate(date, pattern);
+	}
+	
 	/**
 	 * 获取日期 。默认yyyy-MM-dd格式。失败返回null。
 	 * @param date 日期字符串

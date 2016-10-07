@@ -17,7 +17,12 @@
 	<mvc:default-servlet-handler />
 	<mvc:resources location="/WEB-INF/assets/" mapping="/resources/**" />
 	
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+        <mvc:argument-resolvers>
+        	<!-- Spring Data中用于分页的注解方法参数解析器 -->
+            <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
     
 	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
 				p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />

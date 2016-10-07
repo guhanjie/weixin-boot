@@ -32,7 +32,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!-- 生成具体的表 -->
-		<table tableName="user" domainObjectName="User" 
+		<!-- <table tableName="user" domainObjectName="User" 
 			   enableInsert="true"
                enableSelectByPrimaryKey="true"
                enableSelectByExample="false"
@@ -44,7 +44,7 @@
                selectByPrimaryKeyQueryId="false"
                selectByExampleQueryId="false">
                <generatedKey column="id" sqlStatement="MySql" identity="true" />
-		</table>
+		</table> -->
 		<table tableName="order" domainObjectName="Order" 
 			   enableInsert="true"
                enableSelectByPrimaryKey="true"
@@ -58,7 +58,7 @@
                selectByExampleQueryId="false">
                <generatedKey column="id" sqlStatement="MySql" identity="true" />
 		</table>
-		<table tableName="position" domainObjectName="Position" 
+		<!-- <table tableName="position" domainObjectName="Position" 
 			   enableInsert="true"
                enableSelectByPrimaryKey="true"
                enableSelectByExample="false"
@@ -70,7 +70,7 @@
                selectByPrimaryKeyQueryId="false"
                selectByExampleQueryId="false">
                <generatedKey column="id" sqlStatement="MySql" identity="true" />
-		</table>
+		</table> -->
 	</context>
 	<!--
 		maven cmd:

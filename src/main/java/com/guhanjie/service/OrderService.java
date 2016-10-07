@@ -9,12 +9,17 @@ package com.guhanjie.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -23,10 +28,11 @@ import com.guhanjie.exception.WebExceptionFactory;
 import com.guhanjie.mapper.OrderMapper;
 import com.guhanjie.mapper.PositionMapper;
 import com.guhanjie.model.Order;
-import com.guhanjie.model.Order.StatusEnum;
-import com.guhanjie.model.Order.VehicleEnum;
+import com.guhanjie.model.OrderStatusEnum;
+import com.guhanjie.model.PayStatusEnum;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
+import com.guhanjie.model.VehicleEnum;
 import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.msg.MessageKit;
 
@@ -120,6 +126,7 @@ public class OrderService {
         double distance = Math.ceil(order.getDistance().doubleValue());
         short fromFloor = from.getFloor();
         short toFloor = to.getFloor();
+        int workers = order.getWorkers();
 		Short vehicle = order.getVehicle();
 		if(vehicle == null) {
 		    throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "缺失车型信息");
@@ -135,6 +142,7 @@ public class OrderService {
                     price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*10.0;
                 }
             }
+            price += workers>1 ? (workers-1)*150 : 0;
         }
 		else if(VehicleEnum.JINBEI.code() == vehicle) {    //金杯车
 		    price = 200.0; //起步价200（10公里内）
@@ -147,11 +155,12 @@ public class OrderService {
                     price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*10.0;
                 }
             }
+            price += workers>1 ? (workers-1)*150 : 0;
         }
 		else if(VehicleEnum.QUANSHUN.code() == vehicle) {   //全顺/依维轲
 		    price = 300.0; //起步价300（10公里内）
             price += (distance<10) ? 0.0 : (distance-10)*8.0;  //超出后每公里8元
-            price += 50.0; //电梯和1楼搬运按50元收取，每多1层加收20元
+            price += (fromFloor==0?0.0:50.0) + (toFloor==0?0.0:50.0); //电梯和1楼搬运按50元收取，每多1层加收20元
             price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
             price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
             if(order.getWaypoints() != null) {
@@ -160,6 +169,7 @@ public class OrderService {
                     price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*20.0;
                 }
             }
+            price += workers>1 ? (workers-1)*150 : 0;
 		}
 		else {    //车型参数非法
             throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "车型信息有误");
@@ -171,7 +181,7 @@ public class OrderService {
 		
 		// 4. 生成订单
 		order.setCreateTime(new Date());
-		order.setStatus(StatusEnum.NEW.code());
+		order.setStatus(OrderStatusEnum.NEW.code());
 		orderMapper.insertSelective(order);
 		
 		// 5. 发送微信消息给客户
@@ -188,6 +198,24 @@ public class OrderService {
 		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
 	}
 	
+	public PageImpl<Order> listOrders(Date beginTime, Date endTime, Pageable pageable) {
+	  //查询条件
+        Map<String, Object> param = new HashMap<String, Object>();
+        if(beginTime != null) {
+            param.put("beginTime", beginTime);
+        }
+        if(endTime != null) {
+            param.put("endTime", endTime);
+        }
+        param.put("offset", pageable.getOffset());
+        param.put("pagesize", pageable.getPageSize());
+        
+        int total = orderMapper.countSelective(param);
+        List<Order> list = orderMapper.selectByQualifiedPage(param);
+        PageImpl<Order> page = new PageImpl<Order>(list, pageable, total);
+        return page;
+	}
+	
 	public List<Order> getOrdersByUser(User user) {
 		List<Order> result = null;
 		if(user!=null && user.getId()!=null) {
@@ -200,17 +228,79 @@ public class OrderService {
 		return orderMapper.selectByPrimaryKey(orderId);
 	}
 	
+	public void updateOrderByPay(boolean success, Integer orderid, String total_fee, String time_end) {
+	    LOGGER.info("Updating order[{}] pay info: sucess=[{}], total_fee=[{}], time_end=[{}]", orderid, success, total_fee, time_end);
+	    Order order = getOrderById(orderid);
+	    if(order==null) {
+	        LOGGER.warn("order[{}] not exists", orderid);
+	        return;
+	    }
+	    //一旦订单状态到达“支付成功”，就不再进行后续处理
+	    short oldOrderStatus = order.getStatus();
+	    short oldPayStatus = order.getPayStatus();
+	    if(oldPayStatus == PayStatusEnum.SUCCESS.code()) {
+	        LOGGER.info("order[{}] pay has succeed, no more to handler.", orderid);
+	        return;
+	    }
+        if(success) {
+            if(total_fee==null || time_end==null) {
+                LOGGER.warn("error in updating order[{}] pay, as pay info not complete: total_fee=[{}], time_end=[{}].", orderid, total_fee, time_end);
+                return;
+            }
+            if(order.getAmount().intValue() == Integer.valueOf(total_fee)/100) {
+                LOGGER.info("Success to complete order[{}] pay!", orderid);
+                order.setStatus(OrderStatusEnum.PAYED.code());
+                order.setPayStatus(PayStatusEnum.SUCCESS.code());
+            }
+        }
+        else {
+            LOGGER.warn("Pay exception, amount not matched: topay=[{}], payed=[{}]", order.getAmount(), total_fee);
+            order.setPayStatus(PayStatusEnum.PAYERROR.code());
+        }
+        //更新订单支付状态
+        LOGGER.info("===updating order[{}] status:[{}]-->[{}], pay status: [{}]-->[{}].", orderid, order.getStatus(), oldOrderStatus, order.getPayStatus(), oldPayStatus);
+        if(1 == orderMapper.updateByPayStatus(order, oldOrderStatus, oldPayStatus)) {
+            LOGGER.info("Success to update order[{}] pay status: [{}]-->[{}].", orderid, order.getPayStatus(), oldPayStatus);
+        }
+        else {
+            LOGGER.warn("Failed to update order[{}] pay status, as already been updated before", orderid);
+        }
+	}
+	
 	public boolean cancelOrder(Order order) {
+        if(order == null) {
+            LOGGER.warn("order can not be null.");
+            return false;
+        }
+        LOGGER.info("cancelling order[{}]...", order.getId());
 		long startTime = order.getStartTime().getTime();
 		long now = System.currentTimeMillis();
 		//只有订单状态为新建，且距离服务时间4小时之前，才可取消订单
-		if(order.getStatus()==StatusEnum.NEW.code() && (startTime-now) > 4*60*60*1000) {
-			order.setStatus(StatusEnum.CANCEL.code());
-			if(orderMapper.updateByStatus(order, StatusEnum.NEW.code()) == 1) {
+		if(order.getStatus()==OrderStatusEnum.NEW.code() && (startTime-now) > 4*60*60*1000) {
+			order.setStatus(OrderStatusEnum.CANCEL.code());
+			if(orderMapper.updateByStatus(order, OrderStatusEnum.NEW.code()) == 1) {
+			    LOGGER.info("success to cancel order[{}]", order.getId());
 				return true;
 			}
 		}
 		throw WebExceptionFactory.exception(WebExceptionEnum.ORDER_CANCEL_ERROR, "当前订单状态无法取消");
 	}
+	
+	public boolean finishOrderPay(Order order) {
+	    if(order == null) {
+	        LOGGER.warn("order can not be null.");
+	        return false;
+	    }
+	    LOGGER.info("finishing pay order[{}]...", order.getId());    
+        short oldOrderStatus = order.getStatus();
+        short oldPayStatus = order.getPayStatus();
+        order.setStatus(OrderStatusEnum.PAYED.code());
+        order.setPayStatus(PayStatusEnum.SUCCESS.code());
+        order.setPayTime(new Date());
+        if(1 == orderMapper.updateByPayStatus(order, oldOrderStatus, oldPayStatus)) {
+            return true;
+        }
+        throw WebExceptionFactory.exception(WebExceptionEnum.PAY_ERROR, "当前订单支付出错");
+    }
 	
 }

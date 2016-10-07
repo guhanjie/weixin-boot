@@ -111,6 +111,9 @@
           </div>
         </div>
       </div>
+      <div class="addway">
+        <i class="icon-plus-sign-alt">还有途经点~</i>
+      </div>
       <div class="weui_cell">
         <div class="weui_cell_hd">
           <label class="weui_label text-primary">
@@ -141,6 +144,16 @@
           <input class="weui_input" name="phone" type="tel" placeholder="请输入联系电话" value="${user.phone}" />
         </div>
       </div>
+      <div class="weui_cell">
+        <div class="weui_cell_hd">
+          <label class="weui_label text-primary">
+            <i class="icon-group"> </i>搬家师傅
+          </label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" name="workers" type="number" min="1" max="10" placeholder="请输入搬家师傅人数，默认1人" />
+        </div>
+      </div>
       <div class="weui_cell remark">
         <div class="weui_cell_hd">
           <label class="weui_label text-primary">
@@ -158,7 +171,7 @@
     <p class="weui_cells_tips">提示：计费距离以百度推荐路径为准，价格根据实际情况可调</p>
     <p class="weui_cells_tips order_sumary">
           <span class="distance">全程<em>0</em>公里</span>
-          <span class="price"><em>150</em>元</span>
+          <span class="price"><em>0</em>元</span>
     </p>
     <div class="weui_btn_area">
       <a class="weui_btn weui_btn_primary" id="submit">确认下单</a>
@@ -174,7 +187,7 @@
         <div class="weui_cells">
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>预估路程</p>
+                    <p><i class="weui_icon_success_circle"></i>预估路程：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_distance"></span>
@@ -182,7 +195,7 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>预计费用</p>
+                    <p><i class="weui_icon_success_circle"></i>预计费用：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_amount"></span>
@@ -190,7 +203,7 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>预订车型</p>
+                    <p><i class="weui_icon_success_circle"></i>预订车型：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_vehicle"></span>
@@ -198,7 +211,7 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>起始地</p>
+                    <p><i class="weui_icon_success_circle"></i>起始地：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_from_address"></span>
@@ -206,7 +219,7 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>目的地</p>
+                    <p><i class="weui_icon_success_circle"></i>目的地：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_to_address"></span>
@@ -214,7 +227,7 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>联系人</p>
+                    <p><i class="weui_icon_success_circle"></i>联系人：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_contactor"></span>
@@ -222,7 +235,15 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>服务时间</p>
+                    <p><i class="weui_icon_success_circle"></i>搬家师傅：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_workers"></span>人
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>服务时间：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_start_time"></span>
@@ -247,8 +268,8 @@
   <script src="resources/js/3rds/lxn.mobiscroll.scroller.js"></script>
   <script src="resources/js/3rds/lxn.mobiscroll.datetime.js"></script>
   <script src="resources/js/3rds/lxn.mobiscroll.i18n.zh.js"></script>
-  <script src="resources/js/order/order.js"></script>
   <script src="http://api.map.baidu.com/api?v=2.0&ak=jZG6MRj1WWYy5tlPLpZf6h8q5Q5ZGcTT"></script>
   <script src="resources/js/order/distance.js"></script>
+  <script src="resources/js/order/order.js"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
  */  
 package com.guhanjie.misc;
 
-import com.guhanjie.model.Order.VehicleEnum;
+import com.guhanjie.model.VehicleEnum;
 
 /**
  * Class Name:		TestVehicleEnum<br/>

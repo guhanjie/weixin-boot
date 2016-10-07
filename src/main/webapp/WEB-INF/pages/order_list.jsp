@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="../resources/css/fontawesome/font-awesome.css">
 <link rel="stylesheet" href="../resources/css/weui/weui.css">
 <link rel="stylesheet" href="../resources/css/order/order.css">
-<title>尊涵搬家服务-订单查询</title>
+<title>尊涵搬家服务-订单列表</title>
 </head>
 <body ontouchstart>
   <div class="container order-list">
-    <div class="weui_cells_title">您的订单列表</div>
+    <div class="weui_cells_title">管理后台--订单列表</div>
     <div class="weui_cells weui_cells_access">
       <c:if test="${orders==null or empty orders}">
         <div class="weui_cell">
@@ -68,11 +68,14 @@
                 <c:when test="${item.status == 03}">
                   <span class="btn_status text-bold">已取消</span>
                 </c:when>
-                <c:when test="${item.status == 01 && item.startTime.time - now.time > 4*60*60*1000}">
-                  <span class="btn_cancel">取消</span>
+                <c:when test="${item.status == 01}">
+                  <span class="btn_success gloming">待支付</span>
+                  <c:if test="${item.startTime.time - now.time > 4*60*60*1000}">
+                    <span class="btn_cancel">取消</span>
+                  </c:if>
                 </c:when>
                 <c:otherwise>
-                  <span class="btn_pay gloming">去支付</span>
+                  <span class="btn_success gloming">待支付</span>
                 </c:otherwise>
               </c:choose>
             </div>
@@ -80,70 +83,10 @@
         </c:forEach>
       </c:if>
     </div>
-  </div>
-  <div class="weui_msg" style="display:none;">
-    <div class="weui_icon_area"><i class="weui_icon_safe weui_icon_safe_success"></i></div>
-    <div class="weui_text_area">
-        <h2 class="weui_msg_title">订单支付</h2>
-        <p class="weui_msg_desc">请您完成支付，尊涵搬家竭诚为您服务！</p>
-        <div class="weui_cells order-item">
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>服务时间：</p>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_start_time"></span>
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>服务车型：</p>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_vehicle"></span>
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>起始地：</p>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_from_address"></span>
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>目的地：</p>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_to_address"></span>
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>行驶路程：</p>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_distance"></span>
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <p><i class="weui_icon_success_circle"></i>订单金额：</p>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_amount" class="text-red"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="weui_opr_area">
-        <p class="weui_btn_area">
-            <a href="javascript:;" class="weui_btn weui_btn_primary order-pay">微信支付</a>
-        </p>
-    </div>
-    <div class="weui_extra_area">
-        <a class="btn_back" href="#">返回订单列表</a>
+    <div class="pagenation">
+      <c:if test="${current > 0}"><a href="list?page=${current-1}"><i  class="icon-chevron-left"></i></a></c:if>      
+       ${current+1} / ${pages} 
+      <c:if test="${current < pages-1}"><a href="list?page=${current+1}"><i  class="icon-chevron-right"></i></a></c:if>
     </div>
   </div>
   <script src="../resources/js/zepto/zepto-1.1.6.js"></script>

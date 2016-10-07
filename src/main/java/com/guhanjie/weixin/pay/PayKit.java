@@ -37,6 +37,7 @@ import com.guhanjie.util.XmlUtil;
 import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.WeixinHttpUtil;
 import com.guhanjie.weixin.WeixinHttpUtil.WeixinHttpCallback;
+import com.guhanjie.weixin.msg.MessageKit;
 
 /**
  * Class Name:		PayKit<br/>
@@ -63,6 +64,10 @@ public class PayKit {
      * @throws IOException
      */
     public static String unifiedorder(HttpServletRequest request, final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
+        if(order == null) {
+            LOGGER.warn("order can not be nulll in unified order.");
+            return null;
+        }
         LOGGER.info("starting to unified order to weixin for order:[{}]...", order.getId());
         
         final StringBuilder prepayId = new StringBuilder();        
@@ -98,39 +103,40 @@ public class PayKit {
             public void process(String respBody) {
                 try {
                     Map<String, String> map = XmlUtil.xmlstr2map(respBody);
-                    LOGGER.debug("=====got response for weixin unified order:[{}].", map);
+                    LOGGER.debug("=====got response from weixin unified order:[{}].", map);
                     String return_code = map.get("return_code");                                        //返回状态码SUCCESS/FAIL，此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
                     String return_msg = map.get("return_msg");                                          //返回信息
-                    if(return_code==null || !return_code.equals("SUCCESS")) {
+                    String appid = map.get("appid");                                                        //公众账号ID
+                    String mch_id = map.get("mch_id");                                                  //商户号
+                    String device_info = map.get("device_info");                                        //设备号
+                    String nonce_str = map.get("nonce_str");                                            //随机字符串
+                    String sign = map.get("sign");                                                          //签名
+                    String result_code = map.get("result_code");                                    //业务结果
+                    String err_code = map.get("err_code");                                              //错误代码
+                    String err_code_des = map.get("err_code_des");                              //错误代码描述
+                    String trade_type = map.get("trade_type");                                  //交易类型JSAPI
+                    String prepay_id = map.get("prepay_id");                                     //预支付交易会话ID
+                    String code_url = map.get("code_url");                                            //二维码链接
+                    if(!"SUCCESS".equals(return_code)) {
                     	LOGGER.error("fail to get response for weixin unified order api, cause:[{}]", return_msg);
                     	return;
                     }
                 	//验签
                     String signature = sign(map, mchkey);
-                    String sign = map.get("sign");                                                          //签名
                     if(sign==null || !sign.equals(signature)) {
                     	LOGGER.warn("signature validation failed, this response maybe fake!");
                     	return;
                     }
-                    //根据业务结果，执行后续业务操作
-                    String appid = map.get("appid");                                                        //公众账号ID
-                    String mch_id = map.get("mch_id");                                                  //商户号
-                    String device_info = map.get("device_info");                                        //设备号
-                    String nonce_str = map.get("nonce_str");                                            //随机字符串
-                    String result_code = map.get("result_code");                                    //业务结果
-                    String err_code = map.get("err_code");                                              //错误代码
-                    String err_code_des = map.get("err_code_des");                              //错误代码描述
+                    //验证随机字符串nonce，防CSRF攻击
                     if(!nonceStr.equals(nonce_str)) {
-                    	LOGGER.warn("nonce not matched, this response maybe fake!");
-                    	return;
+                        LOGGER.warn("nonce not matched(CSRF warning), this response maybe fake!");
+                        return;
                     }
-                    if(result_code==null || !result_code.equals("SUCCESS")) {
-                    	LOGGER.error("error in weixin unified order, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
-                    	return;
+                    //根据业务结果，执行后续业务操作
+                    if(!"SUCCESS".equals(result_code)) {
+                        LOGGER.error("error in weixin unified order, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
+                        return;
                     }
-                    String trade_type = map.get("trade_type");                                  //交易类型JSAPI
-                    String prepay_id = map.get("prepay_id");                                     //预支付交易会话ID
-                    String code_url = map.get("code_url");											//二维码链接
                     prepayId.append(prepay_id);
                     LOGGER.info("success to get weixin prepay id:[{}] for order:[{}]", prepayId, order.getId());
                 }
@@ -158,10 +164,14 @@ public class PayKit {
      * @param mchkey
      * @throws IOException
      */
-    public static boolean search(final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
+    public static Map<String,String> search(final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
+        if(order == null) {
+            LOGGER.warn("order can not be nulll in search order.");
+            return null;
+        }
         LOGGER.info("starting to search payment for order:[{}]...", order.getId());
-        
-        final Boolean res = new Boolean(false);
+
+        final Map<String, String> result = new HashMap<String, String>();
 
     	final String nonceStr = String.valueOf(new Random().nextInt(10000));
         Map<String, String> map = new HashMap<String, String>();
@@ -180,11 +190,13 @@ public class PayKit {
             public void process(String respBody) {
                 try {
                     Map<String, String> map = XmlUtil.xmlstr2map(respBody);
-                    LOGGER.debug("=====got response for weixin search payment:[{}].", map);
+                    LOGGER.debug("=====got response from weixin search payment:[{}].", map);
                     String return_code = map.get("return_code");                                        //返回状态码SUCCESS/FAIL，此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
                     String return_msg = map.get("return_msg");                                          //返回信息
-                    if(return_code==null || !return_code.equals("SUCCESS")) {
+                    if(!"SUCCESS".equals(return_code)) {
                     	LOGGER.error("fail to get response for weixin search payment api, cause:[{}]", return_msg);
+                        result.put("result", return_code);
+                        result.put("err_msg", "订单查询失败: " + return_msg);
                     	return;
                     }
                 	//验签
@@ -192,32 +204,39 @@ public class PayKit {
                     String sign = map.get("sign");                                                          //签名
                     if(sign==null || !sign.equals(signature)) {
                     	LOGGER.warn("signature validation failed, this response maybe fake!");
+                        result.put("result", return_code);
+                        result.put("err_msg", "验签失败");
                     	return;
+                    }
+                    //验证随机字符串nonce，防CSRF攻击
+                    String nonce_str = map.get("nonce_str");                                            //随机字符串
+                    if(!nonceStr.equals(nonce_str)) {
+                        LOGGER.warn("nonce not matched(CSRF warning), this response maybe fake!");
+                        result.put("result", return_code);
+                        result.put("err_msg", "随机字符串不匹配");
+                        return;
                     }
                     //根据业务结果，执行后续业务操作
-                    String appid = map.get("appid");                                                        //公众账号ID
-                    String mch_id = map.get("mch_id");                                                  //商户号
-                    String nonce_str = map.get("nonce_str");                                            //随机字符串
                     String result_code = map.get("result_code");                                    //业务结果
-                    String err_code = map.get("err_code");                                              //错误代码
-                    String err_code_des = map.get("err_code_des");                              //错误代码描述
-                    if(!nonceStr.equals(nonce_str)) {
-                    	LOGGER.warn("nonce not matched, this response maybe fake!");
-                    	return;
+                    if(!"SUCCESS".equals(result_code)) {
+                        String err_code = map.get("err_code");                                              //错误代码
+                        String err_code_des = map.get("err_code_des");                              //错误代码描述
+                        LOGGER.error("error in weixin search payment, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
+                        result.put("result", result_code);
+                        result.put("err_msg", err_code + ", " + err_code_des);
+                        return;
                     }
-                    if(result_code==null || !result_code.equals("SUCCESS")) {
-                    	LOGGER.error("error in weixin search payment, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
-                    	return;
-                    }
-                    String device_info = map.get("device_info");                                        //设备号
                     String openid = map.get("openid");                                        			//用户OpenId
                     String trade_state = map.get("trade_state");                                  //交易状态(SUCCESS—支付成功、REFUND—转入退款、NOTPAY—未支付、CLOSED—已关闭、REVOKED—已撤销（刷卡支付）、USERPAYING--用户支付中、PAYERROR--支付失败(其他原因，如银行返回失败)、)
-                    String total_fee = map.get("total_fee");											//订单总金额，单位为分
-                    String settlement_total_fee = map.get("settlement_total_fee");		//应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额
-                    String transaction_id = map.get("transaction_id");						//微信支付订单号
                     String out_trade_no = map.get("out_trade_no");							//商户订单号
+                    String total_fee = map.get("total_fee");											//订单总金额，单位为分
                     String time_end = map.get("time_end");										//支付完成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。
                     String trade_state_desc = map.get("trade_state_desc");				//对当前查询订单状态的描述和下一步操作的指引
+//                    String settlement_total_fee = map.get("settlement_total_fee");		//应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额
+//                    String transaction_id = map.get("transaction_id");						//微信支付订单号
+//                    String appid = map.get("appid");                                                        //公众账号ID
+//                    String mch_id = map.get("mch_id");                                                  //商户号
+//                    String device_info = map.get("device_info");                                        //设备号
 //                    String is_subscribe = map.get("is_subscribe");                                //用户是否关注公众账号，Y-关注，N-未关注，仅在公众账号类型支付有效
 //                    String trade_type = map.get("trade_type");                                  //交易类型JSAPI
 //                    String bank_type = map.get("bank_type");                                     //付款银行(银行类型，采用字符串类型的银行标识)
@@ -226,24 +245,84 @@ public class PayKit {
                     LOGGER.info("success to search weixin payment for order:[{}]: "
                     				+ "openid=[{}], trade_state=[{}], total_fee=[{}], out_trade_no=[{}], time_end=[{}], trade_state_desc=[{}]", 
                     				order.getId(), openid, trade_state, total_fee, out_trade_no, time_end, trade_state_desc);
-                    if(trade_state.equals("SUCCESS")) {
-                    	if(order.getAmount().intValue() == Integer.valueOf(total_fee)) {
-                    		//支付成功
-                    	}
-                    	else {
-                    		//支付金额有误
-                    	}
+                    if(!"SUCCESS".equals(trade_state)) {    //支付不成功
+                        LOGGER.warn("trade failed, trade_state:[{}], trade_state_desc:[{}]", trade_state, trade_state_desc);
+                        result.put("result", trade_state);
+                        result.put("err_msg", "订单支付不成功："+trade_state_desc);
+                        return;
                     }
-                    else {
-                    	//支付不成功
+                    if(order.getAmount().intValue() != Integer.valueOf(total_fee)/100) {    //支付金额有误
+                        LOGGER.warn("trade exception, amount not matched: topay=[{}], payed=[{}]", order.getAmount(), total_fee);
+                        result.put("result", "FAIL");
+                        result.put("err_msg", "订单支付金额有误：topay="+order.getAmount()+", payed="+ total_fee);
+                        return;
                     }
+                    result.put("result", "SUCCESS");
+                    result.put("out_trade_no", out_trade_no);
+                    result.put("total_fee", total_fee);
+                    result.put("time_end", time_end);
+                    result.put("openid", openid);
                 }
                 catch (DocumentException e) {
                     LOGGER.error("error in parsing response xml:[{}]", respBody, e);
                 }
             }
         });
-        return res;
+        return result;
+    }
+    
+    /**
+     * Method Name:	callback<br/>
+     * Description:			[支付完成后，微信会把相关支付结果和用户信息发送给商户，商户需要接收处理，并返回应答]
+     * @author				guhanjie
+     * @time					2016年10月1日 下午6:49:46
+     * @param request
+     * @param mchkey
+     * @return map: {result:SUCCESS/FAIL, ...}
+     */
+    public static Map<String,String> callback(HttpServletRequest request, final String mchkey) {
+        final Map<String, String> result = new HashMap<String, String>();
+        
+        Map<String, String> map = MessageKit.reqMsg2Map(request);
+        LOGGER.debug("=====got response from weixin pay callback:[{}].", map);
+
+        String return_code = map.get("return_code");                                        //返回状态码SUCCESS/FAIL，此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
+        String return_msg = map.get("return_msg");                                          //返回信息
+        if(!"SUCCESS".equals(return_code)) {
+            LOGGER.warn("error in callback from weixin pay, cause:[{}]", return_msg);
+            result.put("result", return_code);
+            result.put("err_msg", return_msg);
+            return result; 
+        }
+        //验签
+        String signature = sign(map, mchkey);
+        String sign = map.get("sign");                                                          //签名
+        if(sign==null || !sign.equals(signature)) {
+            LOGGER.warn("signature validation failed, this request of weixin pay callback maybe fake!");
+            result.put("result", "FAIL");
+            result.put("err_msg", "签名失败");
+            return result;
+        }
+        String result_code = map.get("result_code");                                    //业务结果
+        if(!"SUCCESS".equals(result_code)) {
+            String err_code = map.get("err_code");                                              //错误代码
+            String err_code_des = map.get("err_code_des");                              //错误代码描述
+            LOGGER.error("error in callback from weixin pay, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
+            result.put("result", result_code);
+            result.put("err_msg", err_code + ", " + err_code_des);
+            return result;
+        }
+        String out_trade_no = map.get("out_trade_no");          //商户订单号
+        String total_fee = map.get("total_fee");                            //订单金额  
+        String time_end = map.get("time_end");                      //支付完成时间
+        String openid = map.get("openid");                              //用户OpenIds
+        result.put("result", "SUCCESS");
+        result.put("out_trade_no", out_trade_no);
+        result.put("total_fee", total_fee);
+        result.put("time_end", time_end);
+        result.put("openid", openid);
+        
+        return result;
     }
         
     public static String sign(Map<String, String> params, String secretKey) {

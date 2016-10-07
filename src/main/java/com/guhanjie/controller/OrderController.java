@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,10 +24,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -38,8 +45,8 @@ import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.OrderService;
 import com.guhanjie.service.UserService;
+import com.guhanjie.util.DateTimeUtil;
 import com.guhanjie.weixin.WeixinConstants;
-import com.guhanjie.weixin.msg.MessageKit;
 import com.guhanjie.weixin.pay.PayKit;
 
 /**
@@ -65,6 +72,9 @@ public class OrderController extends BaseController {
 	@Autowired
 	private OrderService orderService;
 	
+	@Resource(name="paySearchScheduler")
+	private TaskScheduler taskScheduler;
+	
 	@RequestMapping(value="",method=RequestMethod.GET)
 	public String order(HttpServletRequest req) {
 		return "order";
@@ -73,7 +83,7 @@ public class OrderController extends BaseController {
 	@RequestMapping(value="",method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> putOrder(HttpServletRequest req) {
-		LOGGER.info("putting new order for user[]...", JSON.toJSONString(getUser(req)));
+		LOGGER.info("putting new order for user[{}]...", JSON.toJSONString(getUser(req)));
 		//获取用户信息
 		String openid = req.getParameter("open_id");
 		User user = userService.getUserByOpenId(openid);
@@ -101,6 +111,9 @@ public class OrderController extends BaseController {
 		to.setFloor(toFloor);
 		to.setGeoLng(toLng);
 		to.setGeoLat(toLat);		
+        //获取途径点位置信息
+		String waypoints = req.getParameter("waypoints[0]");
+		LOGGER.info(waypoints);
 		//获取订单详细信息
 		String _amount = req.getParameter("amount");
 		BigDecimal amount = new BigDecimal(StringUtils.isBlank(_amount) ? "0" : _amount);
@@ -111,6 +124,7 @@ public class OrderController extends BaseController {
 		short vehicle = (short)Integer.parseInt(req.getParameter("vehicle"));
 		String contactor = req.getParameter("contactor");
 		String phone = req.getParameter("phone");
+		Integer workers = Integer.parseInt(req.getParameter("workers"));
 		String remark = req.getParameter("remark");		
 		String _startTime = req.getParameter("start_time");
 		Date startTime = StringUtils.isBlank(_startTime) ? new Date() : new Date(Long.parseLong(_startTime));
@@ -126,19 +140,45 @@ public class OrderController extends BaseController {
 		order.setVehicle(vehicle);
 		order.setContactor(contactor);
 		order.setPhone(phone);
+		order.setWorkers(workers);
 		order.setRemark(remark);
 		
 		//下单
 		orderService.putOrder(order);
 		return success();
 	}
+
+    @RequestMapping(value="list",method=RequestMethod.GET)
+    public String listOrders(HttpServletRequest req, Model model, 
+                    @RequestParam(required=false) String beginDate, //yyyy-mm-dd
+                    @RequestParam(required=false) String endDate,    //yyyy-mm-dd
+                    @PageableDefault(page=0, size=10) Pageable pageable) {
+        HttpSession session = req.getSession();
+        User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
+        
+        Date beginTime = null;
+        Date endTime = null;
+        if(StringUtils.isNotBlank(beginDate)){
+            beginTime = DateTimeUtil.getDate(beginDate + " 00:00:00", "yyyy-MM-dd HH:mm:ss");
+        }       
+        if(StringUtils.isNotBlank(endDate)){
+            endTime = DateTimeUtil.getDate(endDate + " 23:59:59", "yyyy-MM-dd HH:mm:ss");
+        }
+        PageImpl<Order> page = orderService.listOrders(beginTime, endTime, pageable);
+
+        model.addAttribute("orders", page.getContent());
+        model.addAttribute("current", page.getNumber());
+        model.addAttribute("pages", page.getTotalPages());
+        model.addAttribute("now", new Date());
+        return "order_list";
+    }
 	
 	@RequestMapping(value="search",method=RequestMethod.GET)
 	public String searchOrder(HttpServletRequest req, Model model) {
 		HttpSession session = req.getSession();
-//		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
-		User user = new User();
-		user.setId(3);
+		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
+//		User user = new User();
+//		user.setId(3);
 		List<Order> orders = orderService.getOrdersByUser(user);
 		model.addAttribute("orders", orders);
 		model.addAttribute("now", new Date());
@@ -160,16 +200,53 @@ public class OrderController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value="payed",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> finishOrderPay(Integer orderid) {
+	    Order order = orderService.getOrderById(orderid);
+	    if(order == null) {
+	        return fail("无效的订单号");
+	    }
+	    try {
+	        orderService.finishOrderPay(order);
+	        return success();
+	    } catch(WebException e) {
+	        return fail(e.getScreenMessage());
+	    }
+	}
+	
 	@RequestMapping(value="pay",method=RequestMethod.GET)
     @ResponseBody
-	public Map<String, Object> payOrder(HttpServletRequest req, Integer orderid) {
-        Order order = orderService.getOrderById(orderid);
+	public Map<String, Object> payOrder(HttpServletRequest req, final Integer orderid) {
+	    final String APPID = weixinContants.APPID;
+	    final String MCH_ID = weixinContants.MCH_ID;
+	    final String MCH_KEY = weixinContants.MCH_KEY;
+        final Order order = orderService.getOrderById(orderid);
         if(order == null) {
             return fail("无效的订单号");
         }
         String prepayId = null;
         try {
-        	prepayId = PayKit.unifiedorder(req, order, weixinContants.APPID, weixinContants.MCH_ID, weixinContants.MCH_KEY);
+        	prepayId = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);
+        	long now = new Date().getTime();
+        	taskScheduler.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    Map<String, String> map;
+                    try {
+                        map = PayKit.search(order, APPID, MCH_ID, MCH_KEY);
+                        String result = map.get("result");
+                        Integer orderid = Integer.valueOf(map.get("out_trade_no"));
+                        String total_fee = map.get("total_fee");
+                        String time_end = map.get("time_end");
+                        boolean success = "SUCCESS".equals(result);                    
+                        orderService.updateOrderByPay(success, orderid, total_fee, time_end);
+                    }
+                    catch (IOException e) {
+                        LOGGER.error("error in search order[{}] pay.", orderid, e);
+                    }
+                }
+        	}, new Date(now+10*60*1000));       //产生支付预付单后的10分钟查询，以防微信支付回调没有接收到。
         }
         catch (IOException e) {
             LOGGER.error("error in weixin pay unified order.");
@@ -192,35 +269,16 @@ public class OrderController extends BaseController {
 	@RequestMapping(value="paycallback",method=RequestMethod.GET)
 	public void paycallback(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		LOGGER.debug("getting callback from weixin pay...");
-		Map<String, String> map = MessageKit.reqMsg2Map(req);
-		String return_code = map.get("return_code");
-		if(!"SUCCESS".equals(return_code)) {
-			LOGGER.warn("error in callback from weixin pay, cause:[{}]", map.get("return_msg"));
-			return; 
-		}
-		//验签
-		String sign = map.get("sign");
-		if(sign==null || !sign.equals(PayKit.sign(map, weixinContants.MCH_KEY))) {
-        	LOGGER.warn("signature validation failed, this callback request maybe fake!");
-			return;
-		}
 		
-		String result_code = map.get("result_code");				//业务结果 SUCCESS/FAIL
-		if(!"SUCCESS".equals(result_code)) {
-			LOGGER.warn("error in callback from weixin pay, cause: err_code=[{}], err_code_des=[{}]", map.get("err_code"), map.get("err_code_des"));
-			return;
-		}
-		String out_trade_no = map.get("out_trade_no");			//商户订单号
-		String total_fee = map.get("total_fee");							//订单金额	
-		String time_end = map.get("time_end");						//支付完成时间
-		String openid = map.get("openid");								//用户OpenIds
+		Map<String, String> map = PayKit.callback(req, weixinContants.MCH_KEY);
+		String result = map.get("result");
+		Integer orderid = Integer.valueOf(map.get("out_trade_no"));
+		String total_fee = map.get("total_fee");
+		String time_end = map.get("time_end");
+		boolean success = "SUCCESS".equals(result);
 		
-		//更新订单支付状态
-		Order order = orderService.getOrderById(Integer.valueOf(out_trade_no));
-		if(order==null || order.getAmount().intValue()==Integer.valueOf(total_fee)/100) {
-			LOGGER.warn("error in callback from weixin pay, cause: err_code=[{}], err_code_des=[{}]", map.get("err_code"), map.get("err_code_des"));
-			return;
-		}
+		orderService.updateOrderByPay(success, orderid, total_fee, time_end);
+		
         resp.setContentType("application/xml;charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String respCon = "<xml>"

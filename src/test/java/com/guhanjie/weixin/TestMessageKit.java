@@ -18,8 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.guhanjie.model.Order;
-import com.guhanjie.model.Order.VehicleEnum;
 import com.guhanjie.model.Position;
+import com.guhanjie.model.VehicleEnum;
 import com.guhanjie.weixin.msg.MessageKit;
 
 /**

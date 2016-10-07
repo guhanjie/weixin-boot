@@ -1,9 +1,22 @@
 $(function() {
 
-	order = {};
+	order = {
+			"vehicle": 1,			//默认车型：小面
+			"workers": 1,		//默认搬家师傅：1人
+			"from": {},
+			"to": {},					
+			"waypoints": []	//途径点
+	};
 	order["open_id"] = $('input[name="open_id"]').val();
-	order["vehicle"] = 1;
 
+	// 定义起末点
+//	var from = {};
+//	var to = {};
+//	var waypoints = [];
+	var waypointsIdx = 1;
+	var plugin = DistancePlugin.createNew(order, order.from, order.to, order.waypoints);
+	plugin.initialInput("from_address", order.from);
+	plugin.initialInput("to_address", order.to);
 	//车型
 	$('.car-type').on('click', '.car-type-label', function(e) {
 		$(this).siblings('.car-type-label').removeClass('text-primary');
@@ -13,12 +26,86 @@ $(function() {
 		var carType = $(this).data('type');
 		order["vehicle"] = carType;
 		$('input[name="vehicle"]').val(order["vehicle"]);
-		var price = [150, 200, 300];
-		$('.order_sumary .price  em').text(price[carType-1]);
+//		var price = [150, 200, 300];
+//		$('.order_sumary .price  em').text(price[carType-1]);
 		var arrowLeft = ['16%', '50%', '83%'];
 		$('.car-type-tips .arrow').css('left', arrowLeft[carType-1]);
 		$('.car-type-tips').find('p').hide();
 		$('.car-type-tips').find('p[id=carType'+carType+']').show();
+		if(carType == 3) {	//全顺/依维柯
+			$('.weui_select.address-floor').find('option[value="0"]').html('无需搬运-0元');
+			$('.weui_select.address-floor').find('option[value="1"]').html('电梯或1楼-50元');
+			$('.weui_select.address-floor').find('option[value="2"]').html('2楼-加收20元');
+			$('.weui_select.address-floor').find('option[value="3"]').html('3楼-加收40元');
+			$('.weui_select.address-floor').find('option[value="4"]').html('4楼-加收60元');
+			$('.weui_select.address-floor').find('option[value="5"]').html('5楼-加收80元');
+			$('.weui_select.address-floor').find('option[value="6"]').html('6楼-加收100元');
+			$('.weui_select.address-floor').find('option[value="7"]').html('7楼-加收120元');
+			$('.weui_select.address-floor').find('option[value="8"]').html('8楼-加收140元');
+		}
+		else {						//小面或金杯
+			$('.weui_select.address-floor').find('option[value="0"]').html('电梯-免费');
+			$('.weui_select.address-floor').find('option[value="1"]').html('1楼-免费');
+			$('.weui_select.address-floor').find('option[value="2"]').html('2楼-加收20元');
+			$('.weui_select.address-floor').find('option[value="3"]').html('3楼-加收30元');
+			$('.weui_select.address-floor').find('option[value="4"]').html('4楼-加收40元');
+			$('.weui_select.address-floor').find('option[value="5"]').html('5楼-加收50元');
+			$('.weui_select.address-floor').find('option[value="6"]').html('6楼-加收60元');
+			$('.weui_select.address-floor').find('option[value="7"]').html('7楼-加收70元');
+			$('.weui_select.address-floor').find('option[value="8"]').html('8楼-加收80元');
+		}
+	});
+	
+	//添加途经点
+	$('.addway i').on('click', function() {
+		var input_id = "way_point_"+waypointsIdx;
+		$(this).parent().before(
+		      '<div class="weui_cell waypoint">'+
+		        '<div class="weui_cell_hd">'+
+		          '<label class="weui_label text-primary">'+
+		            '<i class="icon-map-marker"> </i>途经点'+
+		          '</label>'+
+		        '</div>'+
+		        '<div class="weui_cell_bd weui_cell_primary">'+
+		          '<input class="weui_input" id='+input_id+' data-idx='+waypointsIdx+' name="way_address" type="text" placeholder="请输入途经点" />'+
+		          '<input class="weui_input address-detail" name="way_detail" type="text" placeholder="几号几室" />'+
+		          '<div class="floor_select">'+
+		            '<select class="weui_select address-floor" name="way_floor">'+
+		              '<option value="0">电梯-免费</option>'+
+		              '<option value="1">1楼-免费</option>'+
+		              '<option value="2">2楼-加收20元</option>'+
+		              '<option value="3">3楼-加收30元</option>'+
+		              '<option value="4">4楼-加收40元</option>'+
+		              '<option value="5">5楼-加收50元</option>'+
+		              '<option value="6">6楼-加收60元</option>'+
+		              '<option value="7">7楼-加收70元</option>'+
+		              '<option value="8">8楼-加收80元</option>'+
+		            '</select>'+
+		          '</div>'+
+		        '</div>'+
+		        '<div class="weui_cell_ft remove">'+
+		          '<i class="icon-remove"></i>'+
+		        '</div>'+
+		      '</div>');
+		var point = {'index': waypointsIdx++};
+		order.waypoints.push(point);
+		plugin.initialInput(input_id, point);
+	});
+	//删除途经点
+	$('.weui_cells_form').on('click', '.waypoint .remove', function() {
+		var $cell = $(this).parents('.weui_cell.waypoint');
+		var idx = $cell.find('.weui_input').data('idx');
+		var del = undefined;
+		order.waypoints.forEach(function(e, i) {
+			if(e.index == idx) {
+				del = i;
+				return;
+			}
+		});
+		if(del != undefined) {
+			order.waypoints.splice(del, 1);
+		}
+		$cell.remove();
 	});
 	
 	//服务时间
@@ -70,48 +157,51 @@ $(function() {
     $('#start_time').mobiscroll().datetime(options);
 
     //计算价格
-	$('body').on('change click touchend', function(e) {
+	$('body').on('click touchend tap blur focus change select keyup mouseup', function(e) {
+		//console.log('==========event type: '+e.type);
     	order["amount"] = undefined;
     	var distance = order["distance"] || 0;
     	if(!$('input[name="from_address"]').val() || !$('input[name="to_address"]').val()) {
     		distance = 0;
     	}
-    	distance = Math.ceil(distance);
     	$('.order_sumary .distance em').text(distance);
-    	var fromFloor = $('select[name="from_floor"]').val() || 0;
-    	var toFloor = $('select[name="to_floor"]').val() || 0;
     	if(!distance) {
+        	$('.order_sumary .price em').text('0');
     		return;
     	}
+    	var fromFloor = $('select[name="from_floor"]').val() || 0;
+    	var toFloor = $('select[name="to_floor"]').val() || 0;
+    	var workers = $('input[name="workers"]').val() || 1;
     	var price = 0;
     	if(order["vehicle"] == 1) {	//小面车型
-    		price = 150.0; //起步价150（10公里内）
-            price += (distance<10) ? 0.0 : (distance-10)*5.0;  //超出后每公里5元
+            price += (distance<10) ? 150.0 : (150.0+(distance-10)*5.0);  //起步价150（10公里内），超出后每公里5元
             price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
             price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
+        	price += workers>1 ? (workers-1)*150 : 0;
     	}
     	else if(order["vehicle"] == 2) {	//金杯车型
-		    price = 200.0; //起步价200（10公里内）
-            price += (distance<10) ? 0.0 : (distance-10)*6.0;  //超出后每公里6元
+            price += (distance<10) ? 200.0 : (200.0+(distance-10)*6.0);  //起步价200（10公里内），超出后每公里6元
             price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
             price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
+        	price += workers>1 ? (workers-1)*150 : 0;
     	}
     	else if(order["vehicle"] == 3) {   //全顺/依维轲
-		    price = 300.0; //起步价300（10公里内）
-            price += (distance<10) ? 0.0 : (distance-10)*8.0;  //超出后每公里8元
-            price += 50.0; //电梯和1楼搬运按50元收取，每多1层加收20元
+            price += (distance<10) ? 300.0 : (300.0+(distance-10)*8.0);  //起步价300（10公里内），超出后每公里8元
+            price += (fromFloor==0?0.0:50.0) + (toFloor==0?0.0:50.0); //电梯和1楼搬运按50元收取，每多1层加收20元
             price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
             price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
+        	price += workers>1 ? (workers-1)*150 : 0;
     	}
-    	order["amount"] = price.toFixed(1);
+    	order["amount"] = price.toFixed(0);
     	$('.order_sumary .price em').text(order["amount"]);
-		$('input[name="vehicle"]').val(order["vehicle"]);
-		$('input[name="from_lng"]').val(order["from_lng"]);
-		$('input[name="from_lat"]').val(order["from_lat"]);
-		$('input[name="to_lng"]').val(order["to_lng"]);
-		$('input[name="to_lat"]').val(order["to_lat"]);
-		$('input[name="distance"]').val(order["distance"]);
-		$('input[name="amount"]').val(order["amount"]);
+//		$('input[name="vehicle"]').val(order["vehicle"]);
+//		$('input[name="from_lng"]').val(order["from_lng"]);
+//		$('input[name="from_lat"]').val(order["from_lat"]);
+//		$('input[name="to_lng"]').val(order["to_lng"]);
+//		$('input[name="to_lat"]').val(order["to_lat"]);
+//		$('input[name="distance"]').val(order["distance"]);
+//		$('input[name="amount"]').val(order["amount"]);
+		e.stopPropagation();
     	return;
 	});
 			
@@ -147,6 +237,7 @@ $(function() {
 		//$('input[name="start_time"]').val(order["start_time"]);
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
+		order["workers"] = $('input[name="workers"]').val() || 1;
 		order["remark"] = $('textarea[name="remark"]').val();
 		//验证订单
 		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3)) {
@@ -193,6 +284,11 @@ $(function() {
 			$('input[name="phone"]').closest('.weui_cell').addClass('weui_cell_warn');
 			return;
 		}
+		if (!order["workers"] || !/^\d+$/.test(order["workers"])) {
+			$.weui.topTips('请输入正确的搬家师傅人数');
+			$('input[name="workers"]').closest('.weui_cell').addClass('weui_cell_warn');
+			return;
+		}
 		if(!order["distance"]) {
 			$.weui.topTips('距离计算失败，请输入正确地址');
 			return;
@@ -205,16 +301,16 @@ $(function() {
 		//console.log(order);
 		//console.log($('form').serialize());
 		//var formData = $('form').serialize();
-		var formData = '';
-		for(i in order) {
-			formData += '&'+i+'='+order[i];
-		}
-		formData = formData.substring(1);
+//		var formData = '';
+//		for(i in order) {
+//			formData += '&'+i+'='+order[i];
+//		}
+//		formData = formData.substring(1);
 		//console.log(formData);
 		$.ajax({
 		    type: 'POST',
 		    url: 'order',
-		    data: formData,
+		    data: order,
 		    success: function(data){
 	    		$.weui.hideLoading();
 		    	if(data.success) {
@@ -227,6 +323,7 @@ $(function() {
 					$('#res_from_address').text(order["from_address"]);
 					$('#res_to_address').text(order["to_address"]);
 					$('#res_contactor').text(order["contactor"]);
+					$('#res_workers').text(order["workers"]);
 					$('#res_start_time').text(new Date(order["start_time"]).toLocaleString());
 					$('form').remove();
 					$('.weui_msg').show();
