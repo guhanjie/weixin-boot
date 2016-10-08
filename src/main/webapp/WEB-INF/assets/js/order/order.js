@@ -3,20 +3,17 @@ $(function() {
 	order = {
 			"vehicle": 1,			//默认车型：小面
 			"workers": 1,		//默认搬家师傅：1人
-			"from": {'target': $('#from_address')},
-			"to": {'target': $('#to_address')},					
+			"from": {'target': 'from_address'},	//起点
+			"to": {'target': 'to_address'},			//终点		
 			"waypoints": []	//途径点
 	};
-	order["open_id"] = $('input[name="open_id"]').val();
-
-	// 定义起末点
-//	var from = {};
-//	var to = {};
-//	var waypoints = [];
 	var waypointsIdx = 1;
+	
+	//百度地图插件
 	var plugin = DistancePlugin.createNew(order, order["from"], order["to"], order["waypoints"]);
-	plugin.initialInput("from_address", order["from"]);
-	plugin.initialInput("to_address", order["to"]);
+	plugin.initialInput(order["from"]);
+	plugin.initialInput(order["to"]);
+	
 	//车型
 	$('.car-type').on('click', '.car-type-label', function(e) {
 		$(this).siblings('.car-type-label').removeClass('text-primary');
@@ -88,10 +85,10 @@ $(function() {
 		      '</div>');
 		var point = {
 				'index': waypointsIdx++,
-				'target': $('#'+input_id)
+				'target': input_id
 		};
 		order["waypoints"].push(point);
-		plugin.initialInput(input_id, point);
+		plugin.initialInput(point);
 	});
 	//删除途经点
 	$('.weui_cells_form').on('click', '.waypoint .remove', function() {
@@ -162,6 +159,20 @@ $(function() {
     //计算价格
 	$('body').on('click touchend tap blur focus change select keyup mouseup', function(e) {
 		//console.log('==========event type: '+e.type);
+		order["from"]["address"] = $('input[name="from_address"]').val();
+		order["from"]["detail"] = $('input[name="from_detail"]').val();
+		order["from"]["floor"] = $('select[name="from_floor"]').val() || 0;
+		order["to"]["address"] = $('input[name="to_address"]').val();
+		order["to"]["detail"] = $('input[name="to_detail"]').val();
+		order["to"]["floor"] = $('select[name="to_floor"]').val() || 0;
+		order["workers"] = $('input[name="workers"]').val() || 1;
+		order["waypoints"].forEach(function(e, i) {
+			var $wayInput = $('#'+e.target);
+			e["address"] = $wayInput.val();
+			e["detail"] = $wayInput.next('input[name="way_detail"]').val();
+			e["floor"] = $wayInput.parents('.weui_cell.waypoint').find('select[name="way_floor"]').val();
+		});
+		//console.log('==========calculating order amount...');
     	order["amount"] = undefined;
     	var distance = order["distance"] || 0;
     	if(!$('input[name="from_address"]').val() || !$('input[name="to_address"]').val()) {
@@ -172,28 +183,43 @@ $(function() {
         	$('.order_sumary .price em').text('0');
     		return;
     	}
-    	var fromFloor = $('select[name="from_floor"]').val() || 0;
-    	var toFloor = $('select[name="to_floor"]').val() || 0;
-    	var workers = $('input[name="workers"]').val() || 1;
     	var price = 0;
     	if(order["vehicle"] == 1) {	//小面车型
             price += (distance<10) ? 150.0 : (150.0+(distance-10)*5.0);  //起步价150（10公里内），超出后每公里5元
-            price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
-        	price += workers>1 ? (workers-1)*150 : 0;
+            price += (order["from"]["floor"]<2) ? 0.0 : order["from"]["floor"]*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
+            price += (order["to"]["floor"]<2) ? 0.0 : order["to"]["floor"]*10.0;
+            price += (order["workers"]<2) ? 0.0 : (order["workers"]-1)*150;  //每增加一名搬家师傅，加收150元
+            if(order["waypoints"].length > 0) {					//途经点
+            	order["waypoints"].forEach(function(e, i) {
+                    price += 50.0; //每增加一个点位装卸货，增加50元
+                    price += (e.floor<2) ? 0.0 : e.floor*10.0;
+            	})
+            }
     	}
     	else if(order["vehicle"] == 2) {	//金杯车型
             price += (distance<10) ? 200.0 : (200.0+(distance-10)*6.0);  //起步价200（10公里内），超出后每公里6元
-            price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
-        	price += workers>1 ? (workers-1)*150 : 0;
+            price += (order["from"]["floor"]<2) ? 0.0 : order["from"]["floor"]*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
+            price += (order["to"]["floor"]<2) ? 0.0 : order["to"]["floor"]*10.0;
+            price += order["workers"]>1 ? (order["workers"]-1)*150 : 0;     //每增加一名搬家师傅，加收150元
+            if(order["waypoints"].length > 0) {				 //途经点
+            	order["waypoints"].forEach(function(e, i) {
+                    price += 50.0; //每增加一个点位装卸货，增加50元
+                    price += (e.floor<2) ? 0.0 : e.floor*10.0;
+            	})
+            }
     	}
     	else if(order["vehicle"] == 3) {   //全顺/依维轲
             price += (distance<10) ? 300.0 : (300.0+(distance-10)*8.0);  //起步价300（10公里内），超出后每公里8元
-            price += (fromFloor==0?0.0:50.0) + (toFloor==0?0.0:50.0); //电梯和1楼搬运按50元收取，每多1层加收20元
-            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
-            price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
-        	price += workers>1 ? (workers-1)*150 : 0;
+            price += (order["from"]["floor"]==0?0.0:50.0) + (order["to"]["floor"]==0?0.0:50.0); //电梯和1楼搬运按50元收取，每多1层加收20元
+            price += (order["from"]["floor"]<2) ? 0.0 : (order["from"]["floor"]-1)*20.0;
+            price += (order["to"]["floor"]<2) ? 0.0 : (order["to"]["floor"]-1)*20.0;
+        	price += order["workers"]>1 ? (order["workers"]-1)*150 : 0;     //每增加一名搬家师傅，加收150元
+            if(order["waypoints"].length > 0) {				 //途经点
+            	order["waypoints"].forEach(function(e, i) {
+                    price += 50.0; //每增加一个点位装卸货，增加50元
+                    price += ((e.floor==0) ? 0.0 : ((e.floor==1)? 50.0: 50.0+(e.floor-1)*20.0));
+            	})
+            }
     	}
     	order["amount"] = price.toFixed(0);
     	$('.order_sumary .price em').text(order["amount"]);
@@ -223,23 +249,10 @@ $(function() {
 //		});
 		$('.weui_cell_warn').removeClass('weui_cell_warn');
 		//收集数据
-		order["from"]["address"] = $('input[name="from_address"]').val();
-		order["from"]["detail"] = $('input[name="from_detail"]').val();
-		order["from"]["floor"] = $('select[name="from_floor"]').val();
-		order["to"]["address"] = $('input[name="to_address"]').val();
-		order["to"]["detail"] = $('input[name="to_detail"]').val();
-		order["to"]["floor"] = $('select[name="to_floor"]').val();
 		order["startTime"] = order["startTime"] || new Date().getTime();
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
-		order["workers"] = $('input[name="workers"]').val() || 1;
 		order["remark"] = $('textarea[name="remark"]').val();
-		order["waypoints"].forEach(function(e, i) {
-			var $wayInput = e.target;
-			e["address"] = $wayInput.val();
-			e["detail"] = $wayInput.next('input[name="way_detail"]').val();
-			e["floor"] = $wayInput.siblings('.floor_select').find('input[name="way_floor"]').val();
-		});
 		//验证订单
 		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3)) {
 			$.weui.topTips('未选择正确车型');
@@ -310,13 +323,16 @@ $(function() {
 		//console.log(formData);
 		$.ajax({
 		    type: 'POST',
-		    url: 'order',
-		    data: order,
+		    url: 'order?open_id='+$('input[name="open_id"]').val(),
+		    data: JSON.stringify(order),
+		    contentType: 'application/json',
 		    success: function(data){
 	    		$.weui.hideLoading();
 		    	if(data.success) {
-					$.weui.loading('订单提交成功');
-					setTimeout($.weui.hideLoading, 1000);
+		    		$.weui.hideLoading();
+		    		$.weui.toast('订单提交成功');
+					//$.weui.loading('订单提交成功');
+					//setTimeout($.weui.hideLoading, 1000);
 					var vehicleName = ['小面车型', '金杯车型', '全顺/依维柯'];
 					$('#res_vehicle').text(vehicleName[order["vehicle"]-1]);
 					$('#res_distance').text(order["distance"]+' 公里');

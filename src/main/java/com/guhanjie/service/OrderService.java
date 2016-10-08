@@ -133,44 +133,41 @@ public class OrderService {
 		    throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "缺失车型信息");
 		}
 		if(VehicleEnum.XIAOMIAN.code() == vehicle) {    //小面车
-		    price = 150.0; //起步价150（10公里内）
-            price += (distance<10) ? 0.0 : (distance-10)*5.0;  //超出后每公里5元
-            price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
+            price += (distance<10) ? 150.0 : (150.0+(distance-10)*5.0);  //起步价150（10公里内），超出后每公里5元
+            price += (fromFloor<2) ? 0.0 : fromFloor*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : toFloor*10.0;
+            price += workers<2 ? 0.0 : (workers-1)*150;     //每增加一名搬家师傅，加收150元
             if(order.getWaypoints() != null) {
-                for(Position p : order.getWaypoints()) {
+                for(Position p : order.getWaypoints()) {    //途经点
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*10.0;
+                    price += (p.getFloor()<2) ? 0.0 : p.getFloor()*10.0;
                 }
             }
-            price += workers>1 ? (workers-1)*150 : 0;
         }
 		else if(VehicleEnum.JINBEI.code() == vehicle) {    //金杯车
-		    price = 200.0; //起步价200（10公里内）
-            price += (distance<10) ? 0.0 : (distance-10)*6.0;  //超出后每公里6元
-            price += (fromFloor<2) ? 0.0 : 10.0+(fromFloor-1)*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : 10.0+(toFloor-1)*10.0;
+            price += (distance<10) ? 200.0 : (200.0+(distance-10)*6.0);  //起步价200（10公里内），超出后每公里6元
+            price += (fromFloor<2) ? 0.0 : fromFloor*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
+            price += (toFloor<2) ? 0.0 : toFloor*10.0;
+            price += workers>1 ? (workers-1)*150 : 0;     //每增加一名搬家师傅，加收150元
             if(order.getWaypoints() != null) {
-                for(Position p : order.getWaypoints()) {
+                for(Position p : order.getWaypoints()) {    //途经点
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*10.0;
+                    price += (p.getFloor()<2) ? 0.0 : p.getFloor()*10.0;
                 }
             }
-            price += workers>1 ? (workers-1)*150 : 0;
         }
 		else if(VehicleEnum.QUANSHUN.code() == vehicle) {   //全顺/依维轲
-		    price = 300.0; //起步价300（10公里内）
-            price += (distance<10) ? 0.0 : (distance-10)*8.0;  //超出后每公里8元
-            price += (fromFloor==0?0.0:50.0) + (toFloor==0?0.0:50.0); //电梯和1楼搬运按50元收取，每多1层加收20元
+            price += (distance<10) ? 300.0 : (300.0+(distance-10)*8.0);  //起步价300（10公里内），超出后每公里8元
+            price += (fromFloor==0?0.0:50.0) + (toFloor==0?0.0:50.0); //不搬运0元，电梯和1楼搬运按50元收取，每多1层加收20元
             price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
             price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
+            price += workers>1 ? (workers-1)*150 : 0;     //每增加一名搬家师傅，加收150元
             if(order.getWaypoints() != null) {
-                for(Position p : order.getWaypoints()) {
+                for(Position p : order.getWaypoints()) {    //途经点
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (p.getFloor()<2) ? 0.0 : (p.getFloor()-1)*20.0;
+                    price += ((p.getFloor()==0) ? 0.0 : ((p.getFloor()==1)? 50.0: 50.0+(p.getFloor()-1)*20.0));
                 }
             }
-            price += workers>1 ? (workers-1)*150 : 0;
 		}
 		else {    //车型参数非法
             throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "车型信息有误");
@@ -192,7 +189,7 @@ public class OrderService {
 		sb.append("联系人：").append(order.getContactor()).append("\n");
 		sb.append("电话：").append(order.getPhone()).append("\n");
 		sb.append("车型：").append(VehicleEnum.valueOf(order.getVehicle()).desc()).append("\n");
-		sb.append("预订时间：").append(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(order.getStartTime())).append("\n");
+		sb.append("预订时间：").append(DateTimeUtil.formatDate(order.getStartTime(), "yyyy-MM-dd HH:mm")).append("\n");
 		sb.append("起始地：").append(order.getFrom().getAddress()).append(" ").append(order.getFrom().getDetail()).append(" 第").append(order.getFrom().getFloor()).append("楼\n");
 		sb.append("目的地：").append(order.getTo().getAddress()).append(" ").append(order.getTo().getDetail()).append(" 第").append(order.getTo().getFloor()).append("楼\n");
 		sb.append("备注：").append(order.getRemark()).append("\n");

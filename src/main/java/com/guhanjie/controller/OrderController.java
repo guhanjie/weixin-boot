@@ -24,13 +24,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,69 +81,20 @@ public class OrderController extends BaseController {
 		return "order";
 	}
 	
-	@RequestMapping(value="",method=RequestMethod.POST)
+	@RequestMapping(value="",method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Map<String, Object> putOrder(HttpServletRequest req, Order xxx) {
-		LOGGER.info("putting new order for user[{}]...", JSON.toJSONString(getUser(req)));
-		LOGGER.info("putting new order for order[{}]...", JSON.toJSONString(xxx, true));
+	public Map<String, Object> putOrder(HttpServletRequest req, 
+    	                                                    @RequestParam("open_id") String openid, 
+    	                                                    @RequestBody Order order) {
+		LOGGER.info("putting new order for user open_id[{}]...", JSON.toJSONString(openid));
+		LOGGER.info("putting new order[{}]...", JSON.toJSONString(order, true));
 		//获取用户信息
-		String openid = req.getParameter("open_id");
-		User user = userService.getUserByOpenId(openid);
-		//获取起始位置信息
-		String fromAddress = req.getParameter("from_address");
-		String fromLng = req.getParameter("from_lng");
-		String fromLat = req.getParameter("from_lat");
-		String fromDetail = req.getParameter("from_detail");
-		short fromFloor = (short)Integer.parseInt(req.getParameter("from_floor"));
-		Position from = new Position();
-		from.setAddress(fromAddress);
-		from.setDetail(fromDetail);
-		from.setFloor(fromFloor);
-		from.setGeoLng(fromLng);
-		from.setGeoLat(fromLat);
-		//获取目的位置信息
-		String toAddress = req.getParameter("to_address");
-		String toLng = req.getParameter("to_lng");
-		String toLat = req.getParameter("to_lat");
-		String toDetail = req.getParameter("to_detail");
-		short toFloor = (short)Integer.parseInt(req.getParameter("to_floor"));
-		Position to = new Position();
-		to.setAddress(toAddress);
-		to.setDetail(toDetail);
-		to.setFloor(toFloor);
-		to.setGeoLng(toLng);
-		to.setGeoLat(toLat);		
-        //获取途径点位置信息
-		String waypoints = req.getParameter("waypoints[0]");
-		LOGGER.info(waypoints);
-		//获取订单详细信息
-		String _amount = req.getParameter("amount");
-		BigDecimal amount = new BigDecimal(StringUtils.isBlank(_amount) ? "0" : _amount);
-		String _tip = req.getParameter("tip");
-		BigDecimal tip = new BigDecimal(StringUtils.isBlank(_tip) ? "0" : _tip);
-		String _distance = req.getParameter("distance");
-		BigDecimal distance = new BigDecimal(StringUtils.isBlank(_distance) ? "0" : _distance);
-		short vehicle = (short)Integer.parseInt(req.getParameter("vehicle"));
-		String contactor = req.getParameter("contactor");
-		String phone = req.getParameter("phone");
-		Integer workers = Integer.parseInt(req.getParameter("workers"));
-		String remark = req.getParameter("remark");		
-		String _startTime = req.getParameter("start_time");
-		Date startTime = StringUtils.isBlank(_startTime) ? new Date() : new Date(Long.parseLong(_startTime));
+		User user = getUser(req);
+		if(user == null) {
+		    user = userService.getUserByOpenId(openid);
+		}
 		//封装信息
-		Order order = new Order();
 		order.setUser(user);
-		order.setAmount(amount);
-		order.setTip(tip);
-		order.setFrom(from);
-		order.setTo(to);
-		order.setStartTime(startTime);
-		order.setDistance(distance);
-		order.setVehicle(vehicle);
-		order.setContactor(contactor);
-		order.setPhone(phone);
-		order.setWorkers(workers);
-		order.setRemark(remark);
 		
 		//下单
 		orderService.putOrder(order);

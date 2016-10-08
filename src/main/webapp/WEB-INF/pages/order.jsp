@@ -21,7 +21,7 @@
 <body ontouchstart>
   <div id="baiduMap"></div>
   <form>
-    <input type="hidden" name="open_id" value="${user.openId}"/>
+    <input type="hidden" name="open_id" value="123"/>
     <div class="weui_cells_title">
       <div class="car-type">
         <div class="car-type-title">
@@ -105,7 +105,7 @@
         </div>
       </div>
       <div class="addway">
-        <i class="icon-plus-sign-alt">还有途经点~</i>
+        <i class="icon-plus-sign-alt"> 还有途经点~</i>
       </div>
       <div class="weui_cell">
         <div class="weui_cell_hd">

@@ -1,5 +1,6 @@
 package com.guhanjie.util;
 
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +22,49 @@ public class DateTimeUtil {
 	private static final Object object = new Object();
 	
 	/**
+     * 将时间转换成字符串，格式yyyy-MM-dd HH:mm:ss(2011-07-20 16:43:43)
+     * 如果传入的date=null，返回null
+     * @param format
+     * @return
+     */
+    public static String formatDate(Date date) {
+        return formatDate(date, defaultFormat);
+    }
+
+    /**
+     * 将毫秒转换成时间字符串，格式yyyy-MM-dd HH:mm:ss(2011-07-20 16:43:43)
+     * 对参数未作验证
+     * 
+     * @param second
+     * @return
+     */
+    public static String formatDate(long ms) {
+        return formatDate(new Date(ms), defaultFormat);
+    }
+
+    /**
+     * 获得当前时间，格式自定义
+     * 
+     * @param format
+     * @return
+     */
+    public static String formatDate(Date date, String format) {
+        if(date == null){
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
+    }
+    
+    public static Date parseDate(String date, String format) throws ParseException {
+        if(date == null) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.parse(date);
+    }
+
+    /**
 	 * 获取SimpleDateFormat
 	 * @param pattern 日期格式
 	 * @return SimpleDateFormat对象
@@ -148,40 +192,6 @@ public class DateTimeUtil {
 	}
 
 	/**
-     * 将时间转换成字符串，格式yyyy-MM-dd HH:mm:ss(2011-07-20 16:43:43)
-     * 如果传入的date=null，返回null
-     * @param format
-     * @return
-     */
-    public static String getDateString(Date date) {
-        return getDateString(date, defaultFormat);
-    }
-    
-    /**
-     * 将毫秒转换成时间字符串，格式yyyy-MM-dd HH:mm:ss(2011-07-20 16:43:43)
-     * 对参数未作验证
-     * 
-     * @param second
-     * @return
-     */
-    public static String getDateString(long ms) {
-        return getDateString(new Date(ms), defaultFormat);
-    }
-    /**
-     * 获得当前时间，格式自定义
-     * 
-     * @param format
-     * @return
-     */
-    public static String getDateString(Date date, String format) {
-        if(date == null){
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.format(date);
-    }
-	
-	/**
 	 * 判断字符串是否为日期字符串
 	 * @param date 日期字符串
 	 * @return true or false
@@ -233,64 +243,64 @@ public class DateTimeUtil {
 	}
 
 	/**
-	 * 将日期字符串转化为日期。失败返回null。
-	 * @param date 日期字符串
-	 * @return 日期
-	 */
-	public static Date StringToDate(String date) {
-		DateStyle dateStyle = getDateStyle(date);
-		return StringToDate(date, dateStyle);
-	}
+     * 将日期字符串转化为日期。失败返回null。
+     * @param date 日期字符串
+     * @return 日期
+     */
+    public static Date StringToDate(String date) {
+    	DateStyle dateStyle = getDateStyle(date);
+    	return StringToDate(date, dateStyle);
+    }
 
-	/**
-	 * 将日期字符串转化为日期。失败返回null。
-	 * @param date 日期字符串
-	 * @param pattern 日期格式
-	 * @return 日期
-	 */
-	public static Date StringToDate(String date, String pattern) {
-		Date myDate = null;
-		if (date != null) {
-			try {
-				myDate = getDateFormat(pattern).parse(date);
-			} catch (Exception e) {
-			}
-		}
-		return myDate;
-	}
+    /**
+     * 将日期字符串转化为日期。失败返回null。
+     * @param date 日期字符串
+     * @param dateStyle 日期风格
+     * @return 日期
+     */
+    public static Date StringToDate(String date, DateStyle dateStyle) {
+    	Date myDate = null;
+    	if (dateStyle != null) {
+    		myDate = StringToDate(date, dateStyle.getValue());
+    	}
+    	return myDate;
+    }
 
-	/**
-	 * 将日期字符串转化为日期。失败返回null。
-	 * @param date 日期字符串
-	 * @param dateStyle 日期风格
-	 * @return 日期
-	 */
-	public static Date StringToDate(String date, DateStyle dateStyle) {
-		Date myDate = null;
-		if (dateStyle != null) {
-			myDate = StringToDate(date, dateStyle.getValue());
-		}
-		return myDate;
-	}
+    /**
+     * 将日期字符串转化为日期。失败返回null。
+     * @param date 日期字符串
+     * @param pattern 日期格式
+     * @return 日期
+     */
+    public static Date StringToDate(String date, String pattern) {
+    	Date myDate = null;
+    	if (date != null) {
+    		try {
+    			myDate = getDateFormat(pattern).parse(date);
+    		} catch (Exception e) {
+    		}
+    	}
+    	return myDate;
+    }
 
-	/**
-	 * 将日期转化为日期字符串。失败返回null。
-	 * @param date 日期
-	 * @param pattern 日期格式
-	 * @return 日期字符串
-	 */
-	public static String DateToString(Date date, String pattern) {
-		String dateString = null;
-		if (date != null) {
-			try {
-				dateString = getDateFormat(pattern).format(date);
-			} catch (Exception e) {
-			}
-		}
-		return dateString;
-	}
+    /**
+     * 将日期转化为日期字符串。失败返回null。
+     * @param date 日期
+     * @param pattern 日期格式
+     * @return 日期字符串
+     */
+    public static String DateToString(Date date, String pattern) {
+    	String dateString = null;
+    	if (date != null) {
+    		try {
+    			dateString = getDateFormat(pattern).format(date);
+    		} catch (Exception e) {
+    		}
+    	}
+    	return dateString;
+    }
 
-	/**
+    /**
 	 * 将日期转化为日期字符串。失败返回null。
 	 * @param date 日期
 	 * @param dateStyle 日期风格
