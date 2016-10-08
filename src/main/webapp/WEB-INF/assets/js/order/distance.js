@@ -7,8 +7,8 @@ $(function() {
 			var map = new BMap.Map("baiduMap", {
 				enableMapClick : false
 			});
-			map.centerAndZoom("上海", 12); // 初始化地图,设置城市和地图级别。
 			map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
+			map.centerAndZoom("上海", 13); // 初始化地图,设置城市和地图级别。
 			//三种驾车策略：最少时间，最短距离，避开高速
 			var routePolicy = [BMAP_DRIVING_POLICY_LEAST_TIME,BMAP_DRIVING_POLICY_LEAST_DISTANCE,BMAP_DRIVING_POLICY_AVOID_HIGHWAYS];
 			//驾车路线查询实例
@@ -42,6 +42,8 @@ $(function() {
 			
 			//初始化自动提示地址输入框
 			obj.initialInput = function(input_id, point) {
+				map.setCurrentCity("上海"); // 设置地图显示的城市 此项是必须设置的
+				map.centerAndZoom("上海", 13); // 初始化地图,设置城市和地图级别。
 				var addressAC = new BMap.Autocomplete( // 建立一个自动完成的对象
 					{
 						"location" : map,
@@ -51,7 +53,7 @@ $(function() {
 								var _value = r.getPoi(0);
 								var location = _value.province + _value.city + _value.district + _value.street + _value.streetNumber + _value.business;
 								//console.log('关键字为：'+r.keyword+'地址为：'+location);
-								locate(location, point);
+								//obj.locate(location, point);
 							}
 						} 
 					});
@@ -60,52 +62,54 @@ $(function() {
 					//addressAC.setInputValue(_value.district + _value.street + _value.business);
 					var location = _value.province + _value.city +  _value.district + _value.street + _value.streetNumber + _value.business;
 					//console.log("地址为：" + location + "<br/>");
-					locate(location, point);
+					obj.locate(location, point);
 				});
 			};
 			
 			//定位输入关键字
-			function locate(place, point) {
+			obj.locate = function(place, point) {
 				map.clearOverlays(); // 清除地图上所有覆盖物
 				point.point = null;//清楚先前位置信息
 				var local = new BMap.LocalSearch(map, { // 本地智能搜索
 					onSearchComplete : function() {
 						var poi = local.getResults().getPoi(0); // 获取第一个智能搜索的结果
-						map.centerAndZoom(poi.point, 18);
-						//map.addOverlay(new BMap.Marker(pp.point)); // 添加标注
-						point.point = poi.point;
-						point.address = $(point.target).val();
-						point.geoLat = poi.point.lat;
-						point.geoLng = poi.point.lng;
-						console.log("place located: " + poi.title + '-' +poi.address + '-' +poi.url);
-						confirmPlace();
+						if(poi) {
+							map.centerAndZoom(poi.point, 18);
+							//map.addOverlay(new BMap.Marker(pp.point)); // 添加标注
+							point.point = poi.point;
+							point["address"] = $(point.target).val();
+							point["geoLat"] = poi.point.lat;
+							point["geoLng"] = poi.point.lng;
+							console.log("place located: " + poi.title + '-' +poi.address + '-' +poi.url);
+						}
+						obj.confirmPlace();
 						// local.clearResults();
 					}
 				});
-				local.search(place, {forceLocal:true});
+				local.search(place/*, {forceLocal:true}*/);
 			}
 
 			//确认位置，进行路径规划，计算距离
-			function confirmPlace() {
+			obj.confirmPlace = function() {
 				//console.log("confirm place..."+from.point + to.point);
-				var _from = from.point || from.address;
-				var _to = to.point || to.address;
+				var _from = from.point || from["address"];
+				var _to = to.point || to["address"];
 
 				if(_from && _to) {
-					var ways = [];
+					var _ways = [];
 					if(waypoints && waypoints.length>0) {
 						waypoints.forEach(function(e, i) {
-							var poi = e.point || e.address;
-							if(poi) {
-								ways.push(poi);
+							var _poi = e.point || e.address;
+							if(_poi) {
+								_ways.push(_poi);
 							}
 						});
 					}
-					if(ways.length > 0) {
-						driving.search(from.point, to.point, {waypoints:ways});
+					if(_ways.length > 0) {
+						driving.search(_from, _to, {waypoints:_ways});
 					}
 					else {
-						driving.search(from.point, to.point);
+						driving.search(_from, _to);
 					}
 				}
 			}

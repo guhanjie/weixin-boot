@@ -14,9 +14,9 @@ $(function() {
 //	var to = {};
 //	var waypoints = [];
 	var waypointsIdx = 1;
-	var plugin = DistancePlugin.createNew(order, order.from, order.to, order.waypoints);
-	plugin.initialInput("from_address", order.from);
-	plugin.initialInput("to_address", order.to);
+	var plugin = DistancePlugin.createNew(order, order["from"], order["to"], order["waypoints"]);
+	plugin.initialInput("from_address", order["from"]);
+	plugin.initialInput("to_address", order["to"]);
 	//车型
 	$('.car-type').on('click', '.car-type-label', function(e) {
 		$(this).siblings('.car-type-label').removeClass('text-primary');
@@ -25,7 +25,6 @@ $(function() {
 		$(this).find('i').removeClass().addClass('icon-ok-sign');
 		var carType = $(this).data('type');
 		order["vehicle"] = carType;
-		$('input[name="vehicle"]').val(order["vehicle"]);
 //		var price = [150, 200, 300];
 //		$('.order_sumary .price  em').text(price[carType-1]);
 		var arrowLeft = ['16%', '50%', '83%'];
@@ -87,8 +86,11 @@ $(function() {
 		          '<i class="icon-remove"></i>'+
 		        '</div>'+
 		      '</div>');
-		var point = {'index': waypointsIdx++};
-		order.waypoints.push(point);
+		var point = {
+				'index': waypointsIdx++,
+				'target': $('#'+input_id)
+		};
+		order["waypoints"].push(point);
 		plugin.initialInput(input_id, point);
 	});
 	//删除途经点
@@ -103,9 +105,10 @@ $(function() {
 			}
 		});
 		if(del != undefined) {
-			order.waypoints.splice(del, 1);
+			order["waypoints"].splice(del, 1);
 		}
 		$cell.remove();
+		plugin.confirmPlace();
 	});
 	
 	//服务时间
@@ -128,7 +131,7 @@ $(function() {
         setText   : '预约服务',
         cancelText: '马上服务',
         onSelect  : function(val){
-            order["start_time"] = new Date(val).getTime();
+            order["startTime"] = new Date(val).getTime();
             var str  = val.replace(/-/g, "/");
             var date = new Date(str);
             var weektime = ($('.dw-sel').text()).substring(0,3);
@@ -150,7 +153,7 @@ $(function() {
             $('#start_time').val(showtime);
         },
         onCancel : function(){
-            order["start_time"] = new Date().getTime();
+            order["startTime"] = new Date().getTime();
             $('#start_time').val('马上服务');
         }
     };//options
@@ -194,13 +197,6 @@ $(function() {
     	}
     	order["amount"] = price.toFixed(0);
     	$('.order_sumary .price em').text(order["amount"]);
-//		$('input[name="vehicle"]').val(order["vehicle"]);
-//		$('input[name="from_lng"]').val(order["from_lng"]);
-//		$('input[name="from_lat"]').val(order["from_lat"]);
-//		$('input[name="to_lng"]').val(order["to_lng"]);
-//		$('input[name="to_lat"]').val(order["to_lat"]);
-//		$('input[name="distance"]').val(order["distance"]);
-//		$('input[name="amount"]').val(order["amount"]);
 		e.stopPropagation();
     	return;
 	});
@@ -227,14 +223,13 @@ $(function() {
 //		});
 		$('.weui_cell_warn').removeClass('weui_cell_warn');
 		//收集数据
-		order["from_address"] = $('input[name="from_address"]').val();
-		order["from_detail"] = $('input[name="from_detail"]').val();
-		order["from_floor"] = $('select[name="from_floor"]').val();
-		order["to_address"] = $('input[name="to_address"]').val();
-		order["to_detail"] = $('input[name="to_detail"]').val();
-		order["to_floor"] = $('select[name="to_floor"]').val();
-		order["start_time"] = order["start_time"] || new Date().getTime();
-		//$('input[name="start_time"]').val(order["start_time"]);
+		order["from"]["address"] = $('input[name="from_address"]').val();
+		order["from"]["detail"] = $('input[name="from_detail"]').val();
+		order["from"]["floor"] = $('select[name="from_floor"]').val();
+		order["to"]["address"] = $('input[name="to_address"]').val();
+		order["to"]["detail"] = $('input[name="to_detail"]').val();
+		order["to"]["floor"] = $('select[name="to_floor"]').val();
+		order["startTime"] = order["startTime"] || new Date().getTime();
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
 		order["workers"] = $('input[name="workers"]').val() || 1;
@@ -244,7 +239,7 @@ $(function() {
 			$.weui.topTips('未选择正确车型');
 			return;
 		}
-		if(!order["from_address"]) {
+		if(!order["from"]["address"]) {
 			$.weui.topTips('请输入起始地');
 			$('input[name="from_address"]').addClass('weui_cell_warn');
 			return;
@@ -254,12 +249,12 @@ $(function() {
 //			$('input[name="from_detail"]').addClass('weui_cell_warn');
 //			return;
 //		}
-		if(!order["from_floor"]) {
+		if(!order["from"]["floor"]) {
 			$.weui.topTips('请输入起始地的楼层信息');
 			$('select[name="from_floor"]').addClass('weui_cell_warn');
 			return;
 		}
-		if(!order["to_address"]) {
+		if(!order["to"]["address"]) {
 			$.weui.topTips('请输入目的地');
 			$('input[name="to_address"]').closest('.weui_cell').addClass('weui_cell_warn');
 			return;
@@ -269,7 +264,7 @@ $(function() {
 //			$('input[name="to_detail"]').addClass('weui_cell_warn');
 //			return;
 //		}
-		if(!order["to_floor"]) {
+		if(!order["to"]["floor"]) {
 			$.weui.topTips('请输入起始地的楼层信息');
 			$('select[name="to_floor"]').addClass('weui_cell_warn');
 			return;
@@ -320,11 +315,11 @@ $(function() {
 					$('#res_vehicle').text(vehicleName[order["vehicle"]-1]);
 					$('#res_distance').text(order["distance"]+' 公里');
 					$('#res_amount').text(order["amount"]+' 元');
-					$('#res_from_address').text(order["from_address"]);
-					$('#res_to_address').text(order["to_address"]);
+					$('#res_from_address').text(order["from"]["address"]);
+					$('#res_to_address').text(order["to"]["address"]);
 					$('#res_contactor').text(order["contactor"]);
 					$('#res_workers').text(order["workers"]);
-					$('#res_start_time').text(new Date(order["start_time"]).toLocaleString());
+					$('#res_start_time').text(new Date(order["startTime"]).toLocaleString());
 					$('form').remove();
 					$('.weui_msg').show();
 		    	}

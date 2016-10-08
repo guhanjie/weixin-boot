@@ -82,8 +82,9 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="",method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> putOrder(HttpServletRequest req) {
+	public Map<String, Object> putOrder(HttpServletRequest req, Order xxx) {
 		LOGGER.info("putting new order for user[{}]...", JSON.toJSONString(getUser(req)));
+		LOGGER.info("putting new order for order[{}]...", JSON.toJSONString(xxx, true));
 		//获取用户信息
 		String openid = req.getParameter("open_id");
 		User user = userService.getUserByOpenId(openid);

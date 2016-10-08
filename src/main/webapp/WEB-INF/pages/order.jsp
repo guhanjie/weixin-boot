@@ -22,9 +22,6 @@
   <div id="baiduMap"></div>
   <form>
     <input type="hidden" name="open_id" value="${user.openId}"/>
-    <input type="hidden" name="amount"/>
-    <input type="hidden" name="distance"/>
-    <input type="hidden" name="vehicle"/>
     <div class="weui_cells_title">
       <div class="car-type">
         <div class="car-type-title">
@@ -66,8 +63,6 @@
           </label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-          <input type="hidden" name="from_lat" />
-          <input type="hidden" name="from_lng" />
           <input class="weui_input" id="from_address" name="from_address" type="text" placeholder="请输入起始地" />
           <input class="weui_input address-detail" name="from_detail" type="text" placeholder="几号几室" />
           <div class="floor_select">
@@ -92,8 +87,6 @@
           </label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-          <input type="hidden" name="to_lat" />
-          <input type="hidden" name="to_lng" />
           <input class="weui_input" id="to_address" name="to_address" type="text" placeholder="请输入目的地" />
           <input class="weui_input address-detail" name="to_detail" type="text" placeholder="几号几室" />
           <div class="floor_select">
