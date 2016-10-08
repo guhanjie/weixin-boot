@@ -342,7 +342,20 @@ $(function() {
 					$('#res_contactor').text(order["contactor"]);
 					$('#res_workers').text(order["workers"]);
 					$('#res_start_time').text(new Date(order["startTime"]).toLocaleString());
-					$('form').remove();
+					if(order["waypoints"].length > 0) {
+						order["waypoints"].forEach(function(e, i) {
+							var $toEl = $('#res_to_address').parents('.weui_cell');
+							$toEl.before('<div class="weui_cell">'+
+					                			 '	<div class="weui_cell_hd">'+
+					                			 '		<p><i class="weui_icon_success_circle"></i>途径点：</p>'+
+					                			 '	</div>'+
+					                			 '	<div class="weui_cell_bd weui_cell_primary">'+
+					                			 '		<span id="res_way_address">'+e.address+'</span>'+
+					                			 '	</div>'+
+					                			 '</div>');
+						});
+					}
+					$('form').hide();
 					$('.weui_msg').show();
 		    	}
 		    	else {

@@ -345,6 +345,9 @@
       <if test="param1.payStatus != null">
         pay_status = #{param1.payStatus,jdbcType=SMALLINT},
       </if>
+      <if test="param1.payType != null">
+        pay_type = #{param1.payType,jdbcType=SMALLINT},
+      </if>
       <if test="param1.payTime != null">
         pay_time = #{param1.payTime,jdbcType=SMALLINT},
       </if>

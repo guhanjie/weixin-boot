@@ -53,6 +53,7 @@
                 <p>金额：<span id="amount" class="text-red">${item.amount} 元</span></p>
                 <p>路程：<span id="distance">${item.distance}公里</span></p>
                 <p>车型：<span id="vehicle">${item.vehicle==1?'小面车型':(item.vehicle==2)?'金杯车型':'全顺/依维柯'}</span></p>
+                <p>搬家师傅：${item.workers}人</p>
                 <p>联系人：${item.contactor}</p>
                 <p>电话：${item.phone}</p>
               </div>

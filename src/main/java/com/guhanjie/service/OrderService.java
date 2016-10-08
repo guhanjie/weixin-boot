@@ -7,7 +7,7 @@
  */  
 package com.guhanjie.service;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,7 @@ import com.guhanjie.mapper.PositionMapper;
 import com.guhanjie.model.Order;
 import com.guhanjie.model.OrderStatusEnum;
 import com.guhanjie.model.PayStatusEnum;
+import com.guhanjie.model.PayTypeEnum;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.model.VehicleEnum;
@@ -121,6 +121,16 @@ public class OrderService {
 		positionMapper.insertSelective(to);
 		order.setToId(to.getId());
 		order.setTo(to);
+		// 途经点信息
+		if(order.getWaypoints() != null) {
+		    StringBuilder sb = new StringBuilder();
+            for(Position p : order.getWaypoints()) {
+                positionMapper.insertSelective(p);
+                sb.append(p.getId()).append(",");
+            }
+            sb.deleteCharAt(sb.length()-1);
+            order.setWaypointsIds(sb.toString());
+		}
 		// 3. 校验订单有效性
 		double price = 0.0;
 		double amount = order.getAmount().doubleValue();
@@ -184,14 +194,20 @@ public class OrderService {
 		
 		// 5. 发送微信消息给客户
 		StringBuffer sb = new StringBuffer("主人，您有新的订单：\n");
-		sb.append("订单金额：").append(order.getAmount()).append("元\n");
+		sb.append("金额：").append(order.getAmount()).append("元\n");
 		sb.append("路程：").append(order.getDistance()).append("公里\n");
 		sb.append("联系人：").append(order.getContactor()).append("\n");
 		sb.append("电话：").append(order.getPhone()).append("\n");
 		sb.append("车型：").append(VehicleEnum.valueOf(order.getVehicle()).desc()).append("\n");
-		sb.append("预订时间：").append(DateTimeUtil.formatDate(order.getStartTime(), "yyyy-MM-dd HH:mm")).append("\n");
+		sb.append("搬家师傅：").append(order.getWorkers()).append("人\n");
+		sb.append("服务时间：").append(DateTimeUtil.formatDate(order.getStartTime(), "yyyy-MM-dd HH:mm")).append("\n");
 		sb.append("起始地：").append(order.getFrom().getAddress()).append(" ").append(order.getFrom().getDetail()).append(" 第").append(order.getFrom().getFloor()).append("楼\n");
 		sb.append("目的地：").append(order.getTo().getAddress()).append(" ").append(order.getTo().getDetail()).append(" 第").append(order.getTo().getFloor()).append("楼\n");
+		if(order.getWaypoints() != null) {
+            for(Position p : order.getWaypoints()) {
+                sb.append("途经：").append(p.getAddress()).append(" ").append(p.getDetail()).append(" 第").append(p.getFloor()).append("楼\n");
+            }
+		}
 		sb.append("备注：").append(order.getRemark()).append("\n");
 		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
 	}
@@ -210,14 +226,44 @@ public class OrderService {
         
         int total = orderMapper.countSelective(param);
         List<Order> list = orderMapper.selectByQualifiedPage(param);
+        if(list != null) {
+            for(Order order : list) {
+                if(StringUtils.isNotBlank(order.getWaypointsIds())) {
+                    setWayPoints(order);
+                }
+            }
+        }
         PageImpl<Order> page = new PageImpl<Order>(list, pageable, total);
         return page;
+	}
+	
+	private void setWayPoints(Order order) {
+	    if(order != null && StringUtils.isNotBlank(order.getWaypointsIds())) {
+	        String wayPoints = order.getWaypointsIds();
+	        String[] pids = wayPoints.split(",");
+	        for(String pid : pids) {
+	            Position poi = positionMapper.selectByPrimaryKey(Integer.parseInt(pid));
+	            List<Position> ways = order.getWaypoints();
+	            if(ways == null){
+	                ways = new ArrayList<Position>();
+	                order.setWaypoints(ways);
+	            }
+	            ways.add(poi);
+	        }
+	    }
 	}
 	
 	public List<Order> getOrdersByUser(User user) {
 		List<Order> result = null;
 		if(user!=null && user.getId()!=null) {
 			result = orderMapper.selectByUserId(user.getId());
+	        if(result != null) {
+	            for(Order order : result) {
+	                if(StringUtils.isNotBlank(order.getWaypointsIds())) {
+	                    setWayPoints(order);
+	                }
+	            }
+	        }
 		}
 		return result;
 	}
@@ -249,6 +295,7 @@ public class OrderService {
                 LOGGER.info("Success to complete order[{}] pay!", orderid);
                 order.setStatus(OrderStatusEnum.PAYED.code());
                 order.setPayStatus(PayStatusEnum.SUCCESS.code());
+                order.setPayType(PayTypeEnum.WEIXIN.code());
                 order.setPayTime(DateTimeUtil.getDate(time_end, "yyyyMMddHHmmss"));
             }
         }
@@ -296,6 +343,7 @@ public class OrderService {
         short oldPayStatus = order.getPayStatus();
         order.setStatus(OrderStatusEnum.PAYED.code());
         order.setPayStatus(PayStatusEnum.SUCCESS.code());
+        order.setPayType(PayTypeEnum.CASH.code());
         order.setPayTime(new Date());
         if(1 == orderMapper.updateByPayStatus(order, oldOrderStatus, oldPayStatus)) {
             return true;

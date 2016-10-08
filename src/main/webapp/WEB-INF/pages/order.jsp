@@ -231,7 +231,7 @@
                     <p><i class="weui_icon_success_circle"></i>搬家师傅：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <span id="res_workers"></span>人
+                    <span id="res_workers"></span> 人
                 </div>
             </div>
             <div class="weui_cell">

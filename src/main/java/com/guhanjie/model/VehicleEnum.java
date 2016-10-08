@@ -18,7 +18,8 @@ package com.guhanjie.model;
 public enum VehicleEnum {
     XIAOMIAN((short)1, "小面车型"),
     JINBEI((short)2, "金杯车型"),
-    QUANSHUN((short)3, "全顺/依维轲");
+    QUANSHUN((short)3, "全顺/依维轲"),
+    UNKNOWN((short)-1, "未知车型");
     
     private short code;
     private String desc;
@@ -43,6 +44,6 @@ public enum VehicleEnum {
                 return e;
             }
         }
-        return null;
+        return UNKNOWN;
     }
 }
