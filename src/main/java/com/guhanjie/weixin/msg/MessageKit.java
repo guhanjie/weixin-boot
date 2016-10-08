@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -178,36 +179,43 @@ public class MessageKit {
     	return "";
     }
     
-    public static void sendKFMsg(String openid, String content) {
-    	LOGGER.info("starting to send message to KF[{}]...", openid);
-        try {
-            String url = WeixinConstants.API_KF_SEND_MSG;
-            String str = new String("{" + 
-					            				"    \"touser\":\"OPENID\"," + 
-					            				"    \"msgtype\":\"text\"," + 
-					            				"    \"text\":" + 
-					            				"    {" + 
-					            				"         \"content\":\"ContentText\"" + 
-					            				"    }" + 
-					            				"}");
-            str = str.replaceAll("OPENID", openid);
-            str = str.replaceAll("ContentText", content);
-            LOGGER.debug("message content: [{}]", str);
-            HttpEntity entity = new StringEntity(str, ContentType.APPLICATION_JSON);
-	        WeixinHttpUtil.sendPost(url, entity, new WeixinHttpCallback() {
-		            @Override
-		            public void process(String json) {
-		            	ErrorEntity t = JSONObject.parseObject(json, ErrorEntity.class);
-		                if(t!=null && t.getErrcode()!=null && t.getErrmsg()!=null) {
-		                    if(t.getErrcode().equals("0") && t.getErrmsg().equals("ok"))
-		                    LOGGER.info("Success to post message to KF.");
-		                    return;
-		                }
-		                LOGGER.error("Failed to post message to KF, error:[{}].", json);
-		            }
-		        });
-	    } catch (Exception e) {
-	        LOGGER.error("error to post message[{}] to KF[{}].", content, openid);
-	    } 
+    public static void sendKFMsg(String openids, String content) {
+        if(StringUtils.isBlank(openids)) {
+            LOGGER.warn("send order msg to KF, but no kf openids.");
+            return;
+        }
+        String [] ids = openids.split(",");
+        for(final String openid : ids) {
+            LOGGER.info("starting to send message to KF[{}]...", openid);
+            try {
+                String url = WeixinConstants.API_KF_SEND_MSG;
+                String str = new String("{" + 
+                                                    "    \"touser\":\"OPENID\"," + 
+                                                    "    \"msgtype\":\"text\"," + 
+                                                    "    \"text\":" + 
+                                                    "    {" + 
+                                                    "         \"content\":\"ContentText\"" + 
+                                                    "    }" + 
+                                                    "}");
+                str = str.replaceAll("OPENID", openid);
+                str = str.replaceAll("ContentText", content);
+                LOGGER.debug("message content: [{}]", str);
+                HttpEntity entity = new StringEntity(str, ContentType.APPLICATION_JSON);
+                WeixinHttpUtil.sendPost(url, entity, new WeixinHttpCallback() {
+                        @Override
+                        public void process(String json) {
+                            ErrorEntity t = JSONObject.parseObject(json, ErrorEntity.class);
+                            if(t!=null && t.getErrcode()!=null && t.getErrmsg()!=null) {
+                                if(t.getErrcode().equals("0") && t.getErrmsg().equals("ok"))
+                                LOGGER.info("Success to post message to KF[{}].", openid);
+                                return;
+                            }
+                            LOGGER.error("Failed to post message to KF, error:[{}].", json);
+                        }
+                    });
+            } catch (Exception e) {
+                LOGGER.error("error to post message[{}] to KF[{}].", content, openid);
+            } 
+        }
 	}
 }
