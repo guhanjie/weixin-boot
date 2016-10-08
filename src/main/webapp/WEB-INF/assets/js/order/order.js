@@ -234,6 +234,12 @@ $(function() {
 		order["phone"] = $('input[name="phone"]').val();
 		order["workers"] = $('input[name="workers"]').val() || 1;
 		order["remark"] = $('textarea[name="remark"]').val();
+		order["waypoints"].forEach(function(e, i) {
+			var $wayInput = e.target;
+			e["address"] = $wayInput.val();
+			e["detail"] = $wayInput.next('input[name="way_detail"]').val();
+			e["floor"] = $wayInput.siblings('.floor_select').find('input[name="way_floor"]').val();
+		});
 		//验证订单
 		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3)) {
 			$.weui.topTips('未选择正确车型');
@@ -249,11 +255,11 @@ $(function() {
 //			$('input[name="from_detail"]').addClass('weui_cell_warn');
 //			return;
 //		}
-		if(!order["from"]["floor"]) {
-			$.weui.topTips('请输入起始地的楼层信息');
-			$('select[name="from_floor"]').addClass('weui_cell_warn');
-			return;
-		}
+//		if(!order["from"]["floor"]) {
+//			$.weui.topTips('请输入起始地的楼层信息');
+//			$('select[name="from_floor"]').addClass('weui_cell_warn');
+//			return;
+//		}
 		if(!order["to"]["address"]) {
 			$.weui.topTips('请输入目的地');
 			$('input[name="to_address"]').closest('.weui_cell').addClass('weui_cell_warn');
@@ -264,11 +270,11 @@ $(function() {
 //			$('input[name="to_detail"]').addClass('weui_cell_warn');
 //			return;
 //		}
-		if(!order["to"]["floor"]) {
-			$.weui.topTips('请输入起始地的楼层信息');
-			$('select[name="to_floor"]').addClass('weui_cell_warn');
-			return;
-		}
+//		if(!order["to"]["floor"]) {
+//			$.weui.topTips('请输入起始地的楼层信息');
+//			$('select[name="to_floor"]').addClass('weui_cell_warn');
+//			return;
+//		}
 		if (!order["contactor"]) {
 			$.weui.topTips('请输入联系人姓名');
 			$('input[name="contactor"]').closest('.weui_cell').addClass('weui_cell_warn');
