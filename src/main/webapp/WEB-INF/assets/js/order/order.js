@@ -3,8 +3,8 @@ $(function() {
 	order = {
 			"vehicle": 1,			//默认车型：小面
 			"workers": 1,		//默认搬家师傅：1人
-			"from": {},
-			"to": {},					
+			"from": {'target': $('#from_address')},
+			"to": {'target': $('#to_address')},					
 			"waypoints": []	//途径点
 	};
 	order["open_id"] = $('input[name="open_id"]').val();

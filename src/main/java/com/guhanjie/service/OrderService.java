@@ -33,6 +33,7 @@ import com.guhanjie.model.PayStatusEnum;
 import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.model.VehicleEnum;
+import com.guhanjie.util.DateTimeUtil;
 import com.guhanjie.weixin.WeixinConstants;
 import com.guhanjie.weixin.msg.MessageKit;
 
@@ -251,6 +252,7 @@ public class OrderService {
                 LOGGER.info("Success to complete order[{}] pay!", orderid);
                 order.setStatus(OrderStatusEnum.PAYED.code());
                 order.setPayStatus(PayStatusEnum.SUCCESS.code());
+                order.setPayTime(DateTimeUtil.getDate(time_end, "yyyyMMddHHmmss"));
             }
         }
         else {
@@ -278,6 +280,7 @@ public class OrderService {
 		//只有订单状态为新建，且距离服务时间4小时之前，才可取消订单
 		if(order.getStatus()==OrderStatusEnum.NEW.code() && (startTime-now) > 4*60*60*1000) {
 			order.setStatus(OrderStatusEnum.CANCEL.code());
+			order.setUpdateTime(new Date());
 			if(orderMapper.updateByStatus(order, OrderStatusEnum.NEW.code()) == 1) {
 			    LOGGER.info("success to cancel order[{}]", order.getId());
 				return true;
