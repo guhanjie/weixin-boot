@@ -37,7 +37,7 @@ public class OAuthIntercepter implements HandlerInterceptor {
 	        String url = WeixinConstants.OAUTH2_AUTHORIZE;
             url = url.replaceAll("APPID", weixinContants.APPID);
             url = url.replaceAll("REDIRECT_URI", weixinContants.OAUTH2_REDIRECT_URI);
-            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_BASE);
+            url = url.replaceAll("SCOPE", weixinContants.OAUTH2_SCOPE_SNSAPI_USERINFO);
             url = url.replaceAll("STATE", state);
             response.sendRedirect(url);
 	        return false;
