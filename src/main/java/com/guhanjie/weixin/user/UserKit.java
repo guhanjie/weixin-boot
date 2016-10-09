@@ -87,6 +87,6 @@ public class UserKit {
         } catch (Exception e) {
             LOGGER.error("Failed to get user[{}] info by oauth2.0.", openid);
         }
-        return user;
+        return user.getOpenid() != null ? user : null;
     }
 }

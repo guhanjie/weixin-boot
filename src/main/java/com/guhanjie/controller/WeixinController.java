@@ -114,18 +114,20 @@ public class WeixinController extends BaseController {
 	                	User user = userService.getUserByOpenId(openid);
 	                	if(user == null) {
 	                		UserInfo userInfo = UserKit.getUserInfoByOauth2(openid, token);
-	                		user = new User();
-	                        user.setOpenId(userInfo.getOpenid());
-	                        user.setUnionid(userInfo.getUnionid());
-	                        user.setName(userInfo.getNickname());
-	                        user.setNickname(userInfo.getNickname());
-	                        user.setSex(userInfo.getSex());
-	                        user.setLanguage(userInfo.getLanguage());
-	                        user.setCountry(userInfo.getCountry());
-	                        user.setProvince(userInfo.getProvince());
-	                        user.setCity(userInfo.getCity());
-	                        user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
-	                        userService.addUser(user);
+	                		if(userInfo != null) {
+		                		user = new User();
+		                        user.setOpenId(userInfo.getOpenid());
+		                        user.setUnionid(userInfo.getUnionid());
+		                        user.setName(userInfo.getNickname());
+		                        user.setNickname(userInfo.getNickname());
+		                        user.setSex(userInfo.getSex());
+		                        user.setLanguage(userInfo.getLanguage());
+		                        user.setCountry(userInfo.getCountry());
+		                        user.setProvince(userInfo.getProvince());
+		                        user.setCity(userInfo.getCity());
+		                        user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
+		                        userService.addUser(user);
+	                		}
 	                	}
                 		session.setAttribute(AppConstants.SESSION_KEY_USER, user);
 	                	String returnURL = (String)session.getAttribute(AppConstants.SESSION_KEY_RETURN_URL);
