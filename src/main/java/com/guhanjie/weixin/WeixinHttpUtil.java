@@ -7,6 +7,8 @@
  */  
 package com.guhanjie.weixin;
 
+import java.nio.charset.Charset;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -46,7 +48,7 @@ public class WeixinHttpUtil {
             int statusCode = resp.getStatusLine().getStatusCode();
             if(statusCode>=200 && statusCode<300) {
                 HttpEntity entity = resp.getEntity();
-                String content = EntityUtils.toString(entity);
+                String content = EntityUtils.toString(entity, Charset.forName("UTF-8"));
                 LOGGER.debug("success to get response:[{}]", content);
                 ErrorEntity err = JSONObject.parseObject(content, ErrorEntity.class);
                 if(err.getErrcode()!= null || err.getErrmsg()!=null) {
@@ -82,7 +84,7 @@ public class WeixinHttpUtil {
             if(sc>=200&&sc<300) {
                 String respEntity = EntityUtils.toString(resp.getEntity());
                 LOGGER.debug("success to get response:[{}]", respEntity);
-                if(resp.getEntity().getContentType().getValue().equalsIgnoreCase("application/json")) {
+                if(resp.getEntity().getContentType().getValue().startsWith("application/json")) {
                     ErrorEntity err = JSONObject.parseObject(respEntity, ErrorEntity.class);
                     if(err.getErrcode()!= null || err.getErrmsg()!=null) {
                         LOGGER.error("http[{}] response is error, errcode:[{}], errmsg:[{}].", url, err.getErrcode(), err.getErrmsg());

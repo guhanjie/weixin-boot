@@ -105,43 +105,43 @@ public class WeixinController extends BaseController {
                 AccessToken at = JSONObject.parseObject(json, AccessToken.class);
                 if(at!=null && at.getAccess_token()!=null && at.getOpenid()!=null) {
                 	//拿到accesstoken，绑定到对应的人
-                    String token = at.getAccess_token();
-                    String openid = at.getOpenid();
+                    final String token = at.getAccess_token();
+                    final String openid = at.getOpenid();
                     LOGGER.info("User authentication successful, access token:[{}], openid:[{}].", token, openid);
                 	session.setAttribute(AppConstants.SESSION_KEY_ACCESS_TOKEN, token);
                 	session.setAttribute(AppConstants.SESSION_KEY_OPEN_ID, openid);
+                	User user = userService.getUserByOpenId(openid);
+                	if(user == null) {
+                	    user = new User();
+                	    user.setOpenId(openid);
+                		UserInfo userInfo = UserKit.getUserInfoByOauth2(openid, token);
+                        user.setUnionid(userInfo.getUnionid());
+                        user.setName(userInfo.getNickname());
+                        user.setNickname(userInfo.getNickname());
+                        user.setSex(userInfo.getSex());
+                        user.setLanguage(userInfo.getLanguage());
+                        user.setCountry(userInfo.getCountry());
+                        user.setProvince(userInfo.getProvince());
+                        user.setCity(userInfo.getCity());
+                        if(StringUtils.isNumeric(userInfo.getSubscribe_time())) {
+                            user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
+                        }
+                		userService.addUser(user);
+                	}
+            		session.setAttribute(AppConstants.SESSION_KEY_USER, user);
                 	try {
-	                	User user = userService.getUserByOpenId(openid);
-	                	if(user == null) {
-	                		UserInfo userInfo = UserKit.getUserInfoByOauth2(openid, token);
-	                		if(userInfo != null) {
-		                		user = new User();
-		                        user.setOpenId(userInfo.getOpenid());
-		                        user.setUnionid(userInfo.getUnionid());
-		                        user.setName(userInfo.getNickname());
-		                        user.setNickname(userInfo.getNickname());
-		                        user.setSex(userInfo.getSex());
-		                        user.setLanguage(userInfo.getLanguage());
-		                        user.setCountry(userInfo.getCountry());
-		                        user.setProvince(userInfo.getProvince());
-		                        user.setCity(userInfo.getCity());
-		                        user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
-		                        userService.addUser(user);
-	                		}
-	                	}
-                		session.setAttribute(AppConstants.SESSION_KEY_USER, user);
 	                	String returnURL = (String)session.getAttribute(AppConstants.SESSION_KEY_RETURN_URL);
 	                	if(StringUtils.isBlank(returnURL)) {
 								response.getWriter().write("Welcome, user authentication successful.");
 								response.getWriter().flush();
 	                	}
 	                	else {	//跳转回原来地址
-	                		LOGGER.info("redirecting back to last request[{}] for user.", returnURL);
+	                		LOGGER.debug("redirecting back to last request[{}] for user.", returnURL);
 	                		response.sendRedirect(returnURL);
 	                	}
                 	}
                 	catch (Exception e) {
-                		LOGGER.error("error in user authentication in weixin oauth2.0.", e);
+                		LOGGER.error("error in user authentication for weixin oauth2.0.", e);
                 	}
                 }
                 else {

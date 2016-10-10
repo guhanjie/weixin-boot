@@ -26,6 +26,7 @@ public class AdminAuthIntercepter implements HandlerInterceptor {
 	    String openid = (String)request.getSession().getAttribute(AppConstants.SESSION_KEY_OPEN_ID);
 	    if(openid==null) { //用户未登录，需要网页授权获取用户信息
 	    	LOGGER.warn("user non login, auth not passed.");
+	    	response.getWriter().write("<html><body><h1>Sorry, you have no auth to access this page.</h1></body></html>");
 	        return false;
 	    }
 	    else {

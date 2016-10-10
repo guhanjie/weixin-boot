@@ -136,20 +136,25 @@ public class MessageKit {
         String openId = msgMap.get("FromUserName");
     	//自动添加关注用户
     	try {
-            UserInfo userInfo = UserKit.getUserInfo(openId);
-            UserService userService = SpringContextUtil.getBean(UserService.class);
-            User user = new User();
-            user.setOpenId(userInfo.getOpenid());
-            user.setUnionid(userInfo.getUnionid());
-            user.setName(userInfo.getNickname());
-            user.setNickname(userInfo.getNickname());
-            user.setSex(userInfo.getSex());
-            user.setLanguage(userInfo.getLanguage());
-            user.setCountry(userInfo.getCountry());
-            user.setProvince(userInfo.getProvince());
-            user.setCity(userInfo.getCity());
-            user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
-            userService.addUser(user);
+    	    UserService userService = SpringContextUtil.getBean(UserService.class);
+            User user = userService.getUserByOpenId(openId);
+            if(user == null) {
+                user = new User();
+                user.setOpenId(openId);
+                UserInfo userInfo = UserKit.getUserInfo(openId);
+                user.setUnionid(userInfo.getUnionid());
+                user.setName(userInfo.getNickname());
+                user.setNickname(userInfo.getNickname());
+                user.setSex(userInfo.getSex());
+                user.setLanguage(userInfo.getLanguage());
+                user.setCountry(userInfo.getCountry());
+                user.setProvince(userInfo.getProvince());
+                user.setCity(userInfo.getCity());
+                if(StringUtils.isNumeric(userInfo.getSubscribe_time())) {
+                    user.setSubscribeTime(new Date(Long.parseLong(userInfo.getSubscribe_time())));
+                }
+                userService.addUser(user);
+            }
     	} catch(Exception e) {
     	    LOGGER.error("error happened in add user info, openId[{}].", openId, e);
     	}

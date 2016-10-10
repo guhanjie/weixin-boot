@@ -47,7 +47,7 @@
 	
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/order"/>
+            <mvc:mapping path="/order/**"/>
             <mvc:exclude-mapping path="/*/preview/**"/>
             <ref bean="OAuthIntercepter"/>
         </mvc:interceptor>

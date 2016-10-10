@@ -105,10 +105,7 @@ public class OrderController extends BaseController {
     public String listOrders(HttpServletRequest req, Model model, 
                     @RequestParam(required=false) String beginDate, //yyyy-mm-dd
                     @RequestParam(required=false) String endDate,    //yyyy-mm-dd
-                    @PageableDefault(page=0, size=10) Pageable pageable) {
-        HttpSession session = req.getSession();
-        User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
-        
+                    @PageableDefault(page=0, size=10) Pageable pageable) {        
         Date beginTime = null;
         Date endTime = null;
         if(StringUtils.isNotBlank(beginDate)){
@@ -128,8 +125,7 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="search",method=RequestMethod.GET)
 	public String searchOrder(HttpServletRequest req, Model model) {
-		HttpSession session = req.getSession();
-		User user = (User)session.getAttribute(AppConstants.SESSION_KEY_USER);
+		User user = getUser(req);
 //		User user = new User();
 //		user.setId(3);
 		List<Order> orders = orderService.getOrdersByUser(user);

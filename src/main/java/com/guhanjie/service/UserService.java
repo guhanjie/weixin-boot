@@ -43,8 +43,8 @@ public class UserService {
 	    if(user.getOpenId() != null) {
 	        User u = userMapper.selectByOpenId(user.getOpenId());
 	        if(u != null) {
-	            LOGGER.error("user has exist, openid:[{}]", user.getOpenId());
-	            throw WebExceptionFactory.exception(WebExceptionEnum.USER_HAS_EXIST);
+	            LOGGER.warn("user has existed, openid:[{}]", user.getOpenId());
+	            return 0;
 	        }
 	    }
 		return userMapper.insertSelective(user);

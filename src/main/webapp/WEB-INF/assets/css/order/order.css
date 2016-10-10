@@ -185,21 +185,24 @@ span.btn_success.gloming, span.btn_pay.gloming {
 }
 .addway i {
 	position: absolute;
-    top: -10px;
+    top: -7px;
     left: 50%;
-    margin-left: -54px;
+    margin-left: -43px;
     z-index: 9;
     cursor: pointer;
-    color: #7b7962;
+    color: #a5a38d;
+    font-size: small;
 }
 .waypoint .remove{
-	font-size: small;
+	font-size: medium;
     position: absolute;
-    right: 4px;
+    right: 10px;
     top: 4px;
     cursor: pointer;
 }
-
+.addway + .weui_cell {
+    padding-top: 15px;
+}
 .weui_cell_warn {
 	border: 1px red dashed;
 }
