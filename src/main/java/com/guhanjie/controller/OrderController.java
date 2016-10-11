@@ -8,7 +8,6 @@
 package com.guhanjie.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.Random;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -27,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +39,6 @@ import com.guhanjie.exception.WebException;
 import com.guhanjie.exception.WebExceptionEnum;
 import com.guhanjie.exception.WebExceptionFactory;
 import com.guhanjie.model.Order;
-import com.guhanjie.model.Position;
 import com.guhanjie.model.User;
 import com.guhanjie.service.OrderService;
 import com.guhanjie.service.UserService;
@@ -81,7 +77,7 @@ public class OrderController extends BaseController {
 		return "order";
 	}
 	
-	@RequestMapping(value="",method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="put",method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public Map<String, Object> putOrder(HttpServletRequest req, 
     	                                                    @RequestParam("open_id") String openid, 

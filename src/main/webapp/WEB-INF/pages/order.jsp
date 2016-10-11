@@ -21,7 +21,7 @@
 <body ontouchstart>
   <div id="baiduMap"></div>
   <form>
-    <input type="hidden" name="open_id" value="123"/>
+    <input type="hidden" name="open_id" value="${user.openId}"/>
     <div class="weui_cells_title">
       <div class="car-type">
         <div class="car-type-title">

@@ -128,7 +128,9 @@ public class OrderService {
                 positionMapper.insertSelective(p);
                 sb.append(p.getId()).append(",");
             }
-            sb.deleteCharAt(sb.length()-1);
+            if(sb.length()>0 && sb.charAt(sb.length()-1) == ',') {
+                sb.deleteCharAt(sb.length()-1);
+            }
             order.setWaypointsIds(sb.toString());
 		}
 		// 3. 校验订单有效性

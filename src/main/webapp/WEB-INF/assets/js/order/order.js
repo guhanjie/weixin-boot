@@ -323,7 +323,7 @@ $(function() {
 		//console.log(formData);
 		$.ajax({
 		    type: 'POST',
-		    url: 'order?open_id='+$('input[name="open_id"]').val(),
+		    url: 'order/put?open_id='+$('input[name="open_id"]').val(),
 		    data: JSON.stringify(order),
 		    contentType: 'application/json',
 		    success: function(data){
