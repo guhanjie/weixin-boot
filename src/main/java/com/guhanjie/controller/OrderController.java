@@ -72,7 +72,7 @@ public class OrderController extends BaseController {
 	@Resource(name="paySearchScheduler")
 	private TaskScheduler taskScheduler;
 	
-	@RequestMapping(value="",method=RequestMethod.GET)
+	@RequestMapping(value={"", "pre"},method=RequestMethod.GET)
 	public String order(HttpServletRequest req) {
 		return "order";
 	}

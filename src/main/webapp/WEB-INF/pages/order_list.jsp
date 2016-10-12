@@ -12,9 +12,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="keywords" content="搬家,货运,上门,服务,上海,市内搬家,同城搬家" />
 <meta name="description" content="尊涵搬家服务，拉货、搬家按公里数计费，快速安全将货物送达。让用户以最经济的方式获得高质量、高性价比的同城货物运输体验。咨询热线：18916840930">
-<link rel="stylesheet" href="../resources/css/fontawesome/font-awesome.css">
-<link rel="stylesheet" href="../resources/css/weui/weui.css">
-<link rel="stylesheet" href="../resources/css/order/order.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/fontawesome/font-awesome.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/weui/weui.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/order/order.css">
 <title>尊涵搬家服务-订单列表</title>
 </head>
 <body ontouchstart>
@@ -90,9 +90,9 @@
       <c:if test="${current < pages-1}"><a href="list?page=${current+1}"><i  class="icon-chevron-right"></i></a></c:if>
     </div>
   </div>
-  <script src="../resources/js/zepto/zepto-1.1.6.js"></script>
-  <script src="../resources/js/weui/weui.js"></script>
-  <script src="../resources/js/order/pay.js"></script>
-  <script src="../resources/js/order/order_search.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/zepto/zepto-1.1.6.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/weui/weui.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/order/pay.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/order/order_search.js"></script>
 </body>
 </html>

@@ -11,11 +11,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="keywords" content="搬家,货运,上门,服务,上海,市内搬家,同城搬家" />
 <meta name="description" content="尊涵搬家服务，拉货、搬家按公里数计费，快速安全将货物送达。让用户以最经济的方式获得高质量、高性价比的同城货物运输体验。咨询热线：18916840930">
-<link rel="stylesheet" href="resources/css/fontawesome/font-awesome.css">
-<link rel="stylesheet" href="resources/css/weui/weui.css">
-<link rel="stylesheet" href="resources/css/order/order.css">
-<link rel="stylesheet" type="text/css" href="resources/css/3rds/mobiscroll.scroller.css">
-<link rel="stylesheet" type="text/css" href="resources/css/3rds/lxn.mobiscroll.scroller.wap2.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/fontawesome/font-awesome.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/weui/weui.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/order/order.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/3rds/mobiscroll.scroller.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/3rds/lxn.mobiscroll.scroller.wap2.css">
 <title>尊涵搬家服务</title>
 </head>
 <body ontouchstart>
@@ -254,15 +254,15 @@
     </div>
   </div>
   
-  <script src="resources/js/zepto/zepto-1.1.6.js"></script>
-  <script src="resources/js/weui/weui.js"></script>
-  <script src="resources/js/3rds/mobiscroll.zepto.js"></script>
-  <script src="resources/js/3rds/mobiscroll.core.js"></script>
-  <script src="resources/js/3rds/lxn.mobiscroll.scroller.js"></script>
-  <script src="resources/js/3rds/lxn.mobiscroll.datetime.js"></script>
-  <script src="resources/js/3rds/lxn.mobiscroll.i18n.zh.js"></script>
-  <script src="http://api.map.baidu.com/api?v=2.0&ak=jZG6MRj1WWYy5tlPLpZf6h8q5Q5ZGcTT"></script>
-  <script src="resources/js/order/distance.js"></script>
-  <script src="resources/js/order/order.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/zepto/zepto-1.1.6.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/weui/weui.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/3rds/mobiscroll.zepto.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/3rds/mobiscroll.core.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/3rds/lxn.mobiscroll.scroller.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/3rds/lxn.mobiscroll.datetime.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/3rds/lxn.mobiscroll.i18n.zh.js"></script>
+  <script src="//api.map.baidu.com/api?v=2.0&ak=jZG6MRj1WWYy5tlPLpZf6h8q5Q5ZGcTT"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/order/distance.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/order/order.js"></script>
 </body>
 </html>

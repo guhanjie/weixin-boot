@@ -27,9 +27,6 @@ public class OAuthIntercepter implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 	    String openid = (String)request.getSession().getAttribute(AppConstants.SESSION_KEY_OPEN_ID);
 	    if(openid==null) { //用户未登录，需要网页授权获取用户信息
-	        if("1".equals(request.getParameter("p"))) {    //预览用
-	            return true;
-	        }
 	    	LOGGER.info("user non login, redirect to weixin oauth2.0...");
 	    	HttpSession session = request.getSession();
 	    	String lasturl = request.getRequestURI();
