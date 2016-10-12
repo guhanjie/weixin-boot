@@ -30,9 +30,19 @@ body:
       ]
     }, 
     { 
-      "type":"view",
-      "name":"立即下单",
-      "url":"http://www.guhanjie.top/weixin-boot/order"
+      "name": "立即下单",
+      "sub_button": [
+        {
+          "type":"view",
+          "name":"立即下单",
+          "url":"http://www.guhanjie.top/weixin-boot/order"
+        },
+        {
+          "type":"view",
+          "name":"历史订单",
+          "url":"http://www.guhanjie.top/weixin-boot/order/search"
+        }
+      ]
     },
     { 
       "type":"view",
