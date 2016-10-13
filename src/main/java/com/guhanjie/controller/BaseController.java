@@ -19,8 +19,16 @@ public abstract class BaseController {
 
     @Autowired			//Spring上下文已经将这个web应用的servletContext注入到上下文中去了，只要注入进来即可。
     protected ServletContext servletContext;
+    
+    @Autowired
+    protected HttpServletRequest request;
 	
-    protected User getUser(HttpServletRequest request) {
+    protected void setSessionUser(User user) {
+        HttpSession session = request.getSession();
+        session.setAttribute(AppConstants.SESSION_KEY_USER, user);
+    }
+    
+    protected User getSessionUser() {
     	HttpSession session = request.getSession();
     	Object user = session.getAttribute(AppConstants.SESSION_KEY_USER);
     	if(user != null && user instanceof User) {

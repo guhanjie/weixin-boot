@@ -51,9 +51,9 @@
               </p>
               <div class="order-detail">
                 <p>金额：<span id="amount" class="text-red">${item.amount} 元</span></p>
-                <p>路程：<span id="distance">${item.distance}公里</span></p>
+                <p>路程：<span id="distance">${item.distance} 公里</span></p>
                 <p>车型：<span id="vehicle">${item.vehicle==1?'小面车型':(item.vehicle==2)?'金杯车型':'全顺/依维柯'}</span></p>
-                <p>搬家师傅：${item.workers}人</p>
+                <p>搬家师傅：<span id="workers">${item.workers} 人</span></p>
                 <p>联系人：${item.contactor}</p>
                 <p>电话：${item.phone}</p>
               </div>
@@ -104,7 +104,7 @@
                     <span id="res_vehicle"></span>
                 </div>
             </div>
-            <div class="weui_cell">
+            <!-- <div class="weui_cell">
                 <div class="weui_cell_hd">
                     <p><i class="weui_icon_success_circle"></i>起始地：</p>
                 </div>
@@ -119,7 +119,7 @@
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_to_address"></span>
                 </div>
-            </div>
+            </div> -->
             <div class="weui_cell">
                 <div class="weui_cell_hd">
                     <p><i class="weui_icon_success_circle"></i>行驶路程：</p>
@@ -130,10 +130,26 @@
             </div>
             <div class="weui_cell">
                 <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>搬家师傅：</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span id="res_workers"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
                     <p><i class="weui_icon_success_circle"></i>订单金额：</p>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
                     <span id="res_amount" class="text-red"></span>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <p><i class="weui_icon_success_circle"></i>小费 ： ￥</p>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input id="tip" class="order_tip weui_input text-red" type="number" placeholder="打赏小费~"></input>元
                 </div>
             </div>
         </div>
