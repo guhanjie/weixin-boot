@@ -53,6 +53,22 @@ public class TestOrderMapper {
         logger.debug(JSON.toJSONString(model, true));
         assertNotNull(model);
     }
+
+    @Test
+    public void testSelectByUserPhone() {
+        logger.debug("Select order by user phone from table[{}]...\n", tableName);
+        List<Order> model = mapper.selectByUserPhone("13052333613");
+        logger.debug(JSON.toJSONString(model, true));
+        assertNotNull(model);
+    }
+    
+    @Test
+    public void testSelectByUserOpenId() {
+        logger.debug("Select order by user openid from table[{}]...\n", tableName);
+        List<Order> model = mapper.selectByUserOpenId("o_05UwXR65RZ-VeZ12CfLH27UiEk");
+        logger.debug(JSON.toJSONString(model, true));
+        assertNotNull(model);
+    }
     
     @Test
     public void testSelectByPage() {

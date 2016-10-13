@@ -83,7 +83,11 @@ public class PayKit {
         //map.put("attach", "附加数据，在查询API和支付通知中原样返回，该字段主要用于商户携带订单的自定义数据");
         map.put("out_trade_no", order.getId().toString());                                  //商户订单号
         map.put("fee_type", "CNY");                                                                 //货币类型
-        map.put("total_fee", String.valueOf(order.getAmount().intValue()*100+order.getTip().intValue()*100));                           //总金额，订单总金额，单位为分
+        int money = order.getAmount().intValue()*100;                   
+        if(order.getTip() != null) {
+            money += order.getTip().intValue()*100;
+        }
+        map.put("total_fee", String.valueOf(money));                           //总金额，订单总金额，单位为分
         map.put("spbill_create_ip", HttpUtil.getIpAddress(request));                    //用户端IP
         map.put("time_start", new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(new Date()));                 //交易起始时间，格式为yyyyMMddHHmmss
         //map.put("time_expire", "订单失效时间，格式为yyyyMMddHHmmss,最短失效时间间隔必须大于5分钟");                       //交易结束时间

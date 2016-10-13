@@ -8,6 +8,7 @@
 package com.guhanjie.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +74,8 @@ public class OrderController extends BaseController {
 	private TaskScheduler taskScheduler;
 	
 	@RequestMapping(value={"", "pre"},method=RequestMethod.GET)
-	public String order(HttpServletRequest req) {
+	public String order(HttpServletRequest req, HttpServletResponse resp) {
+	    resp.setHeader("Cache-Control", "no-cache");
 		return "order";
 	}
 	
@@ -85,9 +87,14 @@ public class OrderController extends BaseController {
 		LOGGER.info("putting new order for user open_id[{}]...", JSON.toJSONString(openid));
 		LOGGER.info("putting new order[{}]...", JSON.toJSONString(order, true));
 		//获取用户信息
-		User user = getUser(req);
+		User user = getSessionUser();
 		if(user == null) {
 		    user = userService.getUserByOpenId(openid);
+		}
+		if(user == null) {
+		    user = new User();
+		    user.setPhone(order.getPhone());
+		    setSessionUser(user);
 		}
 		//封装信息
 		order.setUser(user);
@@ -121,9 +128,7 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="search",method=RequestMethod.GET)
 	public String searchOrder(HttpServletRequest req, Model model) {
-		User user = getUser(req);
-//		User user = new User();
-//		user.setId(3);
+		User user = getSessionUser();
 		List<Order> orders = orderService.getOrdersByUser(user);
 		model.addAttribute("orders", orders);
 		model.addAttribute("now", new Date());
@@ -162,7 +167,7 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="pay",method=RequestMethod.GET)
     @ResponseBody
-	public Map<String, Object> payOrder(HttpServletRequest req, final Integer orderid) {
+	public Map<String, Object> payOrder(HttpServletRequest req, final Integer orderid, final Integer tip) {
 	    final String APPID = weixinContants.APPID;
 	    final String MCH_ID = weixinContants.MCH_ID;
 	    final String MCH_KEY = weixinContants.MCH_KEY;
@@ -170,6 +175,12 @@ public class OrderController extends BaseController {
         if(order == null) {
             return fail("无效的订单号");
         }
+        //设置订单小费
+        if(tip != null) {
+            order.setTip(new BigDecimal(tip));
+            orderService.updateOrderTip(order);
+        }
+        
         String prepayId = null;
         try {
         	prepayId = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);

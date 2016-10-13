@@ -70,7 +70,7 @@ public class OrderService {
 		}
 		// 1. 检查用户信息 
 		User user = order.getUser();
-		if(user == null) {	//若用户不存在，首次进入添加user记录
+		if(user == null || user.getId() == null) {	//若用户不存在，首次进入添加user记录
 			if(StringUtils.isBlank(order.getPhone())) {
 				LOGGER.error("put order error, user not exist, order:[{}]", order.getId());
 				throw WebExceptionFactory.exception(WebExceptionEnum.USER_NOT_EXIST);
@@ -214,6 +214,15 @@ public class OrderService {
 		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
 	}
 	
+	public void updateOrderTip(Order order) {
+	    if(order != null && order.getId() != null) {
+	        //disable status update for security
+	        order.setPayStatus(null);
+	        order.setStatus(null);
+	        orderMapper.updateByPrimaryKeySelective(order);
+	    }
+	}
+	
 	public PageImpl<Order> listOrders(Date beginTime, Date endTime, Pageable pageable) {
 	  //查询条件
         Map<String, Object> param = new HashMap<String, Object>();
@@ -257,15 +266,23 @@ public class OrderService {
 	
 	public List<Order> getOrdersByUser(User user) {
 		List<Order> result = null;
-		if(user!=null && user.getId()!=null) {
-			result = orderMapper.selectByUserId(user.getId());
-	        if(result != null) {
-	            for(Order order : result) {
-	                if(StringUtils.isNotBlank(order.getWaypointsIds())) {
-	                    setWayPoints(order);
-	                }
-	            }
-	        }
+		if(user!=null) {
+		    if(user.getId() != null) {
+		        result = orderMapper.selectByUserId(user.getId());
+		    }
+		    if(user.getOpenId() != null) {
+		        result = orderMapper.selectByUserOpenId(user.getOpenId());
+		    }
+		    if(user.getPhone() != null) {
+		        result = orderMapper.selectByUserPhone(user.getPhone());
+		    }
+		}
+		if(result != null) {
+		    for(Order order : result) {
+		        if(StringUtils.isNotBlank(order.getWaypointsIds())) {
+		            setWayPoints(order);
+		        }
+		    }
 		}
 		return result;
 	}

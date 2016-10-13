@@ -68,6 +68,9 @@ public class XmlUtil {
         	if(value instanceof Number){
         		root.addElement(key).addText(value.toString());
         	}
+        	else if(value == null) {
+                root.addElement(key).addText("");
+        	}
         	else {
         		root.addElement(key).addCDATA(value.toString());
         	}

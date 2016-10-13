@@ -188,7 +188,6 @@ span.btn_success.gloming, span.btn_pay.gloming {
     top: -7px;
     left: 50%;
     margin-left: -43px;
-    z-index: 9;
     cursor: pointer;
     color: #a5a38d;
     font-size: small;
@@ -211,6 +210,9 @@ span.btn_success.gloming, span.btn_pay.gloming {
 }
 input.address-detail {
 	border-right: 1px dotted #B3B3B3;
+}
+input.order_tip {
+	width: 50%;
 }
 select.weui_select.address-floor {
     font-size: 15px;

@@ -57,6 +57,10 @@ public interface OrderMapper {
     //------------------------- custom add -----------------------------
     List<Order> selectByUserId(Integer userid);
     
+    List<Order> selectByUserOpenId(String openid);
+    
+    List<Order> selectByUserPhone(String phone);
+    
     List<Order> selectByQualifiedPage(Map<String, Object> param);
     
     int countSelective(Map<String, Object> param);
