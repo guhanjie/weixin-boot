@@ -157,7 +157,7 @@ $(function() {
     $('#start_time').mobiscroll().datetime(options);
 
     //计算价格
-	$('body').on('click touchend tap blur focus change select keyup mouseup', function(e) {
+    var calculate = function(e) {
 		//console.log('==========event type: '+e.type);
 		order["from"]["address"] = $('input[name="from_address"]').val();
 		order["from"]["detail"] = $('input[name="from_detail"]').val();
@@ -172,6 +172,9 @@ $(function() {
 			e["detail"] = $wayInput.next('input[name="way_detail"]').val();
 			e["floor"] = $wayInput.parents('.weui_cell.waypoint').find('select[name="way_floor"]').val();
 		});
+		if(e && e.data && e.data.forceConfirmPlace) {
+			plugin.confirmPlace();
+		}
 		//console.log('==========calculating order amount...');
     	order["amount"] = undefined;
     	var distance = order["distance"] || 0;
@@ -223,9 +226,10 @@ $(function() {
     	}
     	order["amount"] = price.toFixed(0);
     	$('.order_sumary .price em').text(order["amount"]);
-		e.stopPropagation();
     	return;
-	});
+	};
+	$('body').on('touchend tap mouseup keyup', calculate);
+	$('body').on('blur', 'input', {'forceConfirmPlace': true}, calculate);
 			
 	$('textarea[name="remark"]').on('input', function() {
 		var max = 200;
@@ -337,8 +341,8 @@ $(function() {
 					$('#res_vehicle').text(vehicleName[order["vehicle"]-1]);
 					$('#res_distance').text(order["distance"]+' 公里');
 					$('#res_amount').text(order["amount"]+' 元');
-					$('#res_from_address').text(order["from"]["address"]);
-					$('#res_to_address').text(order["to"]["address"]);
+					//$('#res_from_address').text(order["from"]["address"]);
+					//$('#res_to_address').text(order["to"]["address"]);
 					$('#res_contactor').text(order["contactor"]);
 					$('#res_workers').text(order["workers"]);
 					$('#res_start_time').text(new Date(order["startTime"]).toLocaleString());
