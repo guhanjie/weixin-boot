@@ -45,7 +45,7 @@
 
 	<bean id="exceptionResolver" class="com.guhanjie.exception.WebExceptionHandler" />
 	
-<!--     <mvc:interceptors>
+    <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/order/**"/>
             <mvc:exclude-mapping path="/order/pre"/>
@@ -56,6 +56,6 @@
             <mvc:mapping path="/order/list"/>
             <ref bean="AdminAuthIntercepter"/>
         </mvc:interceptor>
-    </mvc:interceptors> -->
+    </mvc:interceptors>
 
 </beans>
