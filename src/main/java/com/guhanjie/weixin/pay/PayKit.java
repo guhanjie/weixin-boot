@@ -132,10 +132,10 @@ public class PayKit {
                     	return;
                     }
                     //验证随机字符串nonce，防CSRF攻击
-                    if(!nonceStr.equals(nonce_str)) {
-                        LOGGER.warn("nonce not matched(CSRF warning), this response maybe fake!");
-                        return;
-                    }
+//                    if(!nonceStr.equals(nonce_str)) {
+//                        LOGGER.warn("nonce not matched(CSRF warning), this response maybe fake!");
+//                        return;
+//                    }
                     //根据业务结果，执行后续业务操作
                     if(!"SUCCESS".equals(result_code)) {
                         LOGGER.error("error in weixin unified order, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
@@ -213,13 +213,13 @@ public class PayKit {
                     	return;
                     }
                     //验证随机字符串nonce，防CSRF攻击
-                    String nonce_str = map.get("nonce_str");                                            //随机字符串
-                    if(!nonceStr.equals(nonce_str)) {
-                        LOGGER.warn("nonce not matched(CSRF warning), this response maybe fake!");
-                        result.put("result", return_code);
-                        result.put("err_msg", "随机字符串不匹配");
-                        return;
-                    }
+//                    String nonce_str = map.get("nonce_str");                                            //随机字符串
+//                    if(!nonceStr.equals(nonce_str)) {
+//                        LOGGER.warn("nonce not matched(CSRF warning), this response maybe fake!");
+//                        result.put("result", return_code);
+//                        result.put("err_msg", "随机字符串不匹配");
+//                        return;
+//                    }
                     //根据业务结果，执行后续业务操作
                     String result_code = map.get("result_code");                                    //业务结果
                     if(!"SUCCESS".equals(result_code)) {

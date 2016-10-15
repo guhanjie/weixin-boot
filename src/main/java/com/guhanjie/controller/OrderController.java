@@ -108,7 +108,7 @@ public class OrderController extends BaseController {
     public String listOrders(HttpServletRequest req, Model model, 
                     @RequestParam(required=false) String beginDate, //yyyy-mm-dd
                     @RequestParam(required=false) String endDate,    //yyyy-mm-dd
-                    @PageableDefault(page=0, size=10) Pageable pageable) {        
+                    @PageableDefault(page=0, size=5) Pageable pageable) {        
         Date beginTime = null;
         Date endTime = null;
         if(StringUtils.isNotBlank(beginDate)){

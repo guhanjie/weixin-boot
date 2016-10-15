@@ -28,6 +28,7 @@ $(function () {
             		    	if(data.success) {
             		    		var $parent = $that.parents('.weui_cell_ft');
             		    		$that.remove();
+            		    		$parent.empty();
             		    		$parent.append('<span class="btn_status text-bold">已取消</span>');
             		    	}
             		    	else {
