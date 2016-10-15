@@ -82,7 +82,7 @@ public class WeixinHttpUtil {
             resp = client.execute(post);
             int sc = resp.getStatusLine().getStatusCode();
             if(sc>=200&&sc<300) {
-                String respEntity = EntityUtils.toString(resp.getEntity());
+                String respEntity = EntityUtils.toString(resp.getEntity(), Charset.forName("UTF-8"));
                 LOGGER.debug("success to get response:[{}]", respEntity);
                 if(resp.getEntity().getContentType().getValue().startsWith("application/json")) {
                     ErrorEntity err = JSONObject.parseObject(respEntity, ErrorEntity.class);
