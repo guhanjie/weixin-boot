@@ -74,8 +74,14 @@ public class OrderController extends BaseController {
 	private TaskScheduler taskScheduler;
 	
 	@RequestMapping(value={"", "pre"},method=RequestMethod.GET)
-	public String order(HttpServletRequest req, HttpServletResponse resp) {
+	public String order(HttpServletRequest req, HttpServletResponse resp, @RequestParam(required=false) String phone) {
 	    resp.setHeader("Cache-Control", "no-cache");
+	    if(getSessionUser()==null && StringUtils.isNotBlank(phone)) {
+    	    User user = userService.getUserByPhone(phone);
+    	    if(user != null) {
+    	        setSessionUser(user);
+    	    }
+	    }
 		return "order";
 	}
 	
@@ -84,8 +90,8 @@ public class OrderController extends BaseController {
 	public Map<String, Object> putOrder(HttpServletRequest req, 
     	                                                    @RequestParam("open_id") String openid, 
     	                                                    @RequestBody Order order) {
-		LOGGER.info("putting new order for user open_id[{}]...", JSON.toJSONString(openid));
-		LOGGER.info("putting new order[{}]...", JSON.toJSONString(order, true));
+		LOGGER.info("putting new order for user open_id[{}]...", openid);
+		LOGGER.info("=====order:[{}]...", JSON.toJSONString(order, true));
 		//获取用户信息
 		User user = getSessionUser();
 		if(user == null) {

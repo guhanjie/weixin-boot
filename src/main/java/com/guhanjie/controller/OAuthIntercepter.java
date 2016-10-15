@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+import com.guhanjie.model.User;
 import com.guhanjie.weixin.WeixinConstants;
 
 @Component("OAuthIntercepter")
@@ -25,10 +27,15 @@ public class OAuthIntercepter implements HandlerInterceptor {
     
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        HttpSession session = request.getSession();
+        Object user = session.getAttribute(AppConstants.SESSION_KEY_USER);
+        if(user != null && user instanceof User) {
+            LOGGER.debug("user[{}] login...", JSON.toJSONString(user));
+            return true;
+        }
 	    String openid = (String)request.getSession().getAttribute(AppConstants.SESSION_KEY_OPEN_ID);
 	    if(openid==null) { //用户未登录，需要网页授权获取用户信息
 	    	LOGGER.info("user non login, redirect to weixin oauth2.0...");
-	    	HttpSession session = request.getSession();
 	    	String lasturl = request.getRequestURI();
 	    	session.setAttribute(AppConstants.SESSION_KEY_RETURN_URL, lasturl);
 	    	String state = String.valueOf(new Random().nextInt(100));
