@@ -10,10 +10,8 @@ package com.guhanjie.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -80,6 +78,7 @@ public class OrderController extends BaseController {
     	    User user = userService.getUserByPhone(phone);
     	    if(user != null) {
     	        setSessionUser(user);
+    	        req.getSession().setAttribute(AppConstants.SESSION_KEY_OPEN_ID, user.getOpenId());
     	    }
 	    }
 		return "order";
@@ -184,12 +183,15 @@ public class OrderController extends BaseController {
         //设置订单小费
         if(tip != null) {
             order.setTip(new BigDecimal(tip));
-            orderService.updateOrderTip(order);
         }
+        else {
+            order.setTip(new BigDecimal(0));
+        }
+        orderService.updateOrderTip(order);
         
-        String prepayId = null;
+        Map<String, String> map = null;
         try {
-        	prepayId = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);
+            map = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);
         	long now = new Date().getTime();
         	taskScheduler.schedule(new Runnable() {
                 @Override
@@ -213,17 +215,9 @@ public class OrderController extends BaseController {
         catch (IOException e) {
             LOGGER.error("error in weixin pay unified order.");
         }
-        if(StringUtils.isBlank(prepayId)) {
+        if(map == null) {
         	throw WebExceptionFactory.exception(WebExceptionEnum.PAY_ERROR, "支付系统有误，目前无法支付");
         }
-        final String nonceStr = String.valueOf(new Random().nextInt(10000));
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("appId", weixinContants.APPID);                                  //公众号id
-        map.put("timeStamp", String.valueOf(System.currentTimeMillis()/1000));         //时间戳
-        map.put("nonceStr", nonceStr);                                                   //随机字符串
-        map.put("package", "prepay_id="+prepayId);                              //订单详情扩展字符串
-        map.put("signType", "MD5");                                                       //签名方式
-        map.put("paySign", PayKit.sign(map, weixinContants.MCH_KEY)); //签名
         
 		return success(map);
 	}

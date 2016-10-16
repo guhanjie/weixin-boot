@@ -63,14 +63,14 @@ public class PayKit {
      * @param mchid
      * @throws IOException
      */
-    public static String unifiedorder(HttpServletRequest request, final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
+    public static Map<String, String> unifiedorder(HttpServletRequest request, final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
         if(order == null) {
             LOGGER.warn("order can not be nulll in unified order.");
             return null;
         }
         LOGGER.info("starting to unified order to weixin for order:[{}]...", order.getId());
-        
-        final StringBuilder prepayId = new StringBuilder();        
+
+        final Map<String, String> result = new HashMap<String, String>();
         
     	final String nonceStr = String.valueOf(new Random().nextInt(10000));
         Map<String, String> map = new HashMap<String, String>();
@@ -141,15 +141,21 @@ public class PayKit {
                         LOGGER.error("error in weixin unified order, cause: err_code=[{}], err_code_des=[{}]", err_code, err_code_des);
                         return;
                     }
-                    prepayId.append(prepay_id);
-                    LOGGER.info("success to get weixin prepay id:[{}] for order:[{}]", prepayId, order.getId());
+                    //成功，则返回
+                    result.put("appId", appid);                                  //公众号id
+                    result.put("timeStamp", String.valueOf(System.currentTimeMillis()/1000));         //时间戳
+                    result.put("nonceStr", nonce_str);                                                   //随机字符串
+                    result.put("package", "prepay_id="+prepay_id);                              //订单详情扩展字符串
+                    result.put("signType", "MD5");                                                       //签名方式
+                    result.put("paySign", sign(result, mchkey)); //签名
+                    LOGGER.info("success to get weixin prepay id:[{}] for order:[{}]", prepay_id, order.getId());
                 }
                 catch (DocumentException e) {
                     LOGGER.error("error in parsing response xml:[{}]", respBody, e);
                 }
             }
         });
-        return prepayId.toString();
+        return result;
     }
     
     /**

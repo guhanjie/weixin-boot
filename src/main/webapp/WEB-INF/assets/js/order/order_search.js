@@ -115,7 +115,7 @@ $(function () {
 		    dataType:  'json',
 		    success: function(data){
 		    	if(data.success) {
-		    		onBridgeReady(data.content, 
+		    		callWeixinPay(data.content, 
 		    		function() {
 		         	   $('body').html('<div class="weui_msg">'
   			   				 +'   <div class="weui_icon_area">'
