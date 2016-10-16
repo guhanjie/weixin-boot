@@ -57,6 +57,7 @@ public class WeixinConstants {
     
     public final static String API_PAY_UNIFIEDORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     public final static String API_PAY_ORDERQUERY = "https://api.mch.weixin.qq.com/pay/orderquery";
+    public final static String API_PAY_CLOSEORDER = "https://api.mch.weixin.qq.com/pay/closeorder";
     public final static String API_PAY_CALLBACK = "http://www.guhanjie.top/weixin-boot/order/paycallback";
     
     public final static String OAUTH2_SCOPE_SNSAPI_BASE="snsapi_base";

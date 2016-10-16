@@ -214,12 +214,14 @@ public class OrderService {
 		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
 	}
 	
-	public void updateOrderTip(Order order) {
+	public void updatePayInfo(Order order) {
 	    if(order != null && order.getId() != null) {
-	        //disable status update for security
-	        order.setPayStatus(null);
-	        order.setStatus(null);
-	        orderMapper.updateByPrimaryKeySelective(order);
+	        //disable status and other fields update for security
+	        Order o = new Order();
+	        o.setId(order.getId());
+	        o.setTip(order.getTip());
+	        o.setPayId(order.getPayId());
+	        orderMapper.updateByPrimaryKeySelective(o);
 	    }
 	}
 	

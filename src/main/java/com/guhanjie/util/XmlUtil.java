@@ -30,14 +30,21 @@ import org.dom4j.io.XMLWriter;
  */
 public class XmlUtil {
     
-    public static Document str2xml(String str) throws DocumentException {
+    public static Document str2xml(String str) {
         if(str == null || str.isEmpty()) {
             return null;
         }
-        Document xml = DocumentHelper.parseText(str);
+        Document xml = null;
+        try {
+            xml = DocumentHelper.parseText(str);
+        }
+        catch (DocumentException e) {
+            e.printStackTrace();
+        }
         return xml;
     }
     
+    @SuppressWarnings("unchecked")
     public static Map<String, String> xml2map(Document xml) {
         if(xml == null) {
             return null;
@@ -51,12 +58,12 @@ public class XmlUtil {
         return maps;
     }
     
-    public static Map<String, String> xmlstr2map(String str) throws DocumentException {
-        Document xml = str2xml(str);
+    public static Map<String, String> xmlstr2map(String str) {
+        Document xml  = str2xml(str);
         return xml2map(xml);
     }
     
-    public static String map2xmlstr(Map<String, ?> map) throws IOException {
+    public static String map2xmlstr(Map<String, ?> map) {
         if(map == null) {
             return null;
         }
@@ -76,9 +83,14 @@ public class XmlUtil {
         	}
         }
         StringWriter sw = new StringWriter();
-        XMLWriter xw = new XMLWriter(sw);
-        xw.setEscapeText(true);
-        xw.write(d);
+        try {
+            XMLWriter xw = new XMLWriter(sw);
+            xw.setEscapeText(true);
+            xw.write(d);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         String str = sw.toString();
         return str.substring(str.indexOf("<xml>"));
     }

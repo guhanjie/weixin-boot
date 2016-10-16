@@ -10,8 +10,10 @@ package com.guhanjie.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -176,22 +178,30 @@ public class OrderController extends BaseController {
 	    final String APPID = weixinContants.APPID;
 	    final String MCH_ID = weixinContants.MCH_ID;
 	    final String MCH_KEY = weixinContants.MCH_KEY;
+	    //查询订单
         final Order order = orderService.getOrderById(orderid);
         if(order == null) {
             return fail("无效的订单号");
         }
-        //设置订单小费
-        if(tip != null) {
-            order.setTip(new BigDecimal(tip));
-        }
-        else {
-            order.setTip(new BigDecimal(0));
-        }
-        orderService.updateOrderTip(order);
-        
-        Map<String, String> map = null;
+        //获取订单的微信预支付id
+        String prepayid = order.getPayId();
         try {
-            map = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);
+            if(prepayid != null) {  //若先前发起过支付，需要验证prepayid是否已关闭
+                Map<String, String>map = PayKit.search(order, APPID, MCH_ID, MCH_KEY);
+                String payStatus = map.get("result");
+                if("CLOSED".equals(payStatus)) {        //若该prepayid已失效则重新下单
+                    prepayid = null;
+                }
+            }
+            if(prepayid == null) {  //第一次发起支付或支付已关闭
+                //设置订单小费（只有在第一次支付时可以设，数据模型有问题，建议订单和支付单独两个表，1:N关系）
+                if(tip != null) {
+                    order.setTip(new BigDecimal(tip));
+                }
+                prepayid = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);
+                orderService.updatePayInfo(order);
+            }
+            //定时（10分钟）查询订单支付情况
         	long now = new Date().getTime();
         	taskScheduler.schedule(new Runnable() {
                 @Override
@@ -200,26 +210,34 @@ public class OrderController extends BaseController {
                     try {
                         map = PayKit.search(order, APPID, MCH_ID, MCH_KEY);
                         String result = map.get("result");
-                        Integer orderid = Integer.valueOf(map.get("out_trade_no"));
+                        Integer orderid = Integer.valueOf(map.get("order_id"));
                         String total_fee = map.get("total_fee");
                         String time_end = map.get("time_end");
                         boolean success = "SUCCESS".equals(result);                    
                         orderService.updateOrderByPay(success, orderid, total_fee, time_end);
                     }
-                    catch (IOException e) {
-                        LOGGER.error("error in search order[{}] pay.", orderid, e);
+                    catch (Exception e) {
+                        LOGGER.error("error in search pay result for order[{}].", orderid, e);
                     }
                 }
         	}, new Date(now+10*60*1000));       //产生支付预付单后的10分钟查询，以防微信支付回调没有接收到。
         }
         catch (IOException e) {
-            LOGGER.error("error in weixin pay unified order.");
-        }
-        if(map == null) {
-        	throw WebExceptionFactory.exception(WebExceptionEnum.PAY_ERROR, "支付系统有误，目前无法支付");
+            LOGGER.error("error in unified weixin pay for order[{}].", order.getId());
         }
         
-		return success(map);
+        if(StringUtils.isBlank(prepayid)) {
+        	throw WebExceptionFactory.exception(WebExceptionEnum.PAY_ERROR, "支付系统有误，目前无法支付");
+        }
+        Map<String, String> payParams = new HashMap<String, String>();
+        final String nonceStr = String.valueOf(new Random().nextInt(10000));
+        payParams.put("appId", APPID);                                  //公众号id
+        payParams.put("timeStamp", String.valueOf(System.currentTimeMillis()/1000));         //时间戳
+        payParams.put("nonceStr", nonceStr);                                                   //随机字符串
+        payParams.put("package", "prepay_id="+prepayid);                              //订单详情扩展字符串
+        payParams.put("signType", "MD5");                                                       //签名方式
+        payParams.put("paySign", PayKit.sign(payParams, MCH_KEY)); //签名        
+		return success(payParams);
 	}
 	
 	@RequestMapping(value="paycallback",method=RequestMethod.GET)
