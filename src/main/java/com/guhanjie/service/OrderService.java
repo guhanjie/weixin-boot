@@ -291,12 +291,14 @@ public class OrderService {
 	 */
 	public void updatePayInfo(Order order) {
 	    if(order != null && order.getId() != null) {
-	        //disable status and other fields update for security
-	        Order o = new Order();
-	        o.setId(order.getId());
-	        o.setTip(order.getTip());
-	        o.setPayId(order.getPayId());
-	        orderMapper.updateByPrimaryKeySelective(o);
+	    	//just update pay related info, disable status and other fields update for security
+	    	if(order.getTip()!=null || order.getPayId()!=null) {
+		        Order o = new Order();
+		        o.setId(order.getId());
+		        o.setTip(order.getTip());
+		        o.setPayId(order.getPayId());
+		        orderMapper.updateByPrimaryKeySelective(o);
+	    	}
 	    }
 	}
 

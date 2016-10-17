@@ -199,6 +199,7 @@ public class OrderController extends BaseController {
                     order.setTip(new BigDecimal(tip));
                 }
                 prepayid = PayKit.unifiedorder(req, order, APPID, MCH_ID, MCH_KEY);
+                order.setPayId(prepayid);
                 orderService.updatePayInfo(order);
             }
             //定时（10分钟）查询订单支付情况
