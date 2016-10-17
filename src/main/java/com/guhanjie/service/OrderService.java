@@ -352,8 +352,10 @@ public class OrderService {
     		sb.append("支付金额：").append(Integer.valueOf(total_fee)/100).append("元\n");
     		sb.append("支付时间：").append(DateTimeUtil.formatDate(order.getPayTime())).append("\n");
     		sb.append("客户名称：").append(order.getContactor()).append("\n");
-    		sb.append("起始地：").append(order.getFrom().getAddress()).append("\n");
-    		sb.append("目的地：").append(order.getTo().getAddress()).append("\n");
+    		Position from = positionMapper.selectByPrimaryKey(order.getFromId());
+    		sb.append("起始地：").append(from.getAddress()).append("\n");
+            Position to = positionMapper.selectByPrimaryKey(order.getToId());
+    		sb.append("目的地：").append(to.getAddress()).append("\n");
     		sb.append("服务时间：").append(DateTimeUtil.formatDate(order.getStartTime())).append("\n");
     		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
         }
