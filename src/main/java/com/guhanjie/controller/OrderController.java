@@ -210,7 +210,7 @@ public class OrderController extends BaseController {
                     try {
                         map = PayKit.search(order, APPID, MCH_ID, MCH_KEY);
                         String result = map.get("result");
-                        Integer orderid = Integer.valueOf(map.get("order_id"));
+                        Integer orderid = Integer.valueOf(map.get("out_trade_no"));
                         String total_fee = map.get("total_fee");
                         String time_end = map.get("time_end");
                         boolean success = "SUCCESS".equals(result);                    

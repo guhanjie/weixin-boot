@@ -194,7 +194,7 @@ public class OrderService {
 		order.setStatus(OrderStatusEnum.NEW.code());
 		orderMapper.insertSelective(order);
 		
-		// 5. 发送微信消息给客户
+		// 5. 发送微信消息通知客服
 		StringBuffer sb = new StringBuffer("主人，您有新的订单：\n");
 		sb.append("金额：").append(order.getAmount()).append("元\n");
 		sb.append("路程：").append(order.getDistance()).append("公里\n");
@@ -212,17 +212,6 @@ public class OrderService {
 		}
 		sb.append("备注：").append(order.getRemark()).append("\n");
 		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
-	}
-	
-	public void updatePayInfo(Order order) {
-	    if(order != null && order.getId() != null) {
-	        //disable status and other fields update for security
-	        Order o = new Order();
-	        o.setId(order.getId());
-	        o.setTip(order.getTip());
-	        o.setPayId(order.getPayId());
-	        orderMapper.updateByPrimaryKeySelective(o);
-	    }
 	}
 	
 	public PageImpl<Order> listOrders(Date beginTime, Date endTime, Pageable pageable) {
@@ -293,6 +282,34 @@ public class OrderService {
 		return orderMapper.selectByPrimaryKey(orderId);
 	}
 	
+	/**
+	 * Method Name:	updatePayInfo<br/>
+	 * Description:			[更新订单的预支付信息]
+	 * @author				GUHANJIE
+	 * @time					2016年10月17日 上午10:30:28
+	 * @param order
+	 */
+	public void updatePayInfo(Order order) {
+	    if(order != null && order.getId() != null) {
+	        //disable status and other fields update for security
+	        Order o = new Order();
+	        o.setId(order.getId());
+	        o.setTip(order.getTip());
+	        o.setPayId(order.getPayId());
+	        orderMapper.updateByPrimaryKeySelective(o);
+	    }
+	}
+
+	/**
+	 * Method Name:	updateOrderByPay<br/>
+	 * Description:			[更新订单的支付状态]
+	 * @author				GUHANJIE
+	 * @time					2016年10月17日 上午10:30:55
+	 * @param success
+	 * @param orderid
+	 * @param total_fee
+	 * @param time_end
+	 */
 	public void updateOrderByPay(boolean success, Integer orderid, String total_fee, String time_end) {
 	    LOGGER.info("Updating order[{}] pay info: sucess=[{}], total_fee=[{}], time_end=[{}]", orderid, success, total_fee, time_end);
 	    Order order = getOrderById(orderid);
@@ -312,25 +329,34 @@ public class OrderService {
                 LOGGER.warn("error in updating order[{}] pay, as pay info not complete: total_fee=[{}], time_end=[{}].", orderid, total_fee, time_end);
                 return;
             }
-            if(order.getAmount().intValue() == Integer.valueOf(total_fee)/100) {
-                LOGGER.info("Success to complete order[{}] pay!", orderid);
-                order.setStatus(OrderStatusEnum.PAYED.code());
-                order.setPayStatus(PayStatusEnum.SUCCESS.code());
-                order.setPayType(PayTypeEnum.WEIXIN.code());
-                order.setPayTime(DateTimeUtil.getDate(time_end, "yyyyMMddHHmmss"));
+            LOGGER.info("Success to complete order[{}] pay!", orderid);
+            order.setStatus(OrderStatusEnum.PAYED.code());
+            order.setPayStatus(PayStatusEnum.SUCCESS.code());
+            order.setPayType(PayTypeEnum.WEIXIN.code());
+            order.setPayTime(DateTimeUtil.getDate(time_end, "yyyyMMddHHmmss"));
+            if(order.getAmount().intValue() != Integer.valueOf(total_fee)/100) {
+            	LOGGER.warn("Pay amount not matched: topay=[{}], actual payed=[{}]", order.getAmount(), total_fee);
+//            	order.setPayStatus(PayStatusEnum.PAYERROR.code());
             }
         }
-        else {
-            LOGGER.warn("Pay exception, amount not matched: topay=[{}], payed=[{}]", order.getAmount(), total_fee);
-            order.setPayStatus(PayStatusEnum.PAYERROR.code());
-        }
         //更新订单支付状态
-        LOGGER.info("===updating order[{}] status:[{}]-->[{}], pay status: [{}]-->[{}].", orderid, order.getStatus(), oldOrderStatus, order.getPayStatus(), oldPayStatus);
+        LOGGER.info("===updating order[{}] status:[{}]-->[{}], pay status: [{}]-->[{}].", orderid, oldOrderStatus, order.getStatus(), oldPayStatus, order.getPayStatus());
         if(1 == orderMapper.updateByPayStatus(order, oldOrderStatus, oldPayStatus)) {
-            LOGGER.info("Success to update order[{}] pay status: [{}]-->[{}].", orderid, order.getPayStatus(), oldPayStatus);
+            LOGGER.info("Success to update order[{}] pay status: [{}]-->[{}].", orderid, oldPayStatus, order.getPayStatus());
+            
+    		// 支付成功，发送微信消息通知客服
+    		StringBuffer sb = new StringBuffer("主人，您有一笔订单已完成支付：\n");
+    		sb.append("订单标识：").append(orderid).append("\n");
+    		sb.append("支付金额：").append(Integer.valueOf(total_fee)/100).append("元\n");
+    		sb.append("支付时间：").append(DateTimeUtil.formatDate(order.getPayTime())).append("\n");
+    		sb.append("客户名称：").append(order.getContactor()).append("\n");
+    		sb.append("起始地：").append(order.getFrom().getAddress()).append("\n");
+    		sb.append("目的地：").append(order.getTo().getAddress()).append("\n");
+    		sb.append("服务时间：").append(DateTimeUtil.formatDate(order.getStartTime())).append("\n");
+    		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
         }
         else {
-            LOGGER.warn("Failed to update order[{}] pay status, as already been updated before", orderid);
+            LOGGER.warn("Failed to update order[{}] pay status: [{}]-->[{}], as already been updated before", orderid, oldPayStatus, order.getPayStatus());
         }
 	}
 	
@@ -354,6 +380,14 @@ public class OrderService {
 		throw WebExceptionFactory.exception(WebExceptionEnum.ORDER_CANCEL_ERROR, "当前订单状态无法取消");
 	}
 	
+	/**
+	 * Method Name:	finishOrderPay<br/>
+	 * Description:			[管理员手动完成订单支付，支持当面付现支付场景]
+	 * @author				GUHANJIE
+	 * @time					2016年10月17日 上午10:03:24
+	 * @param order
+	 * @return
+	 */
 	public boolean finishOrderPay(Order order) {
 	    if(order == null) {
 	        LOGGER.warn("order can not be null.");

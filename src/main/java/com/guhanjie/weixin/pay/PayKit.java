@@ -161,6 +161,7 @@ public class PayKit {
      * @param appid
      * @param mchid
      * @param mchkey
+     * @return Map<K,V>: {<br/>result: SUCCESS/FAIL, <br/>out_trade_no: orderid, <br/>total_fee: 100, time_end: ***, <br/>openid:***<br/>}
      * @throws IOException
      */
     public static Map<String,String> search(final Order order, final String appid, final String mchid, final String mchkey) throws IOException {
@@ -171,7 +172,7 @@ public class PayKit {
         LOGGER.info("starting to search payment for order:[{}]...", order.getId());
 
         final Map<String, String> result = new HashMap<String, String>();
-        result.put("order_id", String.valueOf(order.getId()));
+        result.put("out_trade_no", String.valueOf(order.getId()));
 
     	final String nonceStr = String.valueOf(new Random().nextInt(10000));
         Map<String, String> map = new HashMap<String, String>();
@@ -250,16 +251,16 @@ public class PayKit {
                     result.put("err_msg", "订单支付不成功："+trade_state_desc);
                     return;
                 }
-                if(order.getAmount().intValue() != Integer.valueOf(total_fee)/100) {    //支付金额有误
+                if(order.getAmount().intValue() != Integer.valueOf(total_fee)/100) {    //支付金额与订单金额不一致
                     LOGGER.warn("trade exception, amount not matched: topay=[{}], payed=[{}]", order.getAmount(), total_fee);
-                    result.put("result", "FAIL");
-                    result.put("err_msg", "订单支付金额有误：topay="+order.getAmount()+", payed="+ total_fee);
-                    return;
+//                    result.put("result", "FAIL");
+//                    result.put("err_msg", "订单支付金额有误：topay="+order.getAmount()+", payed="+ total_fee);
+//                    return;
                 }
-                result.put("result", "SUCCESS");
                 result.put("total_fee", total_fee);
                 result.put("time_end", time_end);
                 result.put("openid", openid);
+                result.put("result", "SUCCESS");
             }
         });
         return result;
@@ -343,7 +344,7 @@ public class PayKit {
      * @time					2016年10月1日 下午6:49:46
      * @param request
      * @param mchkey
-     * @return map: {result:SUCCESS/FAIL, ...}
+     * @return Map<K,V>: {<br/>result: SUCCESS/FAIL, <br/>out_trade_no: orderid, <br/>total_fee: 100, time_end: ***, <br/>openid:***<br/>}
      */
     public static Map<String,String> callback(HttpServletRequest request, final String mchkey) {
         final Map<String, String> result = new HashMap<String, String>();
