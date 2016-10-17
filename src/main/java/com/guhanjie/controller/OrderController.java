@@ -70,7 +70,7 @@ public class OrderController extends BaseController {
 	@Autowired
 	private OrderService orderService;
 	
-	@Resource(name="paySearchScheduler")
+	@Resource(name="scheduler4weixin")
 	private TaskScheduler taskScheduler;
 	
 	@RequestMapping(value={"", "pre"},method=RequestMethod.GET)
