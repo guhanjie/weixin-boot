@@ -88,9 +88,10 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="put",method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
-	public Map<String, Object> putOrder(HttpServletRequest req, 
+	public Map<String, Object> putOrder(HttpServletRequest req, HttpServletResponse resp, 
     	                                                    @RequestParam("open_id") String openid, 
     	                                                    @RequestBody Order order) {
+	    resp.setHeader("Cache-Control", "no-cache");
 		LOGGER.info("putting new order for user open_id[{}]...", openid);
 		LOGGER.info("=====order:[{}]...", JSON.toJSONString(order, true));
 		//获取用户信息
@@ -112,10 +113,11 @@ public class OrderController extends BaseController {
 	}
 
     @RequestMapping(value="list",method=RequestMethod.GET)
-    public String listOrders(HttpServletRequest req, Model model, 
+    public String listOrders(HttpServletRequest req, HttpServletResponse resp, Model model, 
                     @RequestParam(required=false) String beginDate, //yyyy-mm-dd
                     @RequestParam(required=false) String endDate,    //yyyy-mm-dd
                     @PageableDefault(page=0, size=5) Pageable pageable) {        
+	    resp.setHeader("Cache-Control", "no-cache");
         Date beginTime = null;
         Date endTime = null;
         if(StringUtils.isNotBlank(beginDate)){
@@ -134,7 +136,8 @@ public class OrderController extends BaseController {
     }
 	
 	@RequestMapping(value="search",method=RequestMethod.GET)
-	public String searchOrder(HttpServletRequest req, Model model) {
+	public String searchOrder(HttpServletRequest req, HttpServletResponse resp, Model model) {
+	    resp.setHeader("Cache-Control", "no-cache");
 		User user = getSessionUser();
 		List<Order> orders = orderService.getOrdersByUser(user);
 		model.addAttribute("orders", orders);
@@ -174,7 +177,8 @@ public class OrderController extends BaseController {
 	
 	@RequestMapping(value="pay",method=RequestMethod.GET)
     @ResponseBody
-	public Map<String, Object> payOrder(HttpServletRequest req, final Integer orderid, final Integer tip) {
+	public Map<String, Object> payOrder(HttpServletRequest req, HttpServletResponse resp, final Integer orderid, final Integer tip) {
+	    resp.setHeader("Cache-Control", "no-cache");
 	    final String APPID = weixinContants.APPID;
 	    final String MCH_ID = weixinContants.MCH_ID;
 	    final String MCH_KEY = weixinContants.MCH_KEY;
