@@ -245,6 +245,10 @@ $(function() {
 	
 	//提交订单
 	$('#submit').on('click', function(e) {
+		if($(this).is('.weui_btn_disabled')) {
+			return;
+		}
+		$(this).addClass('weui_btn_disabled');
 //		var pairs = $('form').serialize().split(/&/gi);
 //		var data = {};
 //		pairs.forEach(function(pair) {
@@ -365,9 +369,11 @@ $(function() {
 		    	else {
 					$.weui.topTips('订单信息有误，提交失败');
 		    	}
+		    	$('#submit').removeClass('weui_btn_disabled');
 		      },
 		      error: function(xhr, type){
 					$.weui.topTips('订单信息有误，提交失败');
+			    	$('#submit').removeClass('weui_btn_disabled');
 		      }
 		  })
 	});
