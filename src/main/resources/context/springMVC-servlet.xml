@@ -50,10 +50,13 @@
             <mvc:mapping path="/order/**"/>
             <mvc:exclude-mapping path="/order/pre"/>
             <mvc:exclude-mapping path="/order/put"/>
+            <mvc:exclude-mapping path="/order/pay"/>
+            <mvc:exclude-mapping path="/order/paycallback"/>
             <ref bean="OAuthIntercepter"/>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/order/list"/>
+            <mvc:mapping path="/order/payed"/>
             <ref bean="AdminAuthIntercepter"/>
         </mvc:interceptor>
     </mvc:interceptors>

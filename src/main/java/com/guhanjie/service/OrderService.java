@@ -313,7 +313,11 @@ public class OrderService {
 	 * @param time_end
 	 */
 	public void updateOrderByPay(boolean success, Integer orderid, String total_fee, String time_end) {
-	    LOGGER.info("Updating order[{}] pay info: sucess=[{}], total_fee=[{}], time_end=[{}]", orderid, success, total_fee, time_end);
+	    LOGGER.info("Updating order[{}] pay info: sucess=[{}], total_fee=[{}], time_end=[{}]...", orderid, success, total_fee, time_end);
+	    if(orderid==null || total_fee==null || time_end==null) {
+	    	LOGGER.warn("error in updating order pay, as pay info not complete: order_id=[{}], total_fee=[{}], time_end=[{}].", orderid, total_fee, time_end);
+	    	return;
+	    }
 	    Order order = getOrderById(orderid);
 	    if(order==null) {
 	        LOGGER.warn("order[{}] not exists", orderid);
@@ -327,11 +331,7 @@ public class OrderService {
 	        return;
 	    }
         if(success) {
-            if(total_fee==null || time_end==null) {
-                LOGGER.warn("error in updating order[{}] pay, as pay info not complete: total_fee=[{}], time_end=[{}].", orderid, total_fee, time_end);
-                return;
-            }
-            LOGGER.info("Success to complete order[{}] pay!", orderid);
+        	LOGGER.info("Order[{}] pay complete successfully!!!", orderid);
             order.setStatus(OrderStatusEnum.PAYED.code());
             order.setPayStatus(PayStatusEnum.SUCCESS.code());
             order.setPayType(PayTypeEnum.WEIXIN.code());
@@ -342,9 +342,9 @@ public class OrderService {
             }
         }
         //更新订单支付状态
-        LOGGER.info("===updating order[{}] status:[{}]-->[{}], pay status: [{}]-->[{}].", orderid, oldOrderStatus, order.getStatus(), oldPayStatus, order.getPayStatus());
+        LOGGER.info("===updating order[{}] status:[{}]-->[{}], pay status:[{}]-->[{}].", orderid, oldOrderStatus, order.getStatus(), oldPayStatus, order.getPayStatus());
         if(1 == orderMapper.updateByPayStatus(order, oldOrderStatus, oldPayStatus)) {
-            LOGGER.info("Success to update order[{}] pay status: [{}]-->[{}].", orderid, oldPayStatus, order.getPayStatus());
+            LOGGER.info("Success to update order[{}] pay! status:[{}]-->[{}], pay status:[{}]-->[{}].", orderid, oldOrderStatus, order.getStatus(), oldPayStatus, order.getPayStatus());
             
     		// 支付成功，发送微信消息通知客服
     		StringBuffer sb = new StringBuffer("主人，您有一笔订单已完成支付：\n");
@@ -360,7 +360,7 @@ public class OrderService {
     		MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
         }
         else {
-            LOGGER.warn("Failed to update order[{}] pay status: [{}]-->[{}], as already been updated before", orderid, oldPayStatus, order.getPayStatus());
+            LOGGER.warn("Failed to update order[{}] pay, maybe already been updated before", orderid);
         }
 	}
 	

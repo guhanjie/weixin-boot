@@ -86,7 +86,7 @@ public class WeixinHttpUtil {
                 LOGGER.debug("success to get response:[{}]", respEntity);
                 if(resp.getEntity().getContentType().getValue().startsWith("application/json")) {
                     ErrorEntity err = JSONObject.parseObject(respEntity, ErrorEntity.class);
-                    if(err.getErrcode()!= null || err.getErrmsg()!=null) {
+                    if(!"0".equals(err.getErrcode()) || !"ok".equals(err.getErrmsg())) {
                         LOGGER.error("http[{}] response is error, errcode:[{}], errmsg:[{}].", url, err.getErrcode(), err.getErrmsg());
                         return;
                     }

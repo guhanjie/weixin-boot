@@ -86,18 +86,18 @@ public class MessageKit {
     	        	return handleSubscribeEvent(msgMap);
     	        }
     	        //上报地址位置事件
-    	        else if(eventType.equals(WeixinConstants.EVENT_LOCATION)) {
-    	        	return handleLocationEvent(msgMap);
-    	        }
+//    	        else if(eventType.equals(WeixinConstants.EVENT_LOCATION)) {
+//    	        	return handleLocationEvent(msgMap);
+//    	        }
     	    }
     	    //处理文本消息
     	    else if(msgType.equals(WeixinConstants.MSG_TYPE_TEXT)) {
     	        return handleTextMsg(msgMap);
     	    }
     	    //处理图片消息
-    	    else if(msgType.equals(WeixinConstants.MSG_TYPE_IMAGE)) {
-    	        return handleImageMsg(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
-    	    }
+//    	    else if(msgType.equals(WeixinConstants.MSG_TYPE_IMAGE)) {
+//    	        return handleImageMsg(msgMap,"_I53ClKoGvcQC4z1mWLf-O_nDJ_rw2p-LtfJOslSONSzUEtv8eKEvlDbn8m71d9m");
+//    	    }
 	    } catch(IOException e) {
 	        LOGGER.error("error to handle msg for weixin.", e);
 	    }

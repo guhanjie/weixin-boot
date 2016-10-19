@@ -71,15 +71,15 @@ public class WeixinController extends BaseController {
         if(checkSignature(req)) {
             Map<String,String> msgMap = MessageKit.reqMsg2Map(req);        
             LOGGER.debug("Weixin msg request="+msgMap);
-            //建立用户会话
-            String openid = msgMap.get("FromUserName");
-            if(StringUtils.isNotBlank(openid)) {
-                User user = userService.getUserByOpenId(openid);
-                if(user != null) {
-                    setSessionUser(user);
-                    req.getSession().setAttribute(AppConstants.SESSION_KEY_OPEN_ID, openid);
-                }
-            }
+//            //建立用户会话
+//            String openid = msgMap.get("FromUserName");
+//            if(StringUtils.isNotBlank(openid)) {
+//                User user = userService.getUserByOpenId(openid);
+//                if(user != null) {
+//                    setSessionUser(user);
+//                    req.getSession().setAttribute(AppConstants.SESSION_KEY_OPEN_ID, openid);
+//                }
+//            }
             String respCon = MessageKit.handlerMsg(msgMap);
             resp.setContentType("application/xml;charset=UTF-8");
             resp.setCharacterEncoding("UTF-8");
