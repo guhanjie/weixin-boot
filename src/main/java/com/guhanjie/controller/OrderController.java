@@ -245,7 +245,7 @@ public class OrderController extends BaseController {
 		return success(payParams);
 	}
 	
-	@RequestMapping(value="paycallback",method=RequestMethod.GET)
+	@RequestMapping(value="paycallback")
 	public void paycallback(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		LOGGER.debug("getting callback from weixin pay...");
 		
