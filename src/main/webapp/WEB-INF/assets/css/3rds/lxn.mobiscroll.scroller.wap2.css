@@ -66,6 +66,10 @@
     padding: 0;
     border-bottom: 1px solid #acacac;
 }
+/* hack for custom on 2016-10-26 00:07:16*/
+.wap2 .dw .dwbc {
+	display: none;
+}
 .wap2 .dwb {
     margin: 0;
     padding: 0 10px;

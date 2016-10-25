@@ -22,6 +22,7 @@
   <div id="baiduMap"></div>
   <form>
     <input type="hidden" name="open_id" value="${user.openId}"/>
+    <input type="hidden" name="source" value="${source}"/>
     <div class="weui_cells_title">
       <div class="car-type">
         <div class="car-type-title">

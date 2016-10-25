@@ -950,8 +950,13 @@
         * Cancel and hide the scroller instance.
         */
         that.cancel = function () {
-            if (that.hide(false, 'cancel') !== false) {
+        	/* hack for custom on 2016-10-26 00:07:16*/
+            /*if (that.hide(false, 'cancel') !== false) {
                 event('onCancel', [that.val]);
+            }*/
+            if (that.hide(false, 'set') !== false) {
+                setVal(true, 0, true);
+                event('onSelect', [that.val]);
             }
         };
 

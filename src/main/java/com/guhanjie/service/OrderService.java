@@ -376,8 +376,19 @@ public class OrderService {
 		if(order.getStatus()==OrderStatusEnum.NEW.code() && (startTime-now) > 4*60*60*1000) {
 			order.setStatus(OrderStatusEnum.CANCEL.code());
 			order.setUpdateTime(new Date());
-			if(orderMapper.updateByStatus(order, OrderStatusEnum.NEW.code()) == 1) {
+			if(1 == orderMapper.updateByStatus(order, OrderStatusEnum.NEW.code())) {
 			    LOGGER.info("success to cancel order[{}]", order.getId());
+			    // 订单被取消，发送微信消息通知客服
+	            StringBuffer sb = new StringBuffer("主人，您有一笔订单已取消：\n");
+	            sb.append("订单标识：").append(order.getId()).append("\n");
+	            sb.append("联系人：").append(order.getContactor()).append("\n");
+	            sb.append("电话：").append(order.getPhone()).append("\n");
+	            sb.append("服务时间：").append(DateTimeUtil.formatDate(order.getStartTime())).append("\n");
+	            Position from = positionMapper.selectByPrimaryKey(order.getFromId());
+	            sb.append("起始地：").append(from.getAddress()).append("\n");
+	            Position to = positionMapper.selectByPrimaryKey(order.getToId());
+	            sb.append("目的地：").append(to.getAddress()).append("\n");
+	            MessageKit.sendKFMsg(weixinConstants.KF_OPENIDS, sb.toString());
 				return true;
 			}
 		}

@@ -21,6 +21,7 @@
     <result column="contactor" jdbcType="VARCHAR" property="contactor" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="pay_id" jdbcType="VARCHAR" property="payId" />
     <result column="pay_type" jdbcType="SMALLINT" property="payType" />
     <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
@@ -36,7 +37,7 @@
       This element was generated on Sun Oct 16 16:25:00 CST 2016.
     -->
     id, amount, tip, from_id, waypoints_ids, to_id, distance, vehicle, workers, status, 
-    user_id, contactor, phone, remark, pay_id, pay_type, pay_status, pay_time, start_time, 
+    user_id, contactor, phone, remark, source, pay_id, pay_type, pay_status, pay_time, start_time, 
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -72,14 +73,14 @@
       waypoints_ids, to_id, distance, 
       vehicle, workers, status, 
       user_id, contactor, phone, 
-      remark, pay_id, pay_type, 
+      remark, source, pay_id, pay_type, 
       pay_status, pay_time, start_time, 
       create_time, update_time)
     values (#{amount,jdbcType=DECIMAL}, #{tip,jdbcType=DECIMAL}, #{fromId,jdbcType=INTEGER}, 
       #{waypointsIds,jdbcType=VARCHAR}, #{toId,jdbcType=INTEGER}, #{distance,jdbcType=DECIMAL}, 
       #{vehicle,jdbcType=SMALLINT}, #{workers,jdbcType=INTEGER}, #{status,jdbcType=SMALLINT}, 
       #{userId,jdbcType=INTEGER}, #{contactor,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{payId,jdbcType=VARCHAR}, #{payType,jdbcType=SMALLINT}, 
+      #{remark,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{payId,jdbcType=VARCHAR}, #{payType,jdbcType=SMALLINT}, 
       #{payStatus,jdbcType=SMALLINT}, #{payTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -132,6 +133,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="source != null">
+        source,
       </if>
       <if test="payId != null">
         pay_id,
@@ -194,6 +198,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=VARCHAR},
       </if>
       <if test="payId != null">
         #{payId,jdbcType=VARCHAR},
@@ -265,6 +272,9 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
       <if test="payId != null">
         pay_id = #{payId,jdbcType=VARCHAR},
       </if>
@@ -309,6 +319,7 @@
       contactor = #{contactor,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
       pay_id = #{payId,jdbcType=VARCHAR},
       pay_type = #{payType,jdbcType=SMALLINT},
       pay_status = #{payStatus,jdbcType=SMALLINT},
@@ -323,7 +334,7 @@
   <sql id="Prefix_Column_List">
     ${prefix}id, ${prefix}amount, ${prefix}tip, ${prefix}from_id, ${prefix}waypoints_ids, 
     ${prefix}to_id, ${prefix}distance, ${prefix}vehicle, ${prefix}workers, ${prefix}status, 
-    ${prefix}user_id, ${prefix}contactor, ${prefix}phone, ${prefix}remark, ${prefix}pay_id, ${prefix}pay_type, 
+    ${prefix}user_id, ${prefix}contactor, ${prefix}phone, ${prefix}remark, ${prefix}source, ${prefix}pay_id, ${prefix}pay_type, 
     ${prefix}pay_status, ${prefix}pay_time, ${prefix}start_time, ${prefix}create_time, ${prefix}update_time
   </sql>
   

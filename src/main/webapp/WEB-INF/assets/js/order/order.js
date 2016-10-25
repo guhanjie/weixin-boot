@@ -15,7 +15,7 @@ $(function() {
 	plugin.initialInput(order["to"]);
 	
 	//车型
-	$('.car-type').on('click', '.car-type-label', function(e) {
+	$('.car-type').on('click tap', '.car-type-label', function(e) {
 		$(this).siblings('.car-type-label').removeClass('text-primary');
 		$(this).siblings('.car-type-label').find('i').removeClass().addClass('icon-circle-blank');
 		$(this).addClass('text-primary');
@@ -120,6 +120,28 @@ $(function() {
         lang        : 'zh',
         stepMinute  : 30,
     };
+    var setTime = function(val){
+        order["startTime"] = new Date(val).getTime();
+        var str  = val.replace(/-/g, "/");
+        var date = new Date(str);
+        var weektime = ($('.dw-sel').text()).substring(0,3);
+        var hourtime = str.substring(11,16);
+        if(weektime.trim()=="今天"){
+            var week = weektime;
+        }else if(weektime.trim()=="明天"){
+            var week = weektime;
+        }else if(weektime.trim()=="后天"){
+            var week = weektime;
+        }else{
+            var week = (date.getMonth()+1) + 
+                        '-' + 
+                        date.getDate()+
+                        ' '+ 
+                        weektime;
+        }
+        var showtime = week + hourtime;
+        $('#start_time').val(showtime);
+    };
     var options = {
         theme     : 'wap2',
         dateOrder : 'S',
@@ -127,32 +149,11 @@ $(function() {
         maxDate   : maxDate,
         setText   : '预约服务',
         cancelText: '马上服务',
-        onSelect  : function(val){
-            order["startTime"] = new Date(val).getTime();
-            var str  = val.replace(/-/g, "/");
-            var date = new Date(str);
-            var weektime = ($('.dw-sel').text()).substring(0,3);
-            var hourtime = str.substring(11,16);
-            if(weektime.trim()=="今天"){
-                var week = weektime;
-            }else if(weektime.trim()=="明天"){
-                var week = weektime;
-            }else if(weektime.trim()=="后天"){
-                var week = weektime;
-            }else{
-                var week = (date.getMonth()+1) + 
-                            '-' + 
-                            date.getDate()+
-                            ' '+ 
-                            weektime;
-            }
-            var showtime = week + hourtime;
-            $('#start_time').val(showtime);
-        },
-        onCancel : function(){
+        onSelect  : setTime,
+        onCancel : setTime/*function(){
             order["startTime"] = new Date().getTime();
             $('#start_time').val('马上服务');
-        }
+        }*/
     };//options
     $('#start_time').mobiscroll().datetime(options);
 
@@ -228,7 +229,7 @@ $(function() {
     	$('.order_sumary .price em').text(order["amount"]);
     	return;
 	};
-	$('body').on('touchend tap mouseup keyup', calculate);
+	$('body').on('click tap touchend mouseup keyup', calculate);
 	$('body').on('blur', 'input', {'forceConfirmPlace': true}, calculate);
 			
 	$('textarea[name="remark"]').on('input', function() {
@@ -331,7 +332,7 @@ $(function() {
 		//console.log(formData);
 		$.ajax({
 		    type: 'POST',
-		    url: '/weixin-boot/order/put?open_id='+$('input[name="open_id"]').val(),
+		    url: '/weixin-boot/order/put?open_id='+$('input[name="open_id"]').val()+'&source='+$('input[name="source"]').val(),
 		    data: JSON.stringify(order),
 		    contentType: 'application/json',
 		    success: function(data){
@@ -349,7 +350,8 @@ $(function() {
 					//$('#res_to_address').text(order["to"]["address"]);
 					$('#res_contactor').text(order["contactor"]);
 					$('#res_workers').text(order["workers"]);
-					$('#res_start_time').text(new Date(order["startTime"]).toLocaleString());
+					var date = new Date(order["startTime"]);
+					$('#res_start_time').text(date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes());
 					if(order["waypoints"].length > 0) {
 						order["waypoints"].forEach(function(e, i) {
 							var $toEl = $('#res_to_address').parents('.weui_cell');

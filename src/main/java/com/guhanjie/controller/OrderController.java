@@ -74,7 +74,10 @@ public class OrderController extends BaseController {
 	private TaskScheduler taskScheduler;
 	
 	@RequestMapping(value={"", "pre"},method=RequestMethod.GET)
-	public String order(HttpServletRequest req, HttpServletResponse resp, @RequestParam(required=false) String phone) {
+	public String order(HttpServletRequest req, HttpServletResponse resp, 
+	                                        Model model, 
+	                                        @RequestParam(required=false) String phone, 
+	                                        @RequestParam(required=false) String source) {
 	    resp.setHeader("Cache-Control", "no-cache");
 	    if(getSessionUser()==null && StringUtils.isNotBlank(phone)) {
     	    User user = userService.getUserByPhone(phone);
@@ -83,6 +86,9 @@ public class OrderController extends BaseController {
     	        req.getSession().setAttribute(AppConstants.SESSION_KEY_OPEN_ID, user.getOpenId());
     	    }
 	    }
+	    if(StringUtils.isNotBlank(source)) {
+	        model.addAttribute("source", source);
+	    }
 		return "order";
 	}
 	
@@ -90,9 +96,10 @@ public class OrderController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> putOrder(HttpServletRequest req, HttpServletResponse resp, 
     	                                                    @RequestParam("open_id") String openid, 
+    	                                                    @RequestParam("source") String source, 
     	                                                    @RequestBody Order order) {
 	    resp.setHeader("Cache-Control", "no-cache");
-		LOGGER.info("putting new order for user open_id[{}]...", openid);
+		LOGGER.info("putting new order for user open_id[{}] from source[{}]...", openid, source);
 		LOGGER.info("=====order:[{}]...", JSON.toJSONString(order, true));
 		//获取用户信息
 		User user = getSessionUser();
@@ -106,7 +113,7 @@ public class OrderController extends BaseController {
 		}
 		//封装信息
 		order.setUser(user);
-		
+		order.setSource(source);
 		//下单
 		orderService.putOrder(order);
 		return success();
