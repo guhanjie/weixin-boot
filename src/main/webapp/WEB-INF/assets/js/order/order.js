@@ -110,7 +110,7 @@ $(function() {
 	
 	//服务时间
     var now = new Date();
-    var minDate = new Date(now.getTime()+30*60*1000);	//起始时间为30分钟
+    var minDate = new Date(now.getTime()+1*60*60*1000);	//起始时间为60分钟
     var maxDate = new Date(now.getTime()+7*24*60*60*1000);	//终止时间为7天后
     $.mobiscroll.themes.wap2 = {
         timeWheels  : 'HHii',
@@ -258,11 +258,16 @@ $(function() {
 //		});
 		$('.weui_cell_warn').removeClass('weui_cell_warn');
 		//收集数据
-		order["startTime"] = order["startTime"] || new Date().getTime();
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
 		order["remark"] = $('textarea[name="remark"]').val();
+		//order["startTime"] = order["startTime"] || new Date().getTime();
 		//验证订单
+		if(!order["startTime"]) {
+			$.weui.topTips('请输入搬家时间');
+			$('input[name="start_time"]').addClass('weui_cell_warn');
+			return;
+		}
 		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3)) {
 			$.weui.topTips('未选择正确车型');
 			return;
