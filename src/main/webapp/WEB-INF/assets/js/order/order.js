@@ -250,13 +250,13 @@ $(function() {
 			return;
 		}
 		$(this).addClass('weui_btn_disabled');
+		$('.weui_cell_warn').removeClass('weui_cell_warn');
 //		var pairs = $('form').serialize().split(/&/gi);
 //		var data = {};
 //		pairs.forEach(function(pair) {
 //			pair = pair.split('=');
 //			data[pair[0]] = decodeURIComponent(pair[1] || '');
 //		});
-		$('.weui_cell_warn').removeClass('weui_cell_warn');
 		//收集数据
 		order["contactor"] = $('input[name="contactor"]').val();
 		order["phone"] = $('input[name="phone"]').val();
@@ -266,63 +266,76 @@ $(function() {
 		if(!order["startTime"]) {
 			$.weui.topTips('请输入搬家时间');
 			$('input[name="start_time"]').addClass('weui_cell_warn');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3)) {
 			$.weui.topTips('未选择正确车型');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		if(!order["from"]["address"]) {
 			$.weui.topTips('请输入起始地');
 			$('input[name="from_address"]').addClass('weui_cell_warn');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 //		if(!order["from_detail"]) {
 //			$.weui.topTips('请输入起始地的详细信息');
 //			$('input[name="from_detail"]').addClass('weui_cell_warn');
+//		    $('#submit').removeClass('weui_btn_disabled');
 //			return;
 //		}
 //		if(!order["from"]["floor"]) {
 //			$.weui.topTips('请输入起始地的楼层信息');
 //			$('select[name="from_floor"]').addClass('weui_cell_warn');
+//		    $('#submit').removeClass('weui_btn_disabled');
 //			return;
 //		}
 		if(!order["to"]["address"]) {
 			$.weui.topTips('请输入目的地');
-			$('input[name="to_address"]').closest('.weui_cell').addClass('weui_cell_warn');
+			$('input[name="to_address"]').addClass('weui_cell_warn');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 //		if(!order["to_detail"]) {
 //			$.weui.topTips('请输入目的地的详细信息');
 //			$('input[name="to_detail"]').addClass('weui_cell_warn');
+//		    $('#submit').removeClass('weui_btn_disabled');
 //			return;
 //		}
 //		if(!order["to"]["floor"]) {
 //			$.weui.topTips('请输入起始地的楼层信息');
 //			$('select[name="to_floor"]').addClass('weui_cell_warn');
+//		    $('#submit').removeClass('weui_btn_disabled');
 //			return;
 //		}
 		if (!order["contactor"]) {
 			$.weui.topTips('请输入联系人姓名');
-			$('input[name="contactor"]').closest('.weui_cell').addClass('weui_cell_warn');
+			$('input[name="contactor"]').addClass('weui_cell_warn');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		if (!order["phone"] || !/(^(86-)?\d{11}$)|(^\d{3}-\d{8}$)|(^\d{4}-\d{7,8}$)/.test(order["phone"])) {
 			$.weui.topTips('请输入正确的手机号码');
-			$('input[name="phone"]').closest('.weui_cell').addClass('weui_cell_warn');
+			$('input[name="phone"]').addClass('weui_cell_warn');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		if (!order["workers"] || !/^\d+$/.test(order["workers"])) {
 			$.weui.topTips('请输入正确的搬家师傅人数');
-			$('input[name="workers"]').closest('.weui_cell').addClass('weui_cell_warn');
+			$('input[name="workers"]').addClass('weui_cell_warn');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		if(!order["distance"]) {
 			$.weui.topTips('距离计算失败，请输入正确地址');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		if(!order["amount"]) {
 			$.weui.topTips('请输入确切信息以确定价格');
+		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
 		$.weui.loading('订单提交中...');
