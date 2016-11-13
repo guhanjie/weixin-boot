@@ -121,9 +121,9 @@ $(function() {
         stepMinute  : 30,
     };
     var setTime = function(val){
-        order["startTime"] = new Date(val).getTime();
         var str  = val.replace(/-/g, "/");
         var date = new Date(str);
+        order["startTime"] = date.getTime();
         var weektime = ($('.dw-sel').text()).substring(0,3);
         var hourtime = str.substring(11,16);
         if(weektime.trim()=="今天"){
