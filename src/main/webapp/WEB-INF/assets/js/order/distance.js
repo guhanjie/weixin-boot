@@ -87,7 +87,8 @@ $(function() {
         });
         local.disableAutoViewport();
         local.setLocation("上海市");
-        local.search(place, {forceLocal:true});
+        //local.search(place, {forceLocal:true});
+        local.search(place);  //modified on 2017-05-23 local.search(place, {forceLocal:true});
       }
 
       //确认位置，进行路径规划，计算距离
