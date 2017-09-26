@@ -71,6 +71,7 @@
                 </c:when>
                 <c:when test="${item.status == 01 && item.startTime.time - now.time > 4*60*60*1000}">
                   <span class="btn_cancel">取消</span>
+                  <span class="btn_pay gloming">去支付</span>
                 </c:when>
                 <c:otherwise>
                   <span class="btn_pay gloming">去支付</span>
