@@ -74,6 +74,7 @@
                   <span class="btn_pay gloming">去支付</span>
                 </c:when>
                 <c:otherwise>
+                  <span class="btn_cancel">取消</span>
                   <span class="btn_pay gloming">去支付</span>
                 </c:otherwise>
               </c:choose>
