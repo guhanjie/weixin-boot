@@ -145,44 +145,63 @@ public class OrderService {
 		    throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "缺失车型信息");
 		}
 		if(VehicleEnum.XIAOMIAN.code() == vehicle) {    //小面车
-            price += (distance<10) ? 150.0 : (150.0+(distance-10)*5.0);  //起步价150（10公里内），超出后每公里5元
-            price += (fromFloor<2) ? 0.0 : fromFloor*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : toFloor*10.0;
-            price += workers<2 ? 0.0 : (workers-1)*150;     //每增加一名搬家师傅，加收150元
+            price += (distance<10) ? 208.0 : (208.0+(distance-10)*5.0);  //起步价208（10公里内），超出后每公里5元
+            price += fromFloor * ((fromFloor>3) ? 20.0 : 15.0); //电梯搬运免费，楼梯3层以下加收15元/层的人工费，3层以上加收20元/层的人工费
+            price += toFloor * ((toFloor>3) ? 20.0 : 15.0);
+            price += workers<2 ? 0.0 : (workers-1)*200;     //每增加一名搬家师傅，加收200元
             if(order.getWaypoints() != null) {
                 for(Position p : order.getWaypoints()) {    //途经点
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (p.getFloor()<2) ? 0.0 : p.getFloor()*10.0;
+                    price += p.getFloor() * ((p.getFloor()>3) ? 20.0 : 15.0);
                 }
             }
         }
 		else if(VehicleEnum.JINBEI.code() == vehicle) {    //金杯车
-            price += (distance<10) ? 200.0 : (200.0+(distance-10)*6.0);  //起步价200（10公里内），超出后每公里6元
-            price += (fromFloor<2) ? 0.0 : fromFloor*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
-            price += (toFloor<2) ? 0.0 : toFloor*10.0;
-            price += workers>1 ? (workers-1)*150 : 0;     //每增加一名搬家师傅，加收150元
+            price += (distance<10) ? 288.0 : (288.0+(distance-10)*6.0);  //起步价288（10公里内），超出后每公里6元
+            price += fromFloor * ((fromFloor>3) ? 20.0 : 15.0); //电梯搬运免费，楼梯3层以下加收15元/层的人工费，3层以上加收20元/层的人工费
+            price += toFloor * ((toFloor>3) ? 20.0 : 15.0);
+            price += workers>1 ? (workers-1)*200 : 0;     //每增加一名搬家师傅，加收200元
             if(order.getWaypoints() != null) {
                 for(Position p : order.getWaypoints()) {    //途经点
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (p.getFloor()<2) ? 0.0 : p.getFloor()*10.0;
+                    price += p.getFloor() * ((p.getFloor()>3) ? 20.0 : 15.0);
                 }
             }
         }
 		else if(VehicleEnum.QUANSHUN.code() == vehicle) {   //全顺/依维轲
-            price += (distance<10) ? 300.0 : (300.0+(distance-10)*8.0);  //起步价300（10公里内），超出后每公里8元
-            price += (fromFloor==0?0.0:50.0) + (toFloor==0?0.0:50.0); //不搬运0元，电梯和1楼搬运按50元收取，每多1层加收20元
-            price += (fromFloor<2) ? 0.0 : (fromFloor-1)*20.0;
-            price += (toFloor<2) ? 0.0 : (toFloor-1)*20.0;
-            price += workers>1 ? (workers-1)*150 : 0;     //每增加一名搬家师傅，加收150元
+            price += (distance<10) ? 388.0 : (388.0+(distance-10)*8.0);  //起步价388（10公里内），超出后每公里8元
+            price += fromFloor * ((fromFloor>3) ? 30.0 : 20.0); //电梯搬运免费，楼梯3层以下加收20元/层的人工费，3层以上加收30元/层的人工费
+            price += toFloor * ((toFloor>3) ? 30.0 : 20.0);
+            price += workers>1 ? (workers-1)*200 : 0;     //每增加一名搬家师傅，加收200元
             if(order.getWaypoints() != null) {
                 for(Position p : order.getWaypoints()) {    //途经点
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += ((p.getFloor()==0) ? 0.0 : ((p.getFloor()==1)? 50.0: 50.0+(p.getFloor()-1)*20.0));
+                    price += p.getFloor() * ((p.getFloor()>3) ? 30.0 : 20.0);
                 }
             }
 		}
+        else if(VehicleEnum.XIANGHUO.code() == vehicle) {   //4.2米厢货车型
+            price += (distance<10) ? 1288.0 : (1288.0+(distance-10)*10.0);  //起步价1288（10公里内），超出后每公里10元
+            price += fromFloor * ((fromFloor>3) ? 40.0 : 30.0); //电梯搬运免费，楼梯3层以下加收30元/层的人工费，3层以上加收40元/层的人工费
+            price += toFloor * ((toFloor>3) ? 40.0 : 30.0);
+            price += workers>2 ? (workers-2)*300 : 0;     //每增加一名搬家师傅，加收300元
+            if(order.getWaypoints() != null) {
+                for(Position p : order.getWaypoints()) {    //途经点
+                    price += 200.0; //每增加一个点位装卸货，增加200元
+                    price += p.getFloor() * ((p.getFloor()>3) ? 40.0 : 30.0);
+                }
+            }
+        }
 		else {    //车型参数非法
             throw WebExceptionFactory.exception(WebExceptionEnum.DATA_NOT_WELL, "车型信息有误");
+		}
+		//下单时间到服务时间小于4小时的价格翻1.5倍，下单时间到服务时间小于2小时的价格翻2倍
+		long countdown = order.getStartTime().getTime() - System.currentTimeMillis();
+		if(countdown < 4*60*60*1000L && countdown >= 2*60*60*1000L) {
+		    price = price * 1.5;
+		}
+		else if(countdown < 2*60*60*1000L) {
+		    price = price * 2.0;
 		}
 		//校验金额（计算金额与前端展示金额误差在1.0以内）
 		if(Math.abs(price-amount) > 1.0) {

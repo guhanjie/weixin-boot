@@ -19,6 +19,7 @@ public enum VehicleEnum {
     XIAOMIAN((short)1, "小面车型"),
     JINBEI((short)2, "金杯车型"),
     QUANSHUN((short)3, "全顺/依维轲"),
+    XIANGHUO((short)4, "4.2米厢货车型"),
     UNKNOWN((short)-1, "未知车型");
     
     private short code;

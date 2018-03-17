@@ -35,6 +35,9 @@
           <label class="car-type-label" data-type="3">
             <span class="car-type-radio"><i class="icon-circle-blank"> </i>全顺</span>
           </label>
+          <label class="car-type-label" data-type="4">
+            <span class="car-type-radio"><i class="icon-circle-blank"> </i>厢货</span>
+          </label>
         </div>
         <div class="car-type-tips">
           <div class="arrow">
@@ -42,15 +45,19 @@
           </div>
           <p id="carType1" style="display: block;">
             <span>计价：起步150元(10公里)，超出5元/公里</span><br> 
-            <span>容量：可容纳10个24寸行李箱，载重600kg</span>
+            <span>容量：可容纳10个包裹，单个包裹限重15公斤</span>
           </p>
           <p id="carType2">
             <span>计价：起步200元(10公里)，超出6元/公里</span><br> 
-            <span>容量：可容纳15个24寸行李箱，载重1500kg</span>
+            <span>容量：可容纳15个包裹，单个包裹限重15公斤</span>
           </p>
           <p id="carType3">
             <span>计价：起步300元(10公里)，超出8元/公里</span><br> 
-            <span>容量：可容纳25个24寸行李箱，载重1500kg</span>
+            <span>容量：可容纳20个包裹，单个包裹限重15公斤</span>
+          </p>
+          <p id="carType3">
+            <span>计价：起步1288元(10公里)，超出10元/公里</span><br> 
+            <span>容量：可容纳30个包裹，单个包裹限重15公斤</span>
           </p>
           <a href="javascript:void(0)">车型说明</a>
         </div>

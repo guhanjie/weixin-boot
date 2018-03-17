@@ -24,31 +24,42 @@ $(function() {
 		order["vehicle"] = carType;
 //		var price = [150, 200, 300];
 //		$('.order_sumary .price  em').text(price[carType-1]);
-		var arrowLeft = ['16%', '50%', '83%'];
+		var arrowLeft = ['10%', '38%', '62%', '88%'];
 		$('.car-type-tips .arrow').css('left', arrowLeft[carType-1]);
 		$('.car-type-tips').find('p').hide();
 		$('.car-type-tips').find('p[id=carType'+carType+']').show();
-		if(carType == 3) {	//全顺/依维柯
-			$('.weui_select.address-floor').find('option[value="0"]').html('无需搬运-0元');
-			$('.weui_select.address-floor').find('option[value="1"]').html('电梯或1楼-50元');
-			$('.weui_select.address-floor').find('option[value="2"]').html('2楼-加收20元');
-			$('.weui_select.address-floor').find('option[value="3"]').html('3楼-加收40元');
-			$('.weui_select.address-floor').find('option[value="4"]').html('4楼-加收60元');
-			$('.weui_select.address-floor').find('option[value="5"]').html('5楼-加收80元');
-			$('.weui_select.address-floor').find('option[value="6"]').html('6楼-加收100元');
-			$('.weui_select.address-floor').find('option[value="7"]').html('7楼-加收120元');
-			$('.weui_select.address-floor').find('option[value="8"]').html('8楼-加收140元');
+		if(carType == 4) {	//4.2米厢货
+			$('.weui_select.address-floor').find('option[value="0"]').html('电梯或无需搬运-免费');
+			$('.weui_select.address-floor').find('option[value="1"]').html('1楼-30元');
+			$('.weui_select.address-floor').find('option[value="2"]').html('2楼-60元');
+			$('.weui_select.address-floor').find('option[value="3"]').html('3楼-90元');
+			$('.weui_select.address-floor').find('option[value="4"]').html('4楼-160元');
+			$('.weui_select.address-floor').find('option[value="5"]').html('5楼-200元');
+			$('.weui_select.address-floor').find('option[value="6"]').html('6楼-240元');
+			$('.weui_select.address-floor').find('option[value="7"]').html('7楼-280元');
+			$('.weui_select.address-floor').find('option[value="8"]').html('8楼-320元');
 		}
+		else if(carType == 3) {   //全顺/依维柯
+            $('.weui_select.address-floor').find('option[value="0"]').html('电梯或无需搬运-免费');
+            $('.weui_select.address-floor').find('option[value="1"]').html('1楼-20元');
+            $('.weui_select.address-floor').find('option[value="2"]').html('2楼-40元');
+            $('.weui_select.address-floor').find('option[value="3"]').html('3楼-60元');
+            $('.weui_select.address-floor').find('option[value="4"]').html('4楼-120元');
+            $('.weui_select.address-floor').find('option[value="5"]').html('5楼-150元');
+            $('.weui_select.address-floor').find('option[value="6"]').html('6楼-180元');
+            $('.weui_select.address-floor').find('option[value="7"]').html('7楼-210元');
+            $('.weui_select.address-floor').find('option[value="8"]').html('8楼-240元');
+        }
 		else {						//小面或金杯
-			$('.weui_select.address-floor').find('option[value="0"]').html('电梯-免费');
-			$('.weui_select.address-floor').find('option[value="1"]').html('1楼-免费');
-			$('.weui_select.address-floor').find('option[value="2"]').html('2楼-加收20元');
-			$('.weui_select.address-floor').find('option[value="3"]').html('3楼-加收30元');
-			$('.weui_select.address-floor').find('option[value="4"]').html('4楼-加收40元');
-			$('.weui_select.address-floor').find('option[value="5"]').html('5楼-加收50元');
-			$('.weui_select.address-floor').find('option[value="6"]').html('6楼-加收60元');
-			$('.weui_select.address-floor').find('option[value="7"]').html('7楼-加收70元');
-			$('.weui_select.address-floor').find('option[value="8"]').html('8楼-加收80元');
+			$('.weui_select.address-floor').find('option[value="0"]').html('电梯或无需搬运-免费');
+			$('.weui_select.address-floor').find('option[value="1"]').html('1楼-15元');
+			$('.weui_select.address-floor').find('option[value="2"]').html('2楼-30元');
+			$('.weui_select.address-floor').find('option[value="3"]').html('3楼-45元');
+			$('.weui_select.address-floor').find('option[value="4"]').html('4楼-80元');
+			$('.weui_select.address-floor').find('option[value="5"]').html('5楼-100元');
+			$('.weui_select.address-floor').find('option[value="6"]').html('6楼-120元');
+			$('.weui_select.address-floor').find('option[value="7"]').html('7楼-140元');
+			$('.weui_select.address-floor').find('option[value="8"]').html('8楼-160元');
 		}
 	});
 	
@@ -111,7 +122,7 @@ $(function() {
 	//服务时间
     var now = new Date();
     var minDate = new Date(now.getTime()+1*60*60*1000);	//起始时间为60分钟
-    var maxDate = new Date(now.getTime()+7*24*60*60*1000);	//终止时间为7天后
+    var maxDate = new Date(now.getTime()+365*24*60*60*1000);	//终止时间为7天后
     $.mobiscroll.themes.wap2 = {
         timeWheels  : 'HHii',
         rows        : 5,
@@ -141,6 +152,10 @@ $(function() {
         }
         var showtime = week + hourtime;
         $('#start_time').val(showtime);
+        if(order["startTime"] - new Date().getTime() <= 4*60*60*1000) {
+            $.weui.alert('下单时间到服务时间小于4小时的价格需翻1.5倍，<br/>下单时间到服务时间小于2小时的价格需翻2倍',
+                    { title: '友情提醒' });
+        }
     };
     var options = {
         theme     : 'wap2',
@@ -189,42 +204,60 @@ $(function() {
     	}
     	var price = 0;
     	if(order["vehicle"] == 1) {	//小面车型
-            price += (distance<10) ? 150.0 : (150.0+(distance-10)*5.0);  //起步价150（10公里内），超出后每公里5元
-            price += (order["from"]["floor"]<2) ? 0.0 : order["from"]["floor"]*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
-            price += (order["to"]["floor"]<2) ? 0.0 : order["to"]["floor"]*10.0;
-            price += (order["workers"]<2) ? 0.0 : (order["workers"]-1)*150;  //每增加一名搬家师傅，加收150元
+            price += (distance<10) ? 208.0 : (208.0+(distance-10)*5.0);  //起步价208（10公里内），超出后每公里5元
+            price += order["from"]["floor"] * ((order["from"]["floor"]>3) ? 20.0 : 15.0); //电梯搬运免费，楼梯3层以下加收15元/层的人工费，3层以上加收20元/层的人工费
+            price += order["to"]["floor"] * ((order["to"]["floor"]>3) ? 20.0 : 15.0);
+            price += order["workers"]>1 ? (order["workers"]-1)*200 : 0;     //每增加一名搬家师傅，加收200元
             if(order["waypoints"].length > 0) {					//途经点
             	order["waypoints"].forEach(function(e, i) {
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (e.floor<2) ? 0.0 : e.floor*10.0;
+                    price += e.floor * ((e.floor>3) ? 20.0 : 15.0);
             	})
             }
     	}
     	else if(order["vehicle"] == 2) {	//金杯车型
-            price += (distance<10) ? 200.0 : (200.0+(distance-10)*6.0);  //起步价200（10公里内），超出后每公里6元
-            price += (order["from"]["floor"]<2) ? 0.0 : order["from"]["floor"]*10.0; //电梯和1楼搬运免费，2楼20元，每多1层加收10元
-            price += (order["to"]["floor"]<2) ? 0.0 : order["to"]["floor"]*10.0;
-            price += order["workers"]>1 ? (order["workers"]-1)*150 : 0;     //每增加一名搬家师傅，加收150元
+            price += (distance<10) ? 288.0 : (288.0+(distance-10)*6.0);  //起步价288（10公里内），超出后每公里6元
+            price += order["from"]["floor"] * ((order["from"]["floor"]>3) ? 20.0 : 15.0); //电梯搬运免费，楼梯3层以下加收15元/层的人工费，3层以上加收20元/层的人工费
+            price += order["to"]["floor"] * ((order["to"]["floor"]>3) ? 20.0 : 15.0);
+            price += order["workers"]>1 ? (order["workers"]-1)*200 : 0;     //每增加一名搬家师傅，加收200元
             if(order["waypoints"].length > 0) {				 //途经点
             	order["waypoints"].forEach(function(e, i) {
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += (e.floor<2) ? 0.0 : e.floor*10.0;
+                    price += e.floor * ((e.floor>3) ? 20.0 : 15.0);
             	})
             }
     	}
     	else if(order["vehicle"] == 3) {   //全顺/依维轲
-            price += (distance<10) ? 300.0 : (300.0+(distance-10)*8.0);  //起步价300（10公里内），超出后每公里8元
-            price += (order["from"]["floor"]==0?0.0:50.0) + (order["to"]["floor"]==0?0.0:50.0); //电梯和1楼搬运按50元收取，每多1层加收20元
-            price += (order["from"]["floor"]<2) ? 0.0 : (order["from"]["floor"]-1)*20.0;
-            price += (order["to"]["floor"]<2) ? 0.0 : (order["to"]["floor"]-1)*20.0;
-        	price += order["workers"]>1 ? (order["workers"]-1)*150 : 0;     //每增加一名搬家师傅，加收150元
+            price += (distance<10) ? 388.0 : (388.0+(distance-10)*8.0);  //起步价388（10公里内），超出后每公里8元
+            price += order["from"]["floor"] * ((order["from"]["floor"]>3) ? 30.0 : 20.0); //电梯搬运免费，楼梯3层以下加收20元/层的人工费，3层以上加收30元/层的人工费
+            price += order["to"]["floor"] * ((order["to"]["floor"]>3) ? 30.0 : 20.0);
+        	price += order["workers"]>1 ? (order["workers"]-1)*200 : 0;     //每增加一名搬家师傅，加收200元
             if(order["waypoints"].length > 0) {				 //途经点
             	order["waypoints"].forEach(function(e, i) {
                     price += 50.0; //每增加一个点位装卸货，增加50元
-                    price += ((e.floor==0) ? 0.0 : ((e.floor==1)? 50.0: 50.0+(e.floor-1)*20.0));
+                    price += e.floor * ((e.floor>3) ? 30.0 : 20.0);
             	})
             }
     	}
+        else if(order["vehicle"] == 4) {   //4.2米厢货车型
+            price += (distance<10) ? 1288.0 : (1288.0+(distance-10)*10.0);  //起步价1288（10公里内），超出后每公里10元
+            price += order["from"]["floor"] * ((order["from"]["floor"]>3) ? 40.0 : 30.0); //电梯搬运免费，楼梯3层以下加收30元/层的人工费，3层以上加收40元/层的人工费
+            price += order["to"]["floor"] * ((order["to"]["floor"]>3) ? 40.0 : 30.0);
+            price += order["workers"]>2 ? (order["workers"]-2)*300 : 0;     //每增加一名搬家师傅，加收300元
+            if(order["waypoints"].length > 0) {              //途经点
+                order["waypoints"].forEach(function(e, i) {
+                    price += 200.0; //每增加一个点位装卸货，增加200元
+                    price += e.floor * ((e.floor>3) ? 40.0 : 30.0);
+                })
+            }
+        }
+    	var countdown = order["startTime"] - new Date().getTime();
+    	if(countdown < 4*60*60*1000 && countdown >= 2*60*60*1000) {
+            price = price * 1.5;
+        }
+        else if(countdown < 2*60*60*1000L) {
+            price = price * 2.0;
+        }
     	order["amount"] = price.toFixed(0);
     	$('.order_sumary .price em').text(order["amount"]);
     	return;
@@ -360,7 +393,7 @@ $(function() {
 		    		$.weui.toast('订单提交成功');
 					//$.weui.loading('订单提交成功');
 					//setTimeout($.weui.hideLoading, 1000);
-					var vehicleName = ['小面车型', '金杯车型', '全顺/依维柯'];
+					var vehicleName = ['小面车型', '金杯车型', '全顺/依维柯', '4.2米厢货车型'];
 					$('#res_vehicle').text(vehicleName[order["vehicle"]-1]);
 					$('#res_distance').text(order["distance"]+' 公里');
 					$('#res_amount').text(order["amount"]+' 元');
