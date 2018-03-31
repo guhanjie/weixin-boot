@@ -255,7 +255,7 @@ $(function() {
     	if(countdown < 4*60*60*1000 && countdown >= 2*60*60*1000) {
             price = price * 1.5;
         }
-        else if(countdown < 2*60*60*1000L) {
+        else if(countdown < 2*60*60*1000) {
             price = price * 2.0;
         }
     	order["amount"] = price.toFixed(0);
