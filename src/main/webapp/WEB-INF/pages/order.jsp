@@ -44,15 +44,15 @@
             <div></div>
           </div>
           <p id="carType1" style="display: block;">
-            <span>计价：起步150元(10公里)，超出5元/公里</span><br> 
+            <span>计价：起步208元(10公里)，超出5元/公里</span><br> 
             <span>容量：可容纳10个包裹，单个包裹限重15公斤</span>
           </p>
           <p id="carType2">
-            <span>计价：起步200元(10公里)，超出6元/公里</span><br> 
+            <span>计价：起步288元(10公里)，超出6元/公里</span><br> 
             <span>容量：可容纳15个包裹，单个包裹限重15公斤</span>
           </p>
           <p id="carType3">
-            <span>计价：起步300元(10公里)，超出8元/公里</span><br> 
+            <span>计价：起步388元(10公里)，超出8元/公里</span><br> 
             <span>容量：可容纳20个包裹，单个包裹限重15公斤</span>
           </p>
           <p id="carType4">
