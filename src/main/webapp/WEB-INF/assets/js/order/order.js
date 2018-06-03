@@ -302,7 +302,7 @@ $(function() {
 		    $('#submit').removeClass('weui_btn_disabled');
 			return;
 		}
-		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3)) {
+		if(!order["vehicle"] || (order["vehicle"]!=1 && order["vehicle"]!=2 && order["vehicle"]!=3 && order["vehicle"]!=4)) {
 			$.weui.topTips('未选择正确车型');
 		    $('#submit').removeClass('weui_btn_disabled');
 			return;
